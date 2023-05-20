@@ -11,14 +11,31 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.18.0" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="FluentAssertions" Version="6.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="NSubstitute" Version="5.0.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
     <PackageReference Include="Verify.NUnit" Version="20.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Fixtures\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PlaningPoker.Api\webapi\webapi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fixtures\Game.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

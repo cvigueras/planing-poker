@@ -7,8 +7,8 @@ public class GameController : ControllerBase
     [HttpGet("{guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Game))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> Get(object guid)
+    public async Task<ActionResult> Get(object guid)
     {
-        throw new NotImplementedException();
+        return NotFound();
     }
 }

@@ -7,16 +7,16 @@ namespace PlaningPoker.Api.Test
     public class GameRepositoryShould
     {
         [Test]
-        public void ReturnNullWhenNotExistsAGame()
+        public async Task ReturnExceptionWhenNotExistsAGame()
         {
             var setupFixture = new SetupFixture();
             var connection = setupFixture.Get();
             var gameRepository = new GameRepository(connection);
             var guid = Guid.NewGuid().ToString();
 
-            var result = gameRepository.GetByGuid(guid);
+            var action = () => gameRepository.GetByGuid(guid);
 
-            result.Should().BeNull();
+            await action.Should().ThrowAsync<InvalidOperationException>();
         }
     }
 }

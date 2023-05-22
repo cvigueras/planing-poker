@@ -2,5 +2,5 @@
 
 public interface IGameRepository
 {
-    object GetByGuid(string guid);
+    Task<Game> GetByGuid(string guid);
 }

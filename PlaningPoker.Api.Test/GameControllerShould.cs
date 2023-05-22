@@ -16,7 +16,7 @@ namespace PlaningPoker.Api.Test
             var guid = Guid.NewGuid().ToString();
 
             var gameRepository = Substitute.For<IGameRepository>();
-            gameRepository.GetByGuid(guid).Returns(null);
+            gameRepository.GetByGuid(guid).Returns((Game)null);
             var actionResult = gameController.Get(guid);
             var result = actionResult.Result as NotFoundResult;
 

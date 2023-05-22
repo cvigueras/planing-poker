@@ -18,4 +18,9 @@ public class GameRepository : IGameRepository
     {
         return (await connection.QueryAsync<Game>($"SELECT * FROM Games WHERE Id = '{guid}'")).First();
     }
+
+    public void Add(Game givenGame)
+    {
+        throw new NotImplementedException();
+    }
 }

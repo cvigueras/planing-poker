@@ -16,11 +16,13 @@ public class GameRepository : IGameRepository
 
     public async Task<Game> GetByGuid(string guid)
     {
-        return (await connection.QueryAsync<Game>($"SELECT * FROM Games WHERE Id = '{guid}'")).First();
+        return (await connection.QueryAsync<Game>($"SELECT *, Games.Id as guid FROM Games WHERE Id = '{guid}'")).First();
     }
 
-    public void Add(Game givenGame)
+    public async Task Add(Game game)
     {
-        throw new NotImplementedException();
+        await connection.ExecuteAsync(
+            $"INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration) " +
+            $"VALUES ('{game.Guid}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}');");
     }
 }

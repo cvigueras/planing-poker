@@ -27,7 +27,7 @@ namespace PlaningPoker.Api.Test
         }
 
         [Test]
-        public void RetrieveAnExistingGame()
+        public async Task RetrieveAnExistingGame()
         {
             var setupFixture = new SetupFixture();
             var connection = setupFixture.Get();
@@ -42,9 +42,9 @@ namespace PlaningPoker.Api.Test
                 RoundTime = 60,
                 Title = "Release1",
             };
-            gameRepository.Add(givenGame);
+            await gameRepository.Add(givenGame);
 
-            var result = gameRepository.GetByGuid(guid);
+            var result = await gameRepository.GetByGuid(guid);
 
             var expectedGame = new Game
             {

@@ -31,6 +31,7 @@ public class GameController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Post(GameCreateDto game)
     {
-        throw new NotImplementedException();
+        var entity = mapper.Map<Game>(game);
+        return Ok(await gameRepository.Add(entity));
     }
 }

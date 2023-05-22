@@ -20,6 +20,7 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddScoped(_ => new SQLiteConnection("Data Source=./Game.db"));
+        services.AddAutoMapper(typeof(MapperConfig));
     }
 
     public void Configure(WebApplication app, IWebHostEnvironment env)

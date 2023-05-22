@@ -32,23 +32,22 @@ namespace PlaningPoker.Api.Test
             var setupFixture = new SetupFixture();
             var connection = setupFixture.Get();
             var gameRepository = new GameRepository(connection);
-            var guid = Guid.NewGuid().ToString();
             var givenGame = new Game
             {
-                Guid = guid,
                 CreatedBy = "Carlos",
                 Description = "Point Poker to release1",
                 Expiration = 60,
                 RoundTime = 60,
                 Title = "Release1",
             };
-            await gameRepository.Add(givenGame);
+            var newGuid = await gameRepository.Add(givenGame);
+            givenGame.Guid = newGuid;
 
-            var result = await gameRepository.GetByGuid(guid);
+            var result = await gameRepository.GetByGuid(newGuid);
 
             var expectedGame = new Game
             {
-                Guid = guid,
+                Guid = newGuid,
                 CreatedBy = "Carlos",
                 Description = "Point Poker to release1",
                 Expiration = 60,

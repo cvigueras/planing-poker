@@ -7,22 +7,27 @@ using webapi;
 namespace PlaningPoker.Api.Test.Startup;
 public class SetupFixture : WebApplicationFactory<Program>
 {
-    private readonly SQLiteConnection _connection;
+    private readonly SQLiteConnection connection;
 
     public SetupFixture()
     {
-        _connection = new SQLiteConnection("Data Source=:memory:");
+        connection = new SQLiteConnection("Data Source=:memory:");
 
-        _connection.Open();
+        connection.Open();
     }
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureServices(services =>
         {
-            services.AddSingleton(_connection);
+            services.AddSingleton(connection);
         });
 
         return base.CreateHost(builder);
+    }
+
+    public SQLiteConnection Get()
+    {
+        return connection;
     }
 }

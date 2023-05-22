@@ -1,7 +1,5 @@
-﻿using System.Data.Common;
+﻿using Dapper;
 using System.Data.SQLite;
-using Dapper;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace webapi;
 

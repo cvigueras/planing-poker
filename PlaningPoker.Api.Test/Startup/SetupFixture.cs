@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Data.Common;
 using System.Data.SQLite;
-using Dapper;
 using webapi;
 
 namespace PlaningPoker.Api.Test.Startup;

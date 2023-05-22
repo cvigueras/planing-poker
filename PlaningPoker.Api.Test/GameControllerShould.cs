@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using PlaningPoker.Api.Test.Fixtures;
@@ -11,7 +12,7 @@ namespace PlaningPoker.Api.Test
     public class GameControllerShould
     {
         private IMapper mapper;
-        private IGameRepository? gameRepository;
+        private IGameRepository gameRepository;
         private GameController gameController;
         private string guid;
 
@@ -20,7 +21,7 @@ namespace PlaningPoker.Api.Test
         {
             mapper = Substitute.For<IMapper>();
             gameRepository = Substitute.For<IGameRepository>();
-            gameController = new GameController(gameRepository,mapper);
+            gameController = new GameController(gameRepository, mapper);
             guid = Guid.NewGuid().ToString();
         }
 
@@ -32,7 +33,7 @@ namespace PlaningPoker.Api.Test
 
             var result = actionResult.Result as NotFoundResult;
 
-            result.StatusCode.Should().Be(404);
+            result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         }
 
         [Test]
@@ -49,6 +50,5 @@ namespace PlaningPoker.Api.Test
 
             result.Value.Should().BeEquivalentTo(expectedGame);
         }
-
     }
 }

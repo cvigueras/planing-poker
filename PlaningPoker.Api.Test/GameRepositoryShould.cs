@@ -1,7 +1,7 @@
-﻿using System.Data.SQLite;
-using FluentAssertions;
+﻿using FluentAssertions;
 using PlaningPoker.Api.Test.Fixtures;
 using PlaningPoker.Api.Test.Startup;
+using System.Data.SQLite;
 using webapi;
 
 namespace PlaningPoker.Api.Test

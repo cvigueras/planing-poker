@@ -27,4 +27,10 @@ public class GameController : ControllerBase
         }
         return NotFound();
     }
+
+    [HttpPost]
+    public async Task<ActionResult> Post(GameCreateDto game)
+    {
+        throw new NotImplementedException();
+    }
 }

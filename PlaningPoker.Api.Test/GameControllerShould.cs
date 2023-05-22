@@ -50,5 +50,22 @@ namespace PlaningPoker.Api.Test
 
             result.Value.Should().BeEquivalentTo(expectedGame);
         }
+
+        [Test]
+        public async Task PostAGameSuccessFully()
+        {
+            var givenGame = new GameCreateDto("Carlos", "Release1", "Session for Release1", 60, 60);
+            var expectedGame = GameMother.CarlosAsGame();
+            mapper.Map<Game>(Arg.Is(givenGame)).Returns(expectedGame);
+            gameRepository.Add(expectedGame).Returns(guid);
+            expectedGame.Guid = guid;
+
+            var action = await gameController.Post(givenGame);
+            var result = action as OkObjectResult;
+
+            gameRepository.Received().Add(expectedGame);
+            result.StatusCode.Should().Be(StatusCodes.Status200OK);
+            result.Value.Should().Be(guid);
+        }
     }
 }

@@ -20,13 +20,13 @@ namespace PlaningPoker.Api.Test
             using var jsonReader = new StreamReader("./Fixtures/Game.json");
             var json = await jsonReader.ReadToEndAsync();
 
-            var responsePost= await _client!.PostAsync("Games",new StringContent(json,
+            var responsePost= await _client!.PostAsync("Game",new StringContent(json,
                                                                Encoding.Default,
                                                                MediaType));
             var resultGuid = responsePost.Content.ReadAsStringAsync().Result;
             responsePost.EnsureSuccessStatusCode();
 
-            var response = await _client!.GetAsync($"Games/{resultGuid}");
+            var response = await _client!.GetAsync($"Game/{resultGuid}");
             response.EnsureSuccessStatusCode();
             var result = response.Content.ReadAsStringAsync().Result;
 

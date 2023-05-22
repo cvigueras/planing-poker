@@ -44,7 +44,6 @@ namespace PlaningPoker.Api.Test
                 RoundTime = 60,
                 Title = "Release1",
             };
-            gameRepository.Add(givenGame).Returns(guid);
             gameRepository.GetByGuid(guid).Returns(givenGame);
             var expectedGame = new GameReadDto(guid, "Carlos", "Release1", "Session for Release1", 60, 60);
             mapper.Map<GameReadDto>(Arg.Is(givenGame)).Returns(expectedGame);

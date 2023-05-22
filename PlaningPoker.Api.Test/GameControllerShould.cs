@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
-using PlaningPoker.Api.Test.Startup;
+using PlaningPoker.Api.Test.Fixtures;
 using webapi;
 using webapi.Controllers;
 
@@ -10,18 +10,26 @@ namespace PlaningPoker.Api.Test
 {
     public class GameControllerShould
     {
+        private IMapper mapper;
+        private IGameRepository? gameRepository;
+        private GameController gameController;
+        private string guid;
+
+        [SetUp]
+        public void SetUp()
+        {
+            mapper = Substitute.For<IMapper>();
+            gameRepository = Substitute.For<IGameRepository>();
+            gameController = new GameController(gameRepository,mapper);
+            guid = Guid.NewGuid().ToString();
+        }
 
         [Test]
         public void RetrieveAnErrorWhenNonExistingGame()
         {
-            var mapper = Substitute.For<IMapper>();
-            var gameRepository = Substitute.For<IGameRepository>();
-            var gameController = new GameController(gameRepository,mapper);
-            var guid = Guid.NewGuid().ToString();
-
-
             gameRepository.GetByGuid(guid)!.Returns((Game)null);
             var actionResult = gameController.Get(guid);
+
             var result = actionResult.Result as NotFoundResult;
 
             result.StatusCode.Should().Be(404);
@@ -30,20 +38,8 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task RetrieveAGameWhenExists()
         {
-            var mapper = Substitute.For<IMapper>();
-            var guid = Guid.NewGuid().ToString();
-            
-            var gameRepository = Substitute.For<IGameRepository>();
-            var gameController = new GameController(gameRepository, mapper);
-            var givenGame = new Game
-            {
-                Guid = guid,
-                CreatedBy = "Carlos",
-                Description = "Point Poker to release1",
-                Expiration = 60,
-                RoundTime = 60,
-                Title = "Release1",
-            };
+            var givenGame = GameMother.CarlosAsGame();
+            givenGame.Guid = guid;
             gameRepository.GetByGuid(guid).Returns(givenGame);
             var expectedGame = new GameReadDto(guid, "Carlos", "Release1", "Session for Release1", 60, 60);
             mapper.Map<GameReadDto>(Arg.Is(givenGame)).Returns(expectedGame);

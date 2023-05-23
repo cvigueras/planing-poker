@@ -7,6 +7,7 @@ namespace webapi.Startup
         public MapperConfig()
         {
             CreateMap<Game, GameReadDto>().ReverseMap();
+            CreateMap<Game, GameCreateDto>().ReverseMap();
         }
     }
 }

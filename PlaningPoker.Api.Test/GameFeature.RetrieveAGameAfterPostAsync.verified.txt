@@ -1,5 +1,4 @@
-{
-  "guid" :  "",
+﻿{
   "createdBy": "Carlos",
   "title": "New game",
   "description": "New game to vote release1",

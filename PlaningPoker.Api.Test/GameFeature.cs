@@ -1,5 +1,6 @@
 using PlaningPoker.Api.Test.Startup;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace PlaningPoker.Api.Test
 {
@@ -28,9 +29,12 @@ namespace PlaningPoker.Api.Test
 
             var response = await _client!.GetAsync($"Game/{resultGuid}");
             response.EnsureSuccessStatusCode();
-            var result = response.Content.ReadAsStringAsync().Result;
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);
+            var settings = new VerifySettings();
+            settings.ScrubLinesContaining("\"guid\":");
 
-            await Verify(result);
+            await Verify(result, settings);
         }
     }
 }

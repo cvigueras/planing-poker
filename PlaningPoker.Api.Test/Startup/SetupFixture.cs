@@ -36,6 +36,7 @@ public class SetupFixture : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(connection);
+            services.AddSingleton<IGameRepository, GameRepository>();
         });
 
         return base.CreateHost(builder);

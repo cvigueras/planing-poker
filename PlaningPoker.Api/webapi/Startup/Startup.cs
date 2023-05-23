@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿using AutoMapper;
+using System.Data.SQLite;
 
 namespace webapi.Startup;
 
@@ -21,6 +22,7 @@ public class Startup
         services.AddSwaggerGen();
         services.AddScoped(_ => new SQLiteConnection("Data Source=./Game.db"));
         services.AddAutoMapper(typeof(MapperConfig));
+        services.AddScoped<IGameRepository, GameRepository>();
     }
 
     public void Configure(WebApplication app, IWebHostEnvironment env)

@@ -35,12 +35,12 @@ namespace PlaningPoker.Api.Test
         {
             var givenGame = GameMother.CarlosAsGame();
             var newGuid = await gameRepository.Add(givenGame);
-            givenGame.Guid = newGuid;
+            givenGame.Id = newGuid;
 
             var result = await gameRepository.GetByGuid(newGuid);
 
             var expectedGame = GameMother.CarlosAsGame();
-            expectedGame.Guid = newGuid;
+            expectedGame.Id = newGuid;
             result.Should().BeEquivalentTo(expectedGame);
         }
     }

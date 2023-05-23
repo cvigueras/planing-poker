@@ -19,10 +19,10 @@ public class GameRepository : IGameRepository
 
     public async Task<string> Add(Game game)
     {
-        game.Guid = Guid.NewGuid().ToString();
+        game.Id = Guid.NewGuid().ToString();
         await connection.ExecuteAsync(
             $"INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration) " +
-            $"VALUES ('{game.Guid}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}');");
-        return game.Guid;
+            $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}');");
+        return game.Id;
     }
 }

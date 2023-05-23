@@ -32,7 +32,7 @@ namespace PlaningPoker.Api.Test
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);
             var settings = new VerifySettings();
-            settings.ScrubLinesContaining("\"guid\":");
+            settings.ScrubInlineGuids();
 
             await Verify(result, settings);
         }

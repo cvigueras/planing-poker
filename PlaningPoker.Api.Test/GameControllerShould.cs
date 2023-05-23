@@ -40,7 +40,7 @@ namespace PlaningPoker.Api.Test
         public async Task RetrieveAGameWhenExists()
         {
             var givenGame = GameMother.CarlosAsGame();
-            givenGame.Guid = guid;
+            givenGame.Id = guid;
             gameRepository.GetByGuid(guid).Returns(givenGame);
             var expectedGame = new GameReadDto(guid, "Carlos", "Release1", "Session for Release1", 60, 60);
             mapper.Map<GameReadDto>(Arg.Is(givenGame)).Returns(expectedGame);
@@ -58,7 +58,7 @@ namespace PlaningPoker.Api.Test
             var game = GameMother.CarlosAsGame();
             mapper.Map<Game>(Arg.Is(givenGame)).Returns(game);
             gameRepository.Add(game).Returns(guid);
-            game.Guid = guid;
+            game.Id = guid;
 
             var action = await gameController.Post(givenGame);
             var result = action as OkObjectResult;

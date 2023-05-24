@@ -11,12 +11,12 @@ public class PlaningHub : Hub
 
     public Task SendMessageToCaller(string message)
     {
-        return Clients.Caller.SendAsync("ReceiveMessage", message);
+        return Clients.Caller.SendAsync("OnReceiveMessage", message);
     }
 
     public Task SendMessageToUser(string connectionId, string message)
     {
-        return Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
+        return Clients.Client(connectionId).SendAsync("OnReceiveMessage", message);
     }
 
     public Task JoinGroup(string group)
@@ -24,9 +24,9 @@ public class PlaningHub : Hub
         return Groups.AddToGroupAsync(Context.ConnectionId, group);
     }
 
-    public Task SendMessageToGroup(string group, string message)
+    public async Task SendMessageToGroup(string group, string message)
     {
-        return Clients.Group(group).SendAsync("ReceiveMessage", message);
+        await Clients.Group(group).SendAsync("OnReceiveMessage", message);
     }
 
     public override async Task OnConnectedAsync()

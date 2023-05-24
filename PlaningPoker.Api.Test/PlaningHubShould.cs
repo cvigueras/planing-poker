@@ -25,10 +25,8 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task SendMessageToAllSuccessfully()
         {
-            //Given
             connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
-            //When
             var user = string.Empty;
             var message = string.Empty;
             connection.On<string, string>("OnReceiveMessage", (u, m) =>
@@ -36,13 +34,30 @@ namespace PlaningPoker.Api.Test
                 user = u;
                 message = m;
             });
-
             await connection.InvokeAsync("SendMessageToAll", "organizer", "Hello World!!");
-            await Task.Delay(100);
+            await Task.Delay(200);
 
-            //Then
+            
             user.Should().Be("organizer");
             message.Should().Be("Hello World!!");
+        }
+
+        [Test]
+        public async Task SendMessageToGroupSuccessfully()
+        {
+            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+
+            var user = string.Empty;
+            var message = string.Empty;
+            connection.On<string>("OnReceiveMessage", (m) =>
+            {
+                message = m;
+            });
+            await connection.InvokeAsync("JoinGroup", "group1");
+            await connection.InvokeAsync("SendMessageToGroup", "group1", "Hello Group!!");
+            await Task.Delay(200);
+
+            message.Should().Be("Hello Group!!");
         }
 
         [Test]

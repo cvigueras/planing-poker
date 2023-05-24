@@ -16,7 +16,7 @@ namespace PlaningPoker.Api.Test
         public void Setup()
         {
             setupFixture = new SetupFixture();
-            connection = setupFixture.Get();
+            connection = setupFixture.GetSQLiteConnection();
             gameRepository = new GameRepository(connection);
         }
 

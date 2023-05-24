@@ -23,6 +23,23 @@ public class Startup
         services.AddScoped(_ => new SQLiteConnection("Data Source=./Game.db"));
         services.AddAutoMapper(typeof(MapperConfig));
         services.AddScoped<IGameRepository, GameRepository>();
+        services.AddCors(
+            x =>
+            {
+                x.AddPolicy("AllowClientPolicy", options =>
+                {
+                    options.WithOrigins("https://localhost:8080")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+
+                    options.WithOrigins("http://localhost:8080")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
+        services.AddSignalR();
     }
 
     public void Configure(WebApplication app, IWebHostEnvironment env)
@@ -36,8 +53,13 @@ public class Startup
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
+        app.UseRouting();
         app.MapControllers();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapHub<PlaningHub>("/hubs/planing");
+        });
 
         app.Run();
     }

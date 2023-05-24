@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SQLite;
@@ -37,13 +39,36 @@ public class SetupFixture : WebApplicationFactory<Program>
         {
             services.AddSingleton(connection);
             services.AddSingleton<IGameRepository, GameRepository>();
+            services.AddSignalR(options => { options.EnableDetailedErrors = true; });
         });
 
         return base.CreateHost(builder);
     }
 
-    public SQLiteConnection Get()
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapHub<PlaningHub>("/hubs/planing");
+        });
+    }
+
+    public SQLiteConnection GetSQLiteConnection()
     {
         return connection;
+    }
+
+    public async Task<HubConnection> StartHubConnectionAsync(HttpMessageHandler handler, string hubName)
+    {
+        var hubConnection = new HubConnectionBuilder()
+            .WithUrl($"ws://localhost/hubs/{hubName}", o =>
+            {
+                o.HttpMessageHandlerFactory = _ => handler;
+            })
+            .Build();
+
+        await hubConnection.StartAsync();
+
+        return hubConnection;
     }
 }

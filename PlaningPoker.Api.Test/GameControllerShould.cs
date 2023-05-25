@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using PlaningPoker.Api.Test.Fixtures;
+using System.Net;
+using Microsoft.AspNetCore.Routing;
 using webapi;
 using webapi.Controllers;
+using static Dapper.SqlMapper;
 
 namespace PlaningPoker.Api.Test
 {
@@ -42,7 +46,7 @@ namespace PlaningPoker.Api.Test
             var givenGame = GameMother.CarlosAsGame();
             givenGame.Id = guid;
             gameRepository.GetByGuid(guid).Returns(givenGame);
-            var expectedGame = new GameReadDto(guid, "Carlos", "Release1", "Session for Release1", 60, 60);
+            var expectedGame = new GameReadDto(guid, "Carlos", "Release1", "Session for Release1", 60, 60, "anyUrl");
             mapper.Map<GameReadDto>(Arg.Is(givenGame)).Returns(expectedGame);
 
             var action = await gameController.Get(guid);
@@ -57,15 +61,15 @@ namespace PlaningPoker.Api.Test
             var givenGame = new GameCreateDto("Carlos", "Release1", "Session for Release1", 60, 60);
             var game = GameMother.CarlosAsGame();
             mapper.Map<Game>(Arg.Is(givenGame)).Returns(game);
-            gameRepository.Add(game).Returns(guid);
-            game.Id = guid;
+            var expectedGame = new GameReadDto(guid,"Carlos", "Release1", "Session for Release1", 60, 60, game.ReturnUrl);
+            mapper.Map<GameReadDto>(game).Returns(expectedGame);
 
             var action = await gameController.Post(givenGame);
             var result = action as OkObjectResult;
 
-            gameRepository.Received().Add(game);
+            await gameRepository.Received(1).Add(game);
             result.StatusCode.Should().Be(StatusCodes.Status200OK);
-            result.Value.Should().Be(guid);
+            result.Value.Should().BeEquivalentTo(expectedGame);
         }
     }
 }

@@ -1,6 +1,7 @@
 using PlaningPoker.Api.Test.Startup;
 using System.Text;
 using Newtonsoft.Json;
+using webapi;
 
 namespace PlaningPoker.Api.Test
 {
@@ -24,10 +25,11 @@ namespace PlaningPoker.Api.Test
             var responsePost = await _client!.PostAsync("Game", new StringContent(json,
                                                                Encoding.Default,
                                                                MediaType));
-            var resultGuid = responsePost.Content.ReadAsStringAsync().Result;
+            var resultPost = responsePost.Content.ReadAsStringAsync().Result;
             responsePost.EnsureSuccessStatusCode();
 
-            var response = await _client!.GetAsync($"Game/{resultGuid}");
+            var gameReadDto = JsonConvert.DeserializeObject<GameReadDto>(resultPost);
+            var response = await _client!.GetAsync($"Game/{gameReadDto.Id}");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);

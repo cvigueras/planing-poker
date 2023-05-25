@@ -37,7 +37,6 @@ namespace PlaningPoker.Api.Test
             await connection.InvokeAsync("SendMessageToAll", "organizer", "Hello World!!");
             await Task.Delay(200);
 
-            
             user.Should().Be("organizer");
             message.Should().Be("Hello World!!");
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace webapi.Controllers;
@@ -33,6 +34,16 @@ public class GameController : ControllerBase
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
         var entity = mapper.Map<Game>(gameCreated);
-        return Ok(await gameRepository.Add(entity));
+        entity.Id = Guid.NewGuid().ToString();
+        if (Request != null)
+        {
+            var url = Request.GetEncodedUrl();
+            entity.ReturnUrl = url;
+        }
+
+        entity.ReturnUrl += "/" + entity.Id;
+        await gameRepository.Add(entity);
+        
+        return Ok(mapper.Map<GameReadDto>(entity));
     }
 }

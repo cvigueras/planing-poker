@@ -29,7 +29,8 @@ public class SetupFixture : WebApplicationFactory<Program>
                 Title VARCHAR(100) NOT NULL,
                 Description VARCHAR(200) NOT NULL,
                 RoundTime INTEGER NOT NULL,
-                Expiration INTEGER NOT NULL)"
+                Expiration INTEGER NOT NULL,
+                ReturnUrl VARCHAR(250) NOT NULL)"
         );
     }
 

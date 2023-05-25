@@ -17,12 +17,10 @@ public class GameRepository : IGameRepository
         return (await connection.QueryAsync<Game>($"SELECT *, Games.Id as guid FROM Games WHERE Id = '{guid}'")).First();
     }
 
-    public async Task<string> Add(Game game)
+    public async Task Add(Game game)
     {
-        game.Id = Guid.NewGuid().ToString();
         await connection.ExecuteAsync(
-            $"INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration) " +
-            $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}');");
-        return game.Id;
+            $"INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration, ReturnUrl) " +
+            $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}', '{game.ReturnUrl}');");
     }
 }

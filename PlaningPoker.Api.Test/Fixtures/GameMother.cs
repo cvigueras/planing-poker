@@ -13,7 +13,6 @@ namespace PlaningPoker.Api.Test.Fixtures
                 Expiration = 60,
                 RoundTime = 60,
                 Title = "Release1",
-                ReturnUrl = "anyUrl",
             };
         }
     }

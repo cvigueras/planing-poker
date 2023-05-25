@@ -28,8 +28,7 @@ namespace PlaningPoker.Api.Test
             var resultPost = responsePost.Content.ReadAsStringAsync().Result;
             responsePost.EnsureSuccessStatusCode();
 
-            var gameReadDto = JsonConvert.DeserializeObject<GameReadDto>(resultPost);
-            var response = await _client!.GetAsync($"Game/{gameReadDto.Id}");
+            var response = await _client!.GetAsync($"Game/{resultPost}");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);

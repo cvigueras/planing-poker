@@ -20,7 +20,7 @@ public class GameRepository : IGameRepository
     public async Task Add(Game game)
     {
         await connection.ExecuteAsync(
-            $"INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration, ReturnUrl) " +
-            $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}', '{game.ReturnUrl}');");
+            $"INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration) " +
+            $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}');");
     }
 }

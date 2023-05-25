@@ -8,5 +8,4 @@ public class Game
     public string Description { get; set; }
     public int RoundTime { get; set; }
     public int Expiration { get; set; }
-    public string ReturnUrl { get; set; }
 }

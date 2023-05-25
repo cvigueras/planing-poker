@@ -29,8 +29,7 @@ public class SetupFixture : WebApplicationFactory<Program>
                 Title VARCHAR(100) NOT NULL,
                 Description VARCHAR(200) NOT NULL,
                 RoundTime INTEGER NOT NULL,
-                Expiration INTEGER NOT NULL,
-                ReturnUrl VARCHAR(250) NOT NULL)"
+                Expiration INTEGER NOT NULL)"
         );
     }
 
@@ -40,6 +39,7 @@ public class SetupFixture : WebApplicationFactory<Program>
         {
             services.AddSingleton(connection);
             services.AddSingleton<IGameRepository, GameRepository>();
+            services.AddSingleton<IGuidGenerator, GuidGenerator>();
             services.AddSignalR(options => { options.EnableDetailedErrors = true; });
         });
 

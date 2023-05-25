@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PlaningPoker.Api.Test
 {
-    public class GameFeature
+    public class GameCreateFeature
     {
         private HttpClient? _client;
         private const string MediaType = "application/json";

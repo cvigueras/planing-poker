@@ -17,8 +17,10 @@ public class UserRepository : IUserRepository
         return (await connection.QueryAsync<User>($"SELECT *, Users.Id as guid FROM Users WHERE Id = '{id}'")).First();
     }
 
-    public async Task Add(User givenUser)
+    public async Task Add(User user)
     {
-        throw new NotImplementedException();
+        await connection.ExecuteAsync(
+            "INSERT INTO Users (Id, GameId) " +
+            $"VALUES ('{user.Id}', '{user.GameId}');");
     }
 }

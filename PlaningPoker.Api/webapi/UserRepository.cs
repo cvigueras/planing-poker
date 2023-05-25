@@ -16,4 +16,9 @@ public class UserRepository : IUserRepository
     {
         return (await connection.QueryAsync<User>($"SELECT *, Users.Id as guid FROM Users WHERE Id = '{id}'")).First();
     }
+
+    public async Task Add(User givenUser)
+    {
+        throw new NotImplementedException();
+    }
 }

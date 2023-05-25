@@ -7,7 +7,7 @@ namespace PlaningPoker.Api.Test
 {
     public class UserRepositoryShould
     {
-        private UserRepository userRepository;
+        private UserRepository repository;
         private SQLiteConnection connection;
         private SetupFixture setupFixture;
 
@@ -16,7 +16,7 @@ namespace PlaningPoker.Api.Test
         {
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
-            userRepository = new UserRepository(connection);
+            repository = new UserRepository(connection);
         }
 
         [Test]
@@ -24,9 +24,29 @@ namespace PlaningPoker.Api.Test
         {
             var guid = Guid.NewGuid().ToString();
 
-            var action = async () => await userRepository.GetById(guid);
+            var action = async () => await repository.GetById(guid);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [Test]
+        public async Task RetrieveAnExistingUser()
+        {
+            var givenUser = new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                GameId = Guid.NewGuid().ToString(),
+            };
+            await repository.Add(givenUser);
+            var expectedUser = new User
+            {
+                Id = givenUser.Id,
+                GameId = givenUser.GameId,
+            };
+
+            var result = await repository.GetById(expectedUser.Id);
+            
+            result.Should().BeEquivalentTo(expectedUser);
         }
     }
 }

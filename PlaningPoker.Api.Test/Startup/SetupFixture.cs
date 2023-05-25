@@ -31,6 +31,11 @@ public class SetupFixture : WebApplicationFactory<Program>
                 RoundTime INTEGER NOT NULL,
                 Expiration INTEGER NOT NULL)"
         );
+
+        connection.Execute(@"CREATE TABLE IF NOT EXISTS Users(
+                Id VARCHAR(60) NOT NULL,
+                GameId VARCHAR(60) NOT NULL)"
+        );
     }
 
     protected override IHost CreateHost(IHostBuilder builder)

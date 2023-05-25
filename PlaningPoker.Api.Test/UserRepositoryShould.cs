@@ -1,6 +1,7 @@
 ﻿using System.Data.SQLite;
 using FluentAssertions;
 using PlaningPoker.Api.Test.Startup;
+using webapi;
 
 namespace PlaningPoker.Api.Test
 {
@@ -19,28 +20,13 @@ namespace PlaningPoker.Api.Test
         }
 
         [Test]
-        public void FailWhenRetrieveANonExistingUser()
+        public async Task FailWhenRetrieveANonExistingUser()
         {
             var guid = Guid.NewGuid().ToString();
 
-            var action = () => userRepository.GetById(guid);
+            var action = async () => await userRepository.GetById(guid);
 
-            action.Should().Throw<ArgumentNullException>();
-        }
-    }
-
-    public class UserRepository
-    {
-        private readonly SQLiteConnection _connection;
-
-        public UserRepository(SQLiteConnection connection)
-        {
-            _connection = connection;
-        }
-
-        public object GetById(string id)
-        {
-            throw new NotImplementedException();
+            await action.Should().ThrowAsync<InvalidOperationException>();
         }
     }
 }

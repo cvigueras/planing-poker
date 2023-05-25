@@ -1,4 +1,4 @@
-﻿namespace PlaningPoker.Api.Test;
+﻿namespace webapi;
 
 public class GuidGenerator : IGuidGenerator
 {

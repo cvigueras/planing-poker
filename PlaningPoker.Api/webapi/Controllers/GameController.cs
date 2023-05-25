@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using PlaningPoker.Api.Test;
 
 namespace webapi.Controllers;
 

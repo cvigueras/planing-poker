@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 
 namespace webapi.Startup;
 

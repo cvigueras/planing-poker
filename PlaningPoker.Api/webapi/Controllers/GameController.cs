@@ -43,7 +43,7 @@ public class GameController : ControllerBase
 
         entity.ReturnUrl += "/" + entity.Id;
         await gameRepository.Add(entity);
-        
+
         return Ok(mapper.Map<GameReadDto>(entity));
     }
 }

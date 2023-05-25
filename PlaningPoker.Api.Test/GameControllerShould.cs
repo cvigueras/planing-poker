@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using PlaningPoker.Api.Test.Fixtures;
-using System.Net;
-using Microsoft.AspNetCore.Routing;
 using webapi;
 using webapi.Controllers;
-using static Dapper.SqlMapper;
 
 namespace PlaningPoker.Api.Test
 {
@@ -61,7 +57,7 @@ namespace PlaningPoker.Api.Test
             var givenGame = new GameCreateDto("Carlos", "Release1", "Session for Release1", 60, 60);
             var game = GameMother.CarlosAsGame();
             mapper.Map<Game>(Arg.Is(givenGame)).Returns(game);
-            var expectedGame = new GameReadDto(guid,"Carlos", "Release1", "Session for Release1", 60, 60, game.ReturnUrl);
+            var expectedGame = new GameReadDto(guid, "Carlos", "Release1", "Session for Release1", 60, 60, game.ReturnUrl);
             mapper.Map<GameReadDto>(game).Returns(expectedGame);
 
             var action = await gameController.Post(givenGame);

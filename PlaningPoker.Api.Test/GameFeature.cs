@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using PlaningPoker.Api.Test.Startup;
 using System.Text;
-using webapi;
 
 namespace PlaningPoker.Api.Test
 {

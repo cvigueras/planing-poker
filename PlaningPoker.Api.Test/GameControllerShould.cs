@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -36,12 +35,12 @@ namespace PlaningPoker.Api.Test
         public void RetrieveAnErrorWhenNonExistingGame()
         {
             var guid = guidGenerator.Generate().ToString();
-            
+
             var actionResult = gameController.Get(guid);
 
             var result = actionResult.Result as NotFoundObjectResult;
 
-            result.StatusCode.Should().Be(StatusCodes.Status404NotFound); 
+            result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
             result.Value.Should().Be("Sequence contains no elements");
         }
 

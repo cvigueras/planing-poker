@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using PlaningPoker.Api.Test.Fixtures;
+using PlaningPoker.Api.Test.Startup;
+using System.Data.SQLite;
 using webapi;
 using webapi.Controllers;
 
@@ -11,6 +14,8 @@ namespace PlaningPoker.Api.Test
 {
     public class GameControllerShould
     {
+        private SetupFixture setupFixture;
+        private SQLiteConnection connection;
         private IMapper mapper;
         private IGameRepository gameRepository;
         private GameController gameController;
@@ -21,7 +26,9 @@ namespace PlaningPoker.Api.Test
         {
             guidGenerator = Substitute.For<IGuidGenerator>();
             mapper = Substitute.For<IMapper>();
-            gameRepository = Substitute.For<IGameRepository>();
+            setupFixture = new SetupFixture();
+            connection = setupFixture.GetSQLiteConnection();
+            gameRepository = new GameRepository(connection);
             gameController = new GameController(gameRepository, mapper, guidGenerator);
         }
 
@@ -29,12 +36,13 @@ namespace PlaningPoker.Api.Test
         public void RetrieveAnErrorWhenNonExistingGame()
         {
             var guid = guidGenerator.Generate().ToString();
-            gameRepository.GetByGuid(guid)!.Returns((Game)null);
+            
             var actionResult = gameController.Get(guid);
 
-            var result = actionResult.Result as NotFoundResult;
+            var result = actionResult.Result as NotFoundObjectResult;
 
-            result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+            result.StatusCode.Should().Be(StatusCodes.Status404NotFound); 
+            result.Value.Should().Be("Sequence contains no elements");
         }
 
         [Test]
@@ -49,7 +57,6 @@ namespace PlaningPoker.Api.Test
             var action = await gameController.Post(givenGame);
             var result = action as OkObjectResult;
 
-            await gameRepository.Received(1).Add(game);
             result.StatusCode.Should().Be(StatusCodes.Status200OK);
             result.Value.Should().BeEquivalentTo(guid.ToString());
         }
@@ -57,11 +64,12 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task RetrieveAGameWhenExists()
         {
-            var guid = guidGenerator.Generate();
+            var guid = Guid.Parse("4c1bf4dc-143f-451b-b5ad-495fb849794c");
             var givenGame = GameMother.CarlosAsGame();
-            gameRepository.GetByGuid(guid.ToString()).Returns(givenGame);
+            givenGame.Id = guid.ToString();
             var expectedGame = new GameReadDto(guid.ToString(), "Carlos", "Release1", "Session for Release1", 60, 60);
-            mapper.Map<GameReadDto>(Arg.Is(givenGame)).Returns(expectedGame);
+            mapper.Map<GameReadDto>(Arg.Any<Game>()).Returns(expectedGame);
+            await gameRepository.Add(givenGame);
 
             var action = await gameController.Get(guid.ToString());
             var result = action as OkObjectResult;

@@ -25,12 +25,16 @@ public class GameController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Get(string guid)
     {
-        var game = await gameRepository.GetByGuid(guid);
-        if (game != null)
+        try
         {
-            return Ok(mapper.Map<GameReadDto>(game));
+            var game = await gameRepository.GetByGuid(guid);
+            var result = mapper.Map<GameReadDto>(game);
+            return Ok(result);
         }
-        return NotFound();
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpPost]

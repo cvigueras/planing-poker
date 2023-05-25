@@ -42,7 +42,6 @@ public class GameController : ControllerBase
         var entity = mapper.Map<Game>(gameCreated);
         entity.Id = guidGenerator.Generate().ToString();
         await gameRepository.Add(entity);
-
         return Ok(entity.Id);
     }
 }

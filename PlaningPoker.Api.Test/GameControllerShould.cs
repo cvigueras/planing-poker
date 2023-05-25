@@ -37,7 +37,6 @@ namespace PlaningPoker.Api.Test
             var guid = guidGenerator.Generate().ToString();
 
             var actionResult = gameController.Get(guid);
-
             var result = actionResult.Result as NotFoundObjectResult;
 
             result.StatusCode.Should().Be(StatusCodes.Status404NotFound);

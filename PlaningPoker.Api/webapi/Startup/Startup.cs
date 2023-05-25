@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿using PlaningPoker.Api.Test;
+using System.Data.SQLite;
 
 namespace webapi.Startup;
 
@@ -19,9 +20,11 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.AddScoped(_ => new SQLiteConnection("Data Source=./Game.db"));
+        services.AddScoped(_ => new SQLiteConnection("Data Source=./PlaningPoker.db"));
         services.AddAutoMapper(typeof(MapperConfig));
         services.AddScoped<IGameRepository, GameRepository>();
+        services.AddSingleton<IGuidGenerator, GuidGenerator>();
+        DataBase.Create();
         services.AddCors(
             x =>
             {

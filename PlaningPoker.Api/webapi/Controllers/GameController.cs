@@ -40,4 +40,10 @@ public class GameController : ControllerBase
         await gameRepository.Add(entity);
         return Ok(entity.Id);
     }
+
+    [HttpPut("{gameId}")]
+    public ActionResult Put(string gameId, string userName)
+    {
+        throw new NotImplementedException();
+    }
 }

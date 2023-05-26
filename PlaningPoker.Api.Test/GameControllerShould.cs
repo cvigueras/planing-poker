@@ -72,5 +72,25 @@ namespace PlaningPoker.Api.Test
 
             result.Value.Should().BeEquivalentTo(expectedGame);
         }
+
+        [Test]
+        public async Task RetrieveAGameUpdatedWithNewUser()
+        {
+            var userId = guidGenerator.Generate().ToString();
+            var givenGame = GameMother.CarlosAsGame();
+            var newUserName = "Juan";
+            var expectedUsers = new List<UsersReadDto>
+            {
+                new (guidGenerator.Generate().ToString(), givenGame.CreatedBy),
+                new (guidGenerator.Generate().ToString(), newUserName)
+            };
+            await gameRepository.Add(givenGame);
+
+            var result = gameController.Put(givenGame.Id, newUserName);
+
+            var userResult = result as OkObjectResult;
+            var expectedUser = new GameUsersReadDto(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60, expectedUsers); 
+            userResult.Value.Should().BeEquivalentTo(expectedUser);
+        }
     }
 }

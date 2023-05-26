@@ -25,6 +25,11 @@ public class UserRepository : IUserRepository
             $"VALUES ('{user.Id}', '{user.Name}', '{user.GameId}');");
     }
 
+    public object GetUsersGameByGameId(string gameId)
+    {
+        throw new NotImplementedException();
+    }
+
     private User ToUser(dynamic rawData)
     {
         return User.Create(rawData.Id, rawData.Name, rawData.GameId);

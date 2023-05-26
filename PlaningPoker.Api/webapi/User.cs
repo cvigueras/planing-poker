@@ -2,7 +2,6 @@
 
 public class User
 {
-
     private User(string id, string name, string gameId)
     {
         Id = id;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace webapi.Controllers;
 
 [ApiController]
@@ -8,11 +9,13 @@ namespace webapi.Controllers;
 public class GameController : ControllerBase
 {
     private readonly IGameRepository gameRepository;
+    private readonly IUserRepository userRepository;
     private readonly IMapper mapper;
 
-    public GameController(IGameRepository gameRepository, IMapper mapper)
+    public GameController(IGameRepository gameRepository, IUserRepository userRepository, IMapper mapper)
     {
         this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
@@ -42,8 +45,14 @@ public class GameController : ControllerBase
     }
 
     [HttpPut("{gameId}")]
-    public ActionResult Put(string gameId, string userName)
+    public async Task<ActionResult> Put(string gameId, string userName)
     {
-        throw new NotImplementedException();
+        var user = webapi.User.Create(new GuidGenerator().Generate().ToString(), userName, gameId);
+        await userRepository.Add(user);
+        var game = await gameRepository.GetByGuid(gameId);
+        var usersGame = userRepository.GetUsersGameByGameId(gameId);
+        var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
+        return Ok(new GameUsersReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
+            game.Expiration, usersReadDto));
     }
 }

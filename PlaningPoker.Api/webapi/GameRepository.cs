@@ -25,6 +25,8 @@ public class GameRepository : IGameRepository
             "INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration) " +
             $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}')");
     }
+
+
     private Game ToGame(dynamic rawData)
     {
         return Game.Create(rawData.Id,rawData.CreatedBy, rawData.Title, rawData.Description, rawData.RoundTime,

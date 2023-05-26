@@ -22,6 +22,7 @@ public class Startup
         services.AddScoped(_ => new SQLiteConnection("Data Source=./PlaningPoker.db"));
         services.AddAutoMapper(typeof(MapperConfig));
         services.AddScoped<IGameRepository, GameRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddSingleton<IGuidGenerator, GuidGenerator>();
         DataBase.Create();
         services.AddCors(

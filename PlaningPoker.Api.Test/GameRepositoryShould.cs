@@ -11,7 +11,7 @@ namespace PlaningPoker.Api.Test
     {
         private SetupFixture setupFixture;
         private SQLiteConnection connection;
-        private GameRepository gameRepository;
+        private GameRepository repository;
         private IGuidGenerator guidGenerator;
 
         [SetUp]
@@ -19,7 +19,7 @@ namespace PlaningPoker.Api.Test
         {
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
-            gameRepository = new GameRepository(connection);
+            repository = new GameRepository(connection);
             guidGenerator = Substitute.For<IGuidGenerator>();
         }
 
@@ -28,7 +28,7 @@ namespace PlaningPoker.Api.Test
         {
             var guid = guidGenerator.Generate().ToString();
 
-            var action = () => gameRepository.GetByGuid(guid);
+            var action = () => repository.GetByGuid(guid);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
         }
@@ -42,9 +42,9 @@ namespace PlaningPoker.Api.Test
             var expectedRoundTime = 60;
             var expectedExpiration = 60;
             var givenGame = GameMother.CarlosAsGame();
-            await gameRepository.Add(givenGame);
+            await repository.Add(givenGame);
 
-            var result = await gameRepository.GetByGuid(givenGame.Id);
+            var result = await repository.GetByGuid(givenGame.Id);
 
             result.CreatedBy.Should().Be(expectedCreatedBy);
             result.Title.Should().Be(expectedTitle);

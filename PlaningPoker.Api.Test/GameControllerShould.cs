@@ -16,6 +16,7 @@ namespace PlaningPoker.Api.Test
         private SetupFixture setupFixture;
         private SQLiteConnection connection;
         private IMapper mapper;
+        private IUserRepository userRepository;
         private IGameRepository gameRepository;
         private GameController gameController;
         private IGuidGenerator guidGenerator;
@@ -27,8 +28,9 @@ namespace PlaningPoker.Api.Test
             mapper = Substitute.For<IMapper>();
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
+            userRepository = Substitute.For<IUserRepository>();
             gameRepository = new GameRepository(connection);
-            gameController = new GameController(gameRepository, mapper);
+            gameController = new GameController(gameRepository, userRepository, mapper);
         }
 
         [Test]
@@ -81,14 +83,14 @@ namespace PlaningPoker.Api.Test
             var newUserName = "Juan";
             var expectedUsers = new List<UsersReadDto>
             {
-                new (guidGenerator.Generate().ToString(), givenGame.CreatedBy),
-                new (guidGenerator.Generate().ToString(), newUserName)
+                new (guidGenerator.Generate().ToString(), givenGame.CreatedBy, givenGame.Id),
+                new (guidGenerator.Generate().ToString(), newUserName, givenGame.Id)
             };
             await gameRepository.Add(givenGame);
 
             var result = gameController.Put(givenGame.Id, newUserName);
 
-            var userResult = result as OkObjectResult;
+            var userResult = await result as OkObjectResult;
             var expectedUser = new GameUsersReadDto(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60, expectedUsers); 
             userResult.Value.Should().BeEquivalentTo(expectedUser);
         }

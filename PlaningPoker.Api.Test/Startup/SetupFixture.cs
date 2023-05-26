@@ -45,6 +45,7 @@ public class SetupFixture : WebApplicationFactory<Program>
         {
             services.AddSingleton(connection);
             services.AddSingleton<IGameRepository, GameRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IGuidGenerator, GuidGenerator>();
             services.AddSignalR(options => { options.EnableDetailedErrors = true; });
         });

@@ -14,13 +14,13 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetById(string id)
     {
-        return (await connection.QueryAsync<User>($"SELECT *, Users.Id as guid FROM Users WHERE Id = '{id}'")).First();
+        return (await connection.QueryAsync<User>($"SELECT * FROM Users WHERE Id = '{id}'")).First();
     }
 
     public async Task Add(User user)
     {
         await connection.ExecuteAsync(
-            "INSERT INTO Users (Id, GameId) " +
-            $"VALUES ('{user.Id}', '{user.GameId}');");
+            "INSERT INTO Users (Id, Name, GameId) " +
+            $"VALUES ('{user.Id}', '{user.Name}', '{user.GameId}');");
     }
 }

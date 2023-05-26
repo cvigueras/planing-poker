@@ -35,12 +35,14 @@ namespace PlaningPoker.Api.Test
             var givenUser = new User
             {
                 Id = Guid.NewGuid().ToString(),
+                Name = "Carlos",
                 GameId = Guid.NewGuid().ToString(),
             };
             await repository.Add(givenUser);
             var expectedUser = new User
             {
                 Id = givenUser.Id,
+                Name = "Carlos",
                 GameId = givenUser.GameId,
             };
 

@@ -12,7 +12,7 @@ public class User
 
     public static User Create(string id, string name, string gameId)
     {
-        return new User(id,name,gameId);
+        return new User(id, name, gameId);
     }
 
     public string Id { get; }

@@ -19,16 +19,15 @@ public class GameRepository : IGameRepository
 
     }
 
-    private Game ToGame(dynamic rawData)
-    {
-        return Game.Create(rawData.Id,rawData.CreatedBy, rawData.Title, rawData.Description, rawData.RoundTime,
-            rawData.Expiration);
-    }
-
     public async Task Add(Game game)
     {
         await connection.ExecuteAsync(
             "INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration) " +
             $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}')");
+    }
+    private Game ToGame(dynamic rawData)
+    {
+        return Game.Create(rawData.Id,rawData.CreatedBy, rawData.Title, rawData.Description, rawData.RoundTime,
+            rawData.Expiration);
     }
 }

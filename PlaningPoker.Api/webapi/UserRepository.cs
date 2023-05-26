@@ -14,7 +14,8 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetById(string id)
     {
-        return (await connection.QueryAsync<User>($"SELECT * FROM Users WHERE Id = '{id}'")).First();
+        var rawData = (await connection.QueryAsync<dynamic>($"SELECT * FROM Users WHERE Id = '{id}'")).First();
+        return ToUser(rawData);
     }
 
     public async Task Add(User user)
@@ -22,5 +23,10 @@ public class UserRepository : IUserRepository
         await connection.ExecuteAsync(
             "INSERT INTO Users (Id, Name, GameId) " +
             $"VALUES ('{user.Id}', '{user.Name}', '{user.GameId}');");
+    }
+
+    private User ToUser(dynamic rawData)
+    {
+        return User.Create(rawData.Id, rawData.Name, rawData.GameId);
     }
 }

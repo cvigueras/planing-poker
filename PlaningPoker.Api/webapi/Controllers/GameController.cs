@@ -9,13 +9,11 @@ public class GameController : ControllerBase
 {
     private readonly IGameRepository gameRepository;
     private readonly IMapper mapper;
-    private readonly IGuidGenerator guidGenerator;
 
-    public GameController(IGameRepository gameRepository, IMapper mapper, IGuidGenerator guidGenerator)
+    public GameController(IGameRepository gameRepository, IMapper mapper)
     {
         this.gameRepository = gameRepository;
         this.mapper = mapper;
-        this.guidGenerator = guidGenerator;
     }
 
     [HttpGet("{guid}")]
@@ -39,7 +37,6 @@ public class GameController : ControllerBase
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
         var entity = mapper.Map<Game>(gameCreated);
-        entity.Id = guidGenerator.Generate().ToString();
         await gameRepository.Add(entity);
         return Ok(entity.Id);
     }

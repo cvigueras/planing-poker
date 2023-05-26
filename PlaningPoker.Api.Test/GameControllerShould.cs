@@ -28,7 +28,7 @@ namespace PlaningPoker.Api.Test
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
             gameRepository = new GameRepository(connection);
-            gameController = new GameController(gameRepository, mapper, guidGenerator);
+            gameController = new GameController(gameRepository, mapper);
         }
 
         [Test]
@@ -48,28 +48,26 @@ namespace PlaningPoker.Api.Test
         {
             var givenGame = new GameCreateDto("Carlos", "Release1", "Session for Release1", 60, 60);
             var game = GameMother.CarlosAsGame();
-            var guid = guidGenerator.Generate();
-            guidGenerator.Generate().Returns(guid);
+            //var guid = guidGenerator.Generate();
+            //guidGenerator.Generate().Returns(guid);
             mapper.Map<Game>(Arg.Is(givenGame)).Returns(game);
 
             var action = await gameController.Post(givenGame);
             var result = action as OkObjectResult;
 
             result.StatusCode.Should().Be(StatusCodes.Status200OK);
-            result.Value.Should().BeEquivalentTo(guid.ToString());
+            result.Value.Should().BeEquivalentTo(game.Id);
         }
 
         [Test]
         public async Task RetrieveAGameWhenExists()
         {
-            var guid = Guid.Parse("4c1bf4dc-143f-451b-b5ad-495fb849794c");
             var givenGame = GameMother.CarlosAsGame();
-            givenGame.Id = guid.ToString();
-            var expectedGame = new GameReadDto(guid.ToString(), "Carlos", "Release1", "Session for Release1", 60, 60);
-            mapper.Map<GameReadDto>(Arg.Any<Game>()).Returns(expectedGame);
             await gameRepository.Add(givenGame);
+            var expectedGame = new GameReadDto(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60);
+            mapper.Map<GameReadDto>(Arg.Any<Game>()).Returns(expectedGame);
 
-            var action = await gameController.Get(guid.ToString());
+            var action = await gameController.Get(givenGame.Id);
             var result = action as OkObjectResult;
 
             result.Value.Should().BeEquivalentTo(expectedGame);

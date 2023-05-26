@@ -34,13 +34,13 @@ namespace PlaningPoker.Api.Test
         public async Task RetrieveAnExistingGame()
         {
             var givenGame = GameMother.CarlosAsGame();
-            givenGame.Id = Guid.NewGuid().ToString();
+
             await gameRepository.Add(givenGame);
 
             var result = await gameRepository.GetByGuid(givenGame.Id);
 
             var expectedGame = GameMother.CarlosAsGame();
-            expectedGame.Id = result.Id;
+            expectedGame.Id = givenGame.Id;
             result.Should().BeEquivalentTo(expectedGame);
         }
     }

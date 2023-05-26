@@ -14,7 +14,15 @@ public class GameRepository : IGameRepository
 
     public async Task<Game> GetByGuid(string guid)
     {
-        return (await connection.QueryAsync<Game>($"SELECT *, Games.Id as guid FROM Games WHERE Id = '{guid}'")).First();
+        var rawData = (await connection.QueryAsync<dynamic>($"SELECT * FROM Games WHERE Id = '{guid}'")).First();
+        return ToGame(rawData);
+
+    }
+
+    private Game ToGame(dynamic rawData)
+    {
+        return Game.Create(rawData.Id,rawData.CreatedBy, rawData.Title, rawData.Description, rawData.RoundTime,
+            rawData.Expiration);
     }
 
     public async Task Add(Game game)

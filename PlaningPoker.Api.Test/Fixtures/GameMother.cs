@@ -6,14 +6,7 @@ namespace PlaningPoker.Api.Test.Fixtures
     {
         public static Game CarlosAsGame()
         {
-            return new Game
-            {
-                CreatedBy = "Carlos",
-                Description = "Point Poker to release1",
-                Expiration = 60,
-                RoundTime = 60,
-                Title = "Release1",
-            };
+            return Game.Create(Guid.NewGuid().ToString(),"Carlos", "Release1", "Point Poker to release1", 60, 60);
         }
     }
 }

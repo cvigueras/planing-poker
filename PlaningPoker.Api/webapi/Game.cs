@@ -12,16 +12,20 @@ public class Game
         Expiration = expiration;
     }
 
-    public static Game Create(string id, string createdBy, string title, string description, long roundTime,
+    public static Game Create(string id,
+        string createdBy,
+        string title,
+        string description,
+        long roundTime,
         long expiration)
     {
-        return new Game(id,createdBy, title, description, roundTime, expiration);
+        return new Game(id, createdBy, title, description, roundTime, expiration);
     }
 
-    public string Id { get; set; }
-    public string CreatedBy { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public long RoundTime { get; set; }
-    public long Expiration { get; set; }
+    public string Id { get; }
+    public string CreatedBy { get; }
+    public string Title { get; }
+    public string Description { get; }
+    public long RoundTime { get; }
+    public long Expiration { get; }
 }

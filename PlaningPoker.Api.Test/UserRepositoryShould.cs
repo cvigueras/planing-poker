@@ -1,5 +1,6 @@
 ﻿using System.Data.SQLite;
 using FluentAssertions;
+using NSubstitute;
 using PlaningPoker.Api.Test.Startup;
 using webapi;
 
@@ -10,6 +11,7 @@ namespace PlaningPoker.Api.Test
         private UserRepository repository;
         private SQLiteConnection connection;
         private SetupFixture setupFixture;
+        private IGuidGenerator guidGenerator;
 
         [SetUp]
         public void Setup()
@@ -17,12 +19,13 @@ namespace PlaningPoker.Api.Test
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
             repository = new UserRepository(connection);
+            guidGenerator = Substitute.For<IGuidGenerator>();
         }
 
         [Test]
         public async Task FailWhenRetrieveANonExistingUser()
         {
-            var guid = Guid.NewGuid().ToString();
+            var guid = guidGenerator.Generate().ToString();
 
             var action = async () => await repository.GetById(guid);
 
@@ -32,23 +35,19 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task RetrieveAnExistingUser()
         {
-            var givenUser = new User
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "Carlos",
-                GameId = Guid.NewGuid().ToString(),
-            };
+            var userGuid = guidGenerator.Generate().ToString();
+            var gameGuid = guidGenerator.Generate().ToString();
+            var givenUser = User.Create(userGuid, "Carlos", gameGuid);
             await repository.Add(givenUser);
-            var expectedUser = new User
-            {
-                Id = givenUser.Id,
-                Name = "Carlos",
-                GameId = givenUser.GameId,
-            };
 
-            var result = await repository.GetById(expectedUser.Id);
+            var result = await repository.GetById(givenUser.Id);
             
-            result.Should().BeEquivalentTo(expectedUser);
+            var expectedUserId = givenUser.Id;
+            var expectedUserName = "Carlos";
+            var expectedGameId = givenUser.GameId;
+            result.Id.Should().BeEquivalentTo(expectedUserId);
+            result.Name.Should().BeEquivalentTo(expectedUserName);
+            result.GameId.Should().BeEquivalentTo(expectedGameId);
         }
     }
 }

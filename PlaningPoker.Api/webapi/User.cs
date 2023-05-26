@@ -2,7 +2,20 @@
 
 public class User
 {
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string GameId { get; set; }
+
+    private User(string id, string name, string gameId)
+    {
+        Id = id;
+        Name = name;
+        GameId = gameId;
+    }
+
+    public static User Create(string id, string name, string gameId)
+    {
+        return new User(id,name,gameId);
+    }
+
+    public string Id { get; }
+    public string Name { get; }
+    public string GameId { get; }
 }

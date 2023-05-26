@@ -1,6 +1,9 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 using Newtonsoft.Json;
+using NSubstitute;
 using PlaningPoker.Api.Test.Startup;
+using webapi;
 
 namespace PlaningPoker.Api.Test
 {
@@ -27,8 +30,10 @@ namespace PlaningPoker.Api.Test
             responsePost.EnsureSuccessStatusCode();
             var gameId = responsePost.Content.ReadAsStringAsync().Result;
 
-            var newUserInGame = "Pedro";
-            var responsePut = await _client!.PutAsync($"Game/{gameId}", new StringContent(newUserInGame));
+            var userAddDto = new UsersAddDto("Pedro", gameId);
+            var serializedDto = JsonConvert.SerializeObject(userAddDto, Formatting.Indented);
+            var responsePut = await _client!.PutAsync($"Game/{gameId}", new StringContent(serializedDto, Encoding.Default,
+                MediaType));
             responsePut.EnsureSuccessStatusCode();
 
             var content = await responsePut.Content.ReadAsStringAsync();

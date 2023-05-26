@@ -77,19 +77,19 @@ namespace PlaningPoker.Api.Test
         public async Task RetrieveAGameUpdatedWithNewUser()
         {
             var givenGame = GameMother.CarlosAsGame();
-            var newUserName = "Juan";
+            var userAddDto = new UsersAddDto("Juan", givenGame.Id);
             var guidUser = Guid.Parse("49c4d829-b7e7-45ba-8db0-9da9eaee4388").ToString();
             var user = User.Create(guidUser, "Carlos", givenGame.Id);
             await userRepository.Add(user);
             var expectedUsers = new List<UsersReadDto>
             {
                 new (guidUser, givenGame.CreatedBy, givenGame.Id),
-                new (guidGenerator.Generate().ToString(), newUserName, givenGame.Id)
+                new (guidGenerator.Generate().ToString(), userAddDto.Name, givenGame.Id)
             };
             await gameRepository.Add(givenGame);
             mapper.Map<List<UsersReadDto>>(Arg.Any<List<User>>()).Returns(expectedUsers);
 
-            var result = gameController.Put(givenGame.Id, newUserName);
+            var result = gameController.Put(givenGame.Id, userAddDto);
 
             var userResult = await result as OkObjectResult;
             var expectedUser = new GameUsersReadDto(givenGame.Id, "Carlos", "Release1", "Point Poker to release1", 60, 60, expectedUsers); 

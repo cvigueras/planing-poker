@@ -28,7 +28,7 @@ namespace PlaningPoker.Api.Test
             mapper = Substitute.For<IMapper>();
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
-            userRepository = Substitute.For<IUserRepository>();
+            userRepository = new UserRepository(connection);
             gameRepository = new GameRepository(connection);
             gameController = new GameController(gameRepository, userRepository, mapper);
         }
@@ -50,8 +50,6 @@ namespace PlaningPoker.Api.Test
         {
             var givenGame = new GameCreateDto("Carlos", "Release1", "Session for Release1", 60, 60);
             var game = GameMother.CarlosAsGame();
-            //var guid = guidGenerator.Generate();
-            //guidGenerator.Generate().Returns(guid);
             mapper.Map<Game>(Arg.Is(givenGame)).Returns(game);
 
             var action = await gameController.Post(givenGame);
@@ -78,20 +76,23 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task RetrieveAGameUpdatedWithNewUser()
         {
-            var userId = guidGenerator.Generate().ToString();
             var givenGame = GameMother.CarlosAsGame();
             var newUserName = "Juan";
+            var guidUser = Guid.Parse("49c4d829-b7e7-45ba-8db0-9da9eaee4388").ToString();
+            var user = User.Create(guidUser, "Carlos", givenGame.Id);
+            await userRepository.Add(user);
             var expectedUsers = new List<UsersReadDto>
             {
-                new (guidGenerator.Generate().ToString(), givenGame.CreatedBy, givenGame.Id),
+                new (guidUser, givenGame.CreatedBy, givenGame.Id),
                 new (guidGenerator.Generate().ToString(), newUserName, givenGame.Id)
             };
             await gameRepository.Add(givenGame);
+            mapper.Map<List<UsersReadDto>>(Arg.Any<List<User>>()).Returns(expectedUsers);
 
             var result = gameController.Put(givenGame.Id, newUserName);
 
             var userResult = await result as OkObjectResult;
-            var expectedUser = new GameUsersReadDto(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60, expectedUsers); 
+            var expectedUser = new GameUsersReadDto(givenGame.Id, "Carlos", "Release1", "Point Poker to release1", 60, 60, expectedUsers); 
             userResult.Value.Should().BeEquivalentTo(expectedUser);
         }
     }

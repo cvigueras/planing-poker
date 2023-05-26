@@ -50,7 +50,7 @@ public class GameController : ControllerBase
         var user = webapi.User.Create(new GuidGenerator().Generate().ToString(), userName, gameId);
         await userRepository.Add(user);
         var game = await gameRepository.GetByGuid(gameId);
-        var usersGame = userRepository.GetUsersGameByGameId(gameId);
+        var usersGame = await userRepository.GetUsersGameByGameId(gameId);
         var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
         return Ok(new GameUsersReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
             game.Expiration, usersReadDto));

@@ -65,14 +65,14 @@ namespace PlaningPoker.Api.Test
             var user2 = User.Create(guidUser2, "Pedro", givenGame.Id);
             await userRepository.Add(user2);
 
-            var result = userRepository.GetUsersGameByGameId(givenGame.Id);
+            var result = await userRepository.GetUsersGameByGameId(givenGame.Id);
 
             var expectedUsers = new List<User>
             {
                 User.Create(guidUser1, "Carlos", givenGame.Id),
                 User.Create(guidUser2, "Pedro", givenGame.Id),
             };
-            result.Should().Be(expectedUsers);
+            result.Should().BeEquivalentTo(expectedUsers);
         }
     }
 }

@@ -28,5 +28,13 @@ namespace PlaningPoker.Api.Test
 
             action.Should().Throw<ArgumentException>().WithMessage("The field CreatedBy cannot be blank, and must have at least 2 characters and maximum 20.");
         }
+
+        [Test]
+        public void NotBeCreatedIfRoundTimeIsZero()
+        {
+            var action = () => Game.Create(new GuidGenerator().Generate().ToString(), "Carlos", "Title", "Description", 0, 60);
+
+            action.Should().Throw<ArgumentException>().WithMessage("The round time value cannot must be greater than 0.");
+        }
     }
 }

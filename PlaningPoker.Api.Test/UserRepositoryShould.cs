@@ -45,12 +45,8 @@ namespace PlaningPoker.Api.Test
 
             var result = await userRepository.GetById(givenUser.Id);
 
-            var expectedUserId = givenUser.Id;
-            var expectedUserName = "Carlos";
-            var expectedGameId = givenUser.GameId;
-            result.Id.Should().BeEquivalentTo(expectedUserId);
-            result.Name.Should().BeEquivalentTo(expectedUserName);
-            result.GameId.Should().BeEquivalentTo(expectedGameId);
+            var expectedUser = User.Create(givenUser.Id, "Carlos", givenUser.GameId);
+            result.Should().BeEquivalentTo(expectedUser);
         }
 
         [Test]

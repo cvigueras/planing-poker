@@ -36,21 +36,30 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task RetrieveAnExistingGame()
         {
-            var expectedCreatedBy = "Carlos";
-            var expectedTitle = "Release1";
-            var expectedDescription = "Point Poker to release1";
-            var expectedRoundTime = 60;
-            var expectedExpiration = 60;
+            var givenGame = await GivenANewCreatedGame();
+
+            var result = await WhenRetrieveTheGame(givenGame);
+
+            ThenGameShouldBeExpectedGame(givenGame, result);
+        }
+
+        private static void ThenGameShouldBeExpectedGame(Game givenGame, Game result)
+        {
+            var expectedGame = Game.Create(givenGame.Id, "Carlos", "Release1", "Point Poker to release1", 60, 60);
+            result.Should().BeEquivalentTo(expectedGame);
+        }
+
+        private async Task<Game> WhenRetrieveTheGame(Game givenGame)
+        {
+            var result = await repository.GetByGuid(givenGame.Id);
+            return result;
+        }
+
+        private async Task<Game> GivenANewCreatedGame()
+        {
             var givenGame = GameMother.CarlosAsGame();
             await repository.Add(givenGame);
-
-            var result = await repository.GetByGuid(givenGame.Id);
-
-            result.CreatedBy.Should().Be(expectedCreatedBy);
-            result.Title.Should().Be(expectedTitle);
-            result.Description.Should().Be(expectedDescription);
-            result.RoundTime.Should().Be(expectedRoundTime);
-            result.Expiration.Should().Be(expectedExpiration);
+            return givenGame;
         }
     }
 }

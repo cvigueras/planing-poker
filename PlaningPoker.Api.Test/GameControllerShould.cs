@@ -64,6 +64,8 @@ namespace PlaningPoker.Api.Test
         {
             var givenGame = GameMother.CarlosAsGame();
             await gameRepository.Add(givenGame);
+            var user = User.Create(givenGame.CreatedBy, givenGame.Id);
+            await userRepository.Add(user);
 
             var action = await gameController.Get(givenGame.Id);
             var result = action as OkObjectResult;

@@ -27,8 +27,10 @@ public class GameController : ControllerBase
         try
         {
             var game = await gameRepository.GetByGuid(guid);
-            var result = mapper.Map<GameReadDto>(game);
-            return Ok(result);
+            var usersGame = await userRepository.GetUsersGameByGameId(guid);
+            var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
+            return Ok(new GameUsersReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
+                game.Expiration, usersReadDto));
         }
         catch (InvalidOperationException ex)
         {
@@ -39,9 +41,11 @@ public class GameController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
-        var entity = mapper.Map<Game>(gameCreated);
-        await gameRepository.Add(entity);
-        return Ok(entity.Id);
+        var game = mapper.Map<Game>(gameCreated);
+        var user = webapi.User.Create(gameCreated.CreatedBy, game.Id);
+        await userRepository.Add(user);
+        await gameRepository.Add(game);
+        return Ok(game.Id);
     }
 
     [HttpPut("{gameId}")]

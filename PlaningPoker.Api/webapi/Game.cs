@@ -1,4 +1,6 @@
-﻿namespace webapi;
+﻿using System.Xml.Linq;
+
+namespace webapi;
 
 public class Game
 {
@@ -19,7 +21,13 @@ public class Game
         long roundTime,
         long expiration)
     {
+        if (!IsValidCreatedBy(createdBy)) throw new ArgumentException("The field CreatedBy cannot be blank, and must have at least 2 characters and maximum 20.");
         return new Game(id, createdBy, title, description, roundTime, expiration);
+    }
+
+    private static bool IsValidCreatedBy(string name)
+    {
+        return name.Length is > 2 and < 20;
     }
 
     public string Id { get; }

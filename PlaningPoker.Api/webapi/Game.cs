@@ -20,9 +20,19 @@ public class Game
         long expiration)
     {
         if (!IsValidCreatedBy(createdBy)) throw new ArgumentException("The field CreatedBy cannot be blank, and must have at least 2 characters and maximum 20.");
-        if (roundTime <= 0) throw new ArgumentException("The round time value must be greater than 0.");
-        if (expiration <= 0) throw new ArgumentException("Expiration time value must be greater than 0.");
+        if (!IsValidRoundTime(roundTime)) throw new ArgumentException("The round time value must be greater than 0.");
+        if (!IsValidExpiration(expiration)) throw new ArgumentException("Expiration time value must be greater than 0.");
         return new Game(id, createdBy, title, description, roundTime, expiration);
+    }
+
+    private static bool IsValidExpiration(long expiration)
+    {
+        return expiration > 0;
+    }
+
+    private static bool IsValidRoundTime(long roundTime)
+    {
+        return roundTime > 0;
     }
 
     private static bool IsValidCreatedBy(string name)

@@ -18,6 +18,11 @@ namespace webapi.Startup
                 Expiration INTEGER NOT NULL)"
             );
 
+            connection.Execute(@"CREATE TABLE IF NOT EXISTS Users(
+                Name VARCHAR(20) NOT NULL,
+                GameId VARCHAR(60) NOT NULL)"
+            );
+
             connection.Close();
             connection.Dispose();
         }

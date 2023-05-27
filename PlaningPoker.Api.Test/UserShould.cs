@@ -13,5 +13,13 @@ namespace PlaningPoker.Api.Test
 
             action.Should().Throw<ArgumentException>().WithMessage("The value name must be 2 characters at least");
         }
+
+        [Test]
+        public void NotBeCreatedIfNameHasLessThan2Characters()
+        {
+            var action = () => User.Create(Guid.NewGuid().ToString(), "a", Guid.NewGuid().ToString());
+
+            action.Should().Throw<ArgumentException>().WithMessage("The value name must be 2 characters at least");
+        }
     }
 }

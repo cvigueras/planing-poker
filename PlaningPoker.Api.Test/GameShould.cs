@@ -20,5 +20,13 @@ namespace PlaningPoker.Api.Test
 
             action.Should().Throw<ArgumentException>().WithMessage("The field CreatedBy cannot be blank, and must have at least 2 characters and maximum 20.");
         }
+
+        [Test]
+        public void NotBeCreatedIfCreatedByHasMoreThanTwentyCharacters()
+        {
+            var action = () => Game.Create(new GuidGenerator().Generate().ToString(), "MoreThanTwentyCharacter", "Title", "Description", 90, 60);
+
+            action.Should().Throw<ArgumentException>().WithMessage("The field CreatedBy cannot be blank, and must have at least 2 characters and maximum 20.");
+        }
     }
 }

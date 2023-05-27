@@ -21,4 +21,16 @@ When
 
 Then
 - The Game is returned with the following details:
-    - UniqueId, Title, description, createdBy, round time and date expiration game.
+    - UniqueId, Title, description, createdBy, round time, date expiration game and user associate to the Game.
+
+# Add user an existing game
+
+Given
+- An anonymous user want to join in a existing Game.
+
+When
+- An anonymous user request to be added to new Game by Game unique Guid.
+
+Then
+- The Game is returned with the following details:
+    - UniqueId, Title, description, createdBy, round time, date expiration game and user associate to the Game included him.

@@ -31,27 +31,7 @@ namespace PlaningPoker.Api.Test
             userRepository = new UserRepository(connection);
             gameRepository = new GameRepository(connection);
             gameGuid = new GuidGenerator().Generate();
-            new GuidGenerator().Generate();
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Game, GameReadDto>().ReverseMap();
-                cfg.CreateMap<Game, GameCreateDto>();
-                cfg.CreateMap<GameCreateDto, Game>()
-                    .ConstructUsing(x => Game.Create(gameGuid
-                            .ToString(),
-                        x.CreatedBy,
-                        x.Title,
-                        x.Description,
-                        x.RoundTime,
-                        x.Expiration));
-                cfg.CreateMap<UsersReadDto, User>()
-                    .ConstructUsing(x => User.Create(x.Name,
-                        x.GameId));
-                cfg.CreateMap<User, UsersReadDto>();
-                cfg.CreateMap<Game, GameUsersReadDto>().ReverseMap();
-            });
-
-            mapper = config.CreateMapper();
+            mapper = setupFixture.AutoMapperConfigTest(gameGuid);
             gameController = new GameController(gameRepository, userRepository, mapper);
         }
 
@@ -71,7 +51,6 @@ namespace PlaningPoker.Api.Test
         public async Task PostGameSuccessFully()
         {
             var givenGame = new GameCreateDto("Carlos", "Release1", "Session for Release1", 60, 60);
-            var game = GameMother.CarlosAsGame();
 
             var action = await gameController.Post(givenGame);
             var result = action as OkObjectResult;

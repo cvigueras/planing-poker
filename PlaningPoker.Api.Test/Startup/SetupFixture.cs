@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SQLite;
+using AutoMapper;
 using webapi;
 
 namespace PlaningPoker.Api.Test.Startup;
@@ -77,5 +78,29 @@ public class SetupFixture : WebApplicationFactory<Program>
         await hubConnection.StartAsync();
 
         return hubConnection;
+    }
+
+    public IMapper AutoMapperConfigTest(Guid gameGuid)
+    {
+        var config =new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<Game, GameReadDto>().ReverseMap();
+            cfg.CreateMap<Game, GameCreateDto>();
+            cfg.CreateMap<GameCreateDto, Game>()
+                .ConstructUsing(x => Game.Create(gameGuid
+                        .ToString(),
+                    x.CreatedBy,
+                    x.Title,
+                    x.Description,
+                    x.RoundTime,
+                    x.Expiration));
+            cfg.CreateMap<UsersReadDto, User>()
+                .ConstructUsing(x => User.Create(x.Name,
+                    x.GameId));
+            cfg.CreateMap<User, UsersReadDto>();
+            cfg.CreateMap<Game, GameUsersReadDto>().ReverseMap();
+        });
+
+        return config.CreateMapper();
     }
 }

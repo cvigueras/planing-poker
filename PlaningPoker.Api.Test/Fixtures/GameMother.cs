@@ -10,7 +10,7 @@ namespace PlaningPoker.Api.Test.Fixtures
                     .ToString(),
                 "Carlos",
                 "Release1",
-                "Point Poker to release1",
+                "Session for Release1",
                 60,
                 60);
         }

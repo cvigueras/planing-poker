@@ -17,9 +17,7 @@ namespace webapi.Startup
                     x.RoundTime,
                     x.Expiration));
             CreateMap<UsersReadDto, User>()
-                .ConstructUsing(x => User.Create(new GuidGenerator().Generate()
-                        .ToString(),
-                    x.Name,
+                .ConstructUsing(x => User.Create(x.Name,
                     x.GameId));
             CreateMap<User, UsersReadDto>();
             CreateMap<Game, GameUsersReadDto>().ReverseMap();

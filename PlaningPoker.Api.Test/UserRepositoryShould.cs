@@ -28,9 +28,9 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task FailWhenRetrieveANonExistingUser()
         {
-            var guid = guidGenerator.Generate().ToString();
+            var guidGame = guidGenerator.Generate().ToString();
 
-            var action = async () => await userRepository.GetById(guid);
+            var action = async () => await userRepository.GetByNameAndGameId("Juan", guidGame);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
         }
@@ -40,12 +40,12 @@ namespace PlaningPoker.Api.Test
         {
             var userGuid = guidGenerator.Generate().ToString();
             var gameGuid = guidGenerator.Generate().ToString();
-            var givenUser = User.Create(userGuid, "Carlos", gameGuid);
+            var givenUser = User.Create("Carlos", gameGuid);
             await userRepository.Add(givenUser);
 
-            var result = await userRepository.GetById(givenUser.Id);
+            var result = await userRepository.GetByNameAndGameId("Carlos", gameGuid);
 
-            var expectedUser = User.Create(givenUser.Id, "Carlos", givenUser.GameId);
+            var expectedUser = User.Create("Carlos", givenUser.GameId);
             result.Should().BeEquivalentTo(expectedUser);
         }
 
@@ -56,17 +56,17 @@ namespace PlaningPoker.Api.Test
             var guidUser1 = Guid.Parse("49c4d829-b7e7-45ba-8db0-9da9eaee4388").ToString();
             var guidUser2 = Guid.Parse("2fdb57e9-d2bb-43dc-bd2b-c3577717d5da").ToString();
             await gameRepository.Add(givenGame);
-            var user1 = User.Create(guidUser1, "Carlos", givenGame.Id);
+            var user1 = User.Create("Carlos", givenGame.Id);
             await userRepository.Add(user1);
-            var user2 = User.Create(guidUser2, "Pedro", givenGame.Id);
+            var user2 = User.Create("Pedro", givenGame.Id);
             await userRepository.Add(user2);
 
             var result = await userRepository.GetUsersGameByGameId(givenGame.Id);
 
             var expectedUsers = new List<User>
             {
-                User.Create(guidUser1, "Carlos", givenGame.Id),
-                User.Create(guidUser2, "Pedro", givenGame.Id),
+                User.Create("Carlos", givenGame.Id),
+                User.Create("Pedro", givenGame.Id),
             };
             result.Should().BeEquivalentTo(expectedUsers);
         }

@@ -7,7 +7,6 @@
   "expiration": 60,
   "usersReadDtos": [
     {
-      "id": "Guid_2",
       "name": "Pedro",
       "gameId": "Guid_1"
     }

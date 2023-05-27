@@ -20,16 +20,38 @@ namespace PlaningPoker.Api.Test
         private IGameRepository gameRepository;
         private GameController gameController;
         private IGuidGenerator guidGenerator;
+        private Guid gameGuid;
 
         [SetUp]
         public void SetUp()
         {
             guidGenerator = Substitute.For<IGuidGenerator>();
-            mapper = Substitute.For<IMapper>();
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
             userRepository = new UserRepository(connection);
             gameRepository = new GameRepository(connection);
+            gameGuid = new GuidGenerator().Generate();
+            new GuidGenerator().Generate();
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Game, GameReadDto>().ReverseMap();
+                cfg.CreateMap<Game, GameCreateDto>();
+                cfg.CreateMap<GameCreateDto, Game>()
+                    .ConstructUsing(x => Game.Create(gameGuid
+                            .ToString(),
+                        x.CreatedBy,
+                        x.Title,
+                        x.Description,
+                        x.RoundTime,
+                        x.Expiration));
+                cfg.CreateMap<UsersReadDto, User>()
+                    .ConstructUsing(x => User.Create(x.Name,
+                        x.GameId));
+                cfg.CreateMap<User, UsersReadDto>();
+                cfg.CreateMap<Game, GameUsersReadDto>().ReverseMap();
+            });
+
+            mapper = config.CreateMapper();
             gameController = new GameController(gameRepository, userRepository, mapper);
         }
 
@@ -50,13 +72,12 @@ namespace PlaningPoker.Api.Test
         {
             var givenGame = new GameCreateDto("Carlos", "Release1", "Session for Release1", 60, 60);
             var game = GameMother.CarlosAsGame();
-            mapper.Map<Game>(Arg.Is(givenGame)).Returns(game);
 
             var action = await gameController.Post(givenGame);
             var result = action as OkObjectResult;
 
             result.StatusCode.Should().Be(StatusCodes.Status200OK);
-            result.Value.Should().BeEquivalentTo(game.Id);
+            result.Value.Should().BeEquivalentTo(gameGuid.ToString());
         }
 
         [Test]
@@ -64,12 +85,11 @@ namespace PlaningPoker.Api.Test
         {
             var givenGame = GameMother.CarlosAsGame();
             await gameRepository.Add(givenGame);
-            var expectedGame = new GameReadDto(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60);
-            mapper.Map<GameReadDto>(Arg.Any<Game>()).Returns(expectedGame);
 
             var action = await gameController.Get(givenGame.Id);
             var result = action as OkObjectResult;
 
+            var expectedGame = new GameReadDto(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60);
             result.Value.Should().BeEquivalentTo(expectedGame);
         }
 
@@ -77,23 +97,19 @@ namespace PlaningPoker.Api.Test
         public async Task RetrieveAGameUpdatedWithNewUser()
         {
             var givenGame = GameMother.CarlosAsGame();
-            var guidUser = Guid.Parse("49c4d829-b7e7-45ba-8db0-9da9eaee4388").ToString();
-            var user = User.Create(guidUser, givenGame.CreatedBy, givenGame.Id);
-            await userRepository.Add(user);
             await gameRepository.Add(givenGame);
-
+            var user = User.Create(givenGame.CreatedBy, givenGame.Id);
+            await userRepository.Add(user);
             var userAddedDto = new UsersAddDto("Juan", givenGame.Id);
-            var expectedUsers = new List<UsersReadDto>
-            {
-                new (guidUser, givenGame.CreatedBy, givenGame.Id),
-                new (guidGenerator.Generate().ToString(), userAddedDto.Name, givenGame.Id)
-            };
-            mapper.Map<List<UsersReadDto>>(Arg.Any<List<User>>()).Returns(expectedUsers);
 
             var result = gameController.Put(givenGame.Id, userAddedDto);
-
             var userResult = await result as OkObjectResult;
-            var expectedUser = new GameUsersReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, expectedUsers);
+
+            var expectedUser = new GameUsersReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, new List<UsersReadDto>
+            {
+                new (givenGame.CreatedBy, givenGame.Id),
+                new (userAddedDto.Name, givenGame.Id)
+            });
             userResult.Value.Should().BeEquivalentTo(expectedUser);
         }
     }

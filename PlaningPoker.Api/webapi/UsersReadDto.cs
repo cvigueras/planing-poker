@@ -1,3 +1,3 @@
 ﻿namespace webapi;
 
-public record UsersReadDto(string Id, string Name, string GameId);
+public record UsersReadDto(string Name, string GameId);

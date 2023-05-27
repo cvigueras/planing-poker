@@ -2,7 +2,7 @@
 
 public interface IUserRepository
 {
-    Task<User> GetById(string id);
+    Task<User> GetByNameAndGameId(string name, string gameId);
     Task Add(User user);
     Task<IEnumerable<User>> GetUsersGameByGameId(string gameId);
 }

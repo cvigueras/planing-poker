@@ -45,7 +45,7 @@ namespace PlaningPoker.Api.Test
 
         private static void ThenGameShouldBeExpectedGame(Game givenGame, Game result)
         {
-            var expectedGame = Game.Create(givenGame.Id, "Carlos", "Release1", "Point Poker to release1", 60, 60);
+            var expectedGame = Game.Create(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60);
             result.Should().BeEquivalentTo(expectedGame);
         }
 

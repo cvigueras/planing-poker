@@ -47,7 +47,7 @@ public class GameController : ControllerBase
     [HttpPut("{gameId}")]
     public async Task<ActionResult> Put(string gameId, UsersAddDto userAdd)
     {
-        var user = webapi.User.Create(new GuidGenerator().Generate().ToString(), userAdd.Name, gameId);
+        var user = webapi.User.Create(userAdd.Name, gameId);
         await userRepository.Add(user);
         var game = await gameRepository.GetByGuid(gameId);
         var usersGame = await userRepository.GetUsersGameByGameId(gameId);

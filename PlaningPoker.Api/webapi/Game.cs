@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace webapi;
+﻿namespace webapi;
 
 public class Game
 {

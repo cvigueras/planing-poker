@@ -11,7 +11,7 @@ namespace PlaningPoker.Api.Test
         {
             var action = () => User.Create(Guid.NewGuid().ToString(), string.Empty, Guid.NewGuid().ToString());
 
-            action.Should().Throw<ArgumentException>().WithMessage("The value name must be 2 characters at least.");
+            action.Should().Throw<ArgumentException>().WithMessage("The name cannot be blank, and must have at least 2 characters and maximum 20.");
         }
 
         [Test]
@@ -19,7 +19,7 @@ namespace PlaningPoker.Api.Test
         {
             var action = () => User.Create(Guid.NewGuid().ToString(), "a", Guid.NewGuid().ToString());
 
-            action.Should().Throw<ArgumentException>().WithMessage("The value name must be 2 characters at least.");
+            action.Should().Throw<ArgumentException>().WithMessage("The name cannot be blank, and must have at least 2 characters and maximum 20.");
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace PlaningPoker.Api.Test
         {
             var action = () => User.Create(Guid.NewGuid().ToString(), "MoreThanTwentyCharacter", Guid.NewGuid().ToString());
 
-            action.Should().Throw<ArgumentException>().WithMessage("The name must have a maximum of 20 characters.");
+            action.Should().Throw<ArgumentException>().WithMessage("The name cannot be blank, and must have at least 2 characters and maximum 20.");
         }
     }
 }

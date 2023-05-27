@@ -92,7 +92,7 @@ namespace PlaningPoker.Api.Test
             var result = gameController.Put(givenGame.Id, userAddDto);
 
             var userResult = await result as OkObjectResult;
-            var expectedUser = new GameUsersReadDto(givenGame.Id, "Carlos", "Release1", "Point Poker to release1", 60, 60, expectedUsers); 
+            var expectedUser = new GameUsersReadDto(givenGame.Id, "Carlos", "Release1", "Point Poker to release1", 60, 60, expectedUsers);
             userResult.Value.Should().BeEquivalentTo(expectedUser);
         }
     }

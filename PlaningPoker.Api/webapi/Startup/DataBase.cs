@@ -1,5 +1,5 @@
-﻿using System.Data.SQLite;
-using Dapper;
+﻿using Dapper;
+using System.Data.SQLite;
 
 namespace webapi.Startup
 {

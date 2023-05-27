@@ -29,7 +29,7 @@ public class GameRepository : IGameRepository
 
     private Game ToGame(dynamic rawData)
     {
-        return Game.Create(rawData.Id,rawData.CreatedBy, rawData.Title, rawData.Description, rawData.RoundTime,
+        return Game.Create(rawData.Id, rawData.CreatedBy, rawData.Title, rawData.Description, rawData.RoundTime,
             rawData.Expiration);
     }
 }

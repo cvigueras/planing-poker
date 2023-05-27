@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
+using NSubstitute;
 using PlaningPoker.Api.Test.Fixtures;
 using PlaningPoker.Api.Test.Startup;
 using System.Data.SQLite;
-using NSubstitute;
 using webapi;
 
 namespace PlaningPoker.Api.Test

@@ -84,7 +84,6 @@ public class SetupFixture : WebApplicationFactory<Program>
     {
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<Game, GameReadDto>().ReverseMap();
             cfg.CreateMap<Game, GameCreateDto>();
             cfg.CreateMap<GameCreateDto, Game>()
                 .ConstructUsing(x => Game.Create(gameGuid
@@ -98,7 +97,7 @@ public class SetupFixture : WebApplicationFactory<Program>
                 .ConstructUsing(x => User.Create(x.Name,
                     x.GameId));
             cfg.CreateMap<User, UsersReadDto>();
-            cfg.CreateMap<Game, GameUsersReadDto>().ReverseMap();
+            cfg.CreateMap<Game, GameReadDto>().ReverseMap();
         });
 
         return config.CreateMapper();

@@ -6,7 +6,6 @@ namespace webapi.Startup
     {
         public MapperConfig()
         {
-            CreateMap<Game, GameReadDto>().ReverseMap();
             CreateMap<Game, GameCreateDto>();
             CreateMap<GameCreateDto, Game>()
                 .ConstructUsing(x => Game.Create(new GuidGenerator().Generate()
@@ -20,7 +19,7 @@ namespace webapi.Startup
                 .ConstructUsing(x => User.Create(x.Name,
                     x.GameId));
             CreateMap<User, UsersReadDto>();
-            CreateMap<Game, GameUsersReadDto>().ReverseMap();
+            CreateMap<Game, GameReadDto>().ReverseMap();
         }
     }
 }

@@ -28,7 +28,7 @@ public class GameController : ControllerBase
             var game = await gameRepository.GetByGuid(guid);
             var usersGame = await userRepository.GetUsersGameByGameId(guid);
             var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
-            return Ok(new GameUsersReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
+            return Ok(new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
                 game.Expiration, usersReadDto));
         }
         catch (InvalidOperationException ex)
@@ -59,7 +59,7 @@ public class GameController : ControllerBase
         var game = await gameRepository.GetByGuid(gameId);
         var usersGame = await userRepository.GetUsersGameByGameId(gameId);
         var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
-        return Ok(new GameUsersReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
+        return Ok(new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
             game.Expiration, usersReadDto));
     }
 }

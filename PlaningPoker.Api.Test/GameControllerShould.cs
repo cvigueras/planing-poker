@@ -70,7 +70,10 @@ namespace PlaningPoker.Api.Test
             var action = await gameController.Get(givenGame.Id);
             var result = action as OkObjectResult;
 
-            var expectedGame = new GameReadDto(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60);
+            var expectedGame = new GameReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, new List<UsersReadDto>
+            {
+                new (givenGame.CreatedBy, givenGame.Id),
+            });
             result.Value.Should().BeEquivalentTo(expectedGame);
         }
 
@@ -86,12 +89,12 @@ namespace PlaningPoker.Api.Test
             var result = gameController.Put(givenGame.Id, userAddedDto);
             var userResult = await result as OkObjectResult;
 
-            var expectedUser = new GameUsersReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, new List<UsersReadDto>
+            var expectedGame = new GameReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, new List<UsersReadDto>
             {
                 new (givenGame.CreatedBy, givenGame.Id),
                 new (userAddedDto.Name, givenGame.Id)
             });
-            userResult.Value.Should().BeEquivalentTo(expectedUser);
+            userResult.Value.Should().BeEquivalentTo(expectedGame);
         }
     }
 }

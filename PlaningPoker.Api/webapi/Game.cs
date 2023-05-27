@@ -21,6 +21,7 @@ public class Game
     {
         if (!IsValidCreatedBy(createdBy)) throw new ArgumentException("The field CreatedBy cannot be blank, and must have at least 2 characters and maximum 20.");
         if (roundTime <= 0) throw new ArgumentException("The round time value must be greater than 0.");
+        if (expiration == 0) throw new ArgumentException("Expiration time value must be greater than 0.");
         return new Game(id, createdBy, title, description, roundTime, expiration);
     }
 

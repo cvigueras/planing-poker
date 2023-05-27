@@ -12,6 +12,7 @@ public class User
     public static User Create(string id, string name, string gameId)
     {
         if (name.Length < 2) throw new ArgumentException("The value name must be 2 characters at least.");
+        if (name.Length > 20) throw new ArgumentException("The name must have a maximum of 20 characters.");
         return new User(id, name, gameId);
     }
 

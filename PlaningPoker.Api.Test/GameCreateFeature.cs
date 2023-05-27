@@ -6,13 +6,12 @@ namespace PlaningPoker.Api.Test
 {
     public class GameCreateFeature
     {
-        private HttpClient? _client;
-        private const string MediaType = "application/json";
+        private PlaningPokerClient client;
 
         [SetUp]
         public void Setup()
         {
-            _client = new SetupFixture().CreateClient();
+            client = new PlaningPokerClient(new SetupFixture().CreateClient());
         }
 
         [Test]
@@ -21,14 +20,10 @@ namespace PlaningPoker.Api.Test
             using var jsonReader = new StreamReader("./Fixtures/Game.json");
             var json = await jsonReader.ReadToEndAsync();
 
-            var responsePost = await _client!.PostAsync("Game", new StringContent(json,
-                                                               Encoding.Default,
-                                                               MediaType));
-            var resultPost = responsePost.Content.ReadAsStringAsync().Result;
-            responsePost.EnsureSuccessStatusCode();
+            var responsePost = await client.Post("Game", json);
+            var gameId = responsePost.Content.ReadAsStringAsync().Result;
 
-            var response = await _client!.GetAsync($"Game/{resultPost}");
-            response.EnsureSuccessStatusCode();
+            var response = await client.Get($"Game/{gameId}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);
             var settings = new VerifySettings();
@@ -36,5 +31,7 @@ namespace PlaningPoker.Api.Test
 
             await Verify(result, settings);
         }
+
+
     }
 }

@@ -34,5 +34,12 @@ namespace PlaningPoker.Api.Test
             responsePut.EnsureSuccessStatusCode();
             return responsePut;
         }
+
+        public async Task<HttpResponseMessage> Get(string requestUri)
+        {
+            var response = await client!.GetAsync(requestUri);
+            response.EnsureSuccessStatusCode();
+            return response;
+        }
     }
 }

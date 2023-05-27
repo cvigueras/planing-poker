@@ -7,7 +7,6 @@ namespace PlaningPoker.Api.Test
     public class GameUpdateFeature
     {
         private PlaningPokerClient client;
-        private const string MediaType = "application/json";
 
         [SetUp]
         public void Setup()

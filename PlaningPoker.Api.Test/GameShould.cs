@@ -58,7 +58,7 @@ namespace PlaningPoker.Api.Test
         {
             var action = () => Game.Create(new GuidGenerator().Generate().ToString(), "Carlos", "Title", "Description", 90, -60);
 
-            action.Should().Throw<ArgumentException>().WithMessage("The round time value must be greater than 0.");
+            action.Should().Throw<ArgumentException>().WithMessage("Expiration time value must be greater than 0.");
         }
     }
 }

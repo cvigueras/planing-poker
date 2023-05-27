@@ -15,7 +15,7 @@ namespace PlaningPoker.Api.Test
         }
 
         [Test]
-        public void NotBeCreatedIfNameHasLessThan2Characters()
+        public void NotBeCreatedIfNameHasLessThanTwoCharacters()
         {
             var action = () => User.Create(Guid.NewGuid().ToString(), "a", Guid.NewGuid().ToString());
 

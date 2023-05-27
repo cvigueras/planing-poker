@@ -1,11 +1,11 @@
-﻿using Dapper;
+﻿using AutoMapper;
+using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SQLite;
-using AutoMapper;
 using webapi;
 
 namespace PlaningPoker.Api.Test.Startup;
@@ -82,7 +82,7 @@ public class SetupFixture : WebApplicationFactory<Program>
 
     public IMapper AutoMapperConfigTest(Guid gameGuid)
     {
-        var config =new MapperConfiguration(cfg =>
+        var config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Game, GameReadDto>().ReverseMap();
             cfg.CreateMap<Game, GameCreateDto>();

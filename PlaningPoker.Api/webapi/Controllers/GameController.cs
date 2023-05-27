@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace webapi.Controllers;
 
 [ApiController]
@@ -39,6 +38,8 @@ public class GameController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Game))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
         var game = mapper.Map<Game>(gameCreated);
@@ -49,6 +50,8 @@ public class GameController : ControllerBase
     }
 
     [HttpPut("{gameId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Game))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Put(string gameId, UsersAddDto userAdd)
     {
         var user = webapi.User.Create(userAdd.Name, gameId);

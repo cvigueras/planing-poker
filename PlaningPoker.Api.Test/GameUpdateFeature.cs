@@ -6,6 +6,8 @@ namespace PlaningPoker.Api.Test
 {
     public class GameUpdateFeature
     {
+        public const string RequestUriBase = "Game";
+        public const string PathJson = "./Fixtures/Game.json";
         private PlaningPokerClient client;
 
         [SetUp]
@@ -17,14 +19,14 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task RetrieveAGameWithNewUserAdded()
         {
-            var json = await client.GetJsonContent("./Fixtures/Game.json");
+            var json = await client.GetJsonContent(PathJson);
 
-            var responsePost = await client.Post("Game", json);
+            var responsePost = await client.Post(RequestUriBase, json);
             var gameId = responsePost.Content.ReadAsStringAsync().Result;
 
             var userAddDto = new UsersAddDto("Pedro", gameId);
             var serializedDto = JsonConvert.SerializeObject(userAddDto, Formatting.Indented);
-            var responsePut = await client.Put($"Game/{gameId}", serializedDto);
+            var responsePut = await client.Put($"{RequestUriBase}/{gameId}", serializedDto);
 
             var content = await responsePut.Content.ReadAsStringAsync();
             var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);

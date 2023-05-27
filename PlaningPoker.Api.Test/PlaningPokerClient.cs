@@ -18,9 +18,9 @@ namespace PlaningPoker.Api.Test
             return await jsonReaderPost.ReadToEndAsync();
         }
 
-        public async Task<HttpResponseMessage> Post(string requestUri, string jsonPost)
+        public async Task<HttpResponseMessage> Post(string requestUri, string json)
         {
-            var responsePost = await client!.PostAsync(requestUri, new StringContent(jsonPost,
+            var responsePost = await client!.PostAsync(requestUri, new StringContent(json,
                 Encoding.Default,
                 MediaType));
             responsePost.EnsureSuccessStatusCode();

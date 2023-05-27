@@ -1,11 +1,12 @@
 using Newtonsoft.Json;
 using PlaningPoker.Api.Test.Startup;
-using System.Text;
 
 namespace PlaningPoker.Api.Test
 {
     public class GameCreateFeature
     {
+        public const string RequestUriBase = "Game";
+        public const string PathJson = "./Fixtures/Game.json";
         private PlaningPokerClient client;
 
         [SetUp]
@@ -17,21 +18,19 @@ namespace PlaningPoker.Api.Test
         [Test]
         public async Task RetrieveAGameAfterPostAsync()
         {
-            using var jsonReader = new StreamReader("./Fixtures/Game.json");
-            var json = await jsonReader.ReadToEndAsync();
+            var json = await client.GetJsonContent(PathJson);
 
-            var responsePost = await client.Post("Game", json);
+            var responsePost = await client.Post(RequestUriBase, json);
             var gameId = responsePost.Content.ReadAsStringAsync().Result;
 
-            var response = await client.Get($"Game/{gameId}");
+            var response = await client.Get($"{RequestUriBase}/{gameId}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);
+
             var settings = new VerifySettings();
             settings.ScrubInlineGuids();
 
             await Verify(result, settings);
         }
-
-
     }
 }

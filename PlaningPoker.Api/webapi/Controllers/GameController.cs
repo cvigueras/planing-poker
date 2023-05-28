@@ -21,9 +21,9 @@ public class GameController : ControllerBase
     {
         try
         {
-            var usersReadDto = await sender.Send(new GetUsersGameByGameIdQuery(guid));
-            var cardDtoList = await sender.Send(new GetAllCardsListQuery());
-            return Ok(await sender.Send(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList)));
+            return Ok(await sender.Send(new GetGameByGuidQuery(guid,
+                await sender.Send(new GetUsersGameByGameIdQuery(guid)),
+                await sender.Send(new GetAllCardsListQuery()))));
         }
         catch (InvalidOperationException ex)
         {
@@ -36,8 +36,7 @@ public class GameController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
-        var gameQuery = new CreateGameCommand(gameCreated);
-        var gameId = await sender.Send(gameQuery);
+        var gameId = await sender.Send(new CreateGameCommand(gameCreated));
         await sender.Send(new CreateUserCommand(new UsersAddDto(gameCreated.CreatedBy, gameId)));
         return Ok(gameId);
     }
@@ -48,8 +47,8 @@ public class GameController : ControllerBase
     public async Task<ActionResult> Put(string guid, UsersAddDto userAdd)
     {
         await sender.Send(new CreateUserCommand(userAdd));
-        var usersReadDto = await sender.Send(new GetUsersGameByGameIdQuery(guid));
-        var cardDtoList = await sender.Send(new GetAllCardsListQuery());
-        return Ok(await sender.Send(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList)));
+        return Ok(await sender.Send(new GetGameByGuidQuery(guid,
+            await sender.Send(new GetUsersGameByGameIdQuery(guid)),
+            await sender.Send(new GetAllCardsListQuery()))));
     }
 }

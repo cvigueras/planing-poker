@@ -2,4 +2,4 @@
 
 namespace webapi.Controllers;
 
-public class GetAllCardsListQuery : IRequest<IEnumerable<Card>> { }
+public class GetAllCardsListQuery : IRequest<IEnumerable<CardReadDto>> { }

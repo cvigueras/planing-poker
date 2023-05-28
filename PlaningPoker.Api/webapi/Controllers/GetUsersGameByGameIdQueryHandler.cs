@@ -1,19 +1,23 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 
 namespace webapi.Controllers;
 
-public class GetUsersGameByGameIdQueryHandler : IRequestHandler<GetUsersGameByGameIdQuery, IEnumerable<User>>
+public class GetUsersGameByGameIdQueryHandler : IRequestHandler<GetUsersGameByGameIdQuery, IEnumerable<UsersReadDto>>
 {
     private readonly IUserRepository userRepository;
+    private readonly IMapper mapper;
 
-    public GetUsersGameByGameIdQueryHandler(IUserRepository userRepository)
+    public GetUsersGameByGameIdQueryHandler(IUserRepository userRepository, IMapper mapper)
     {
         this.userRepository = userRepository;
+        this.mapper = mapper;
     }
 
 
-    public async Task<IEnumerable<User>> Handle(GetUsersGameByGameIdQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<UsersReadDto>> Handle(GetUsersGameByGameIdQuery request, CancellationToken cancellationToken)
     {
-        return await userRepository.GetUsersGameByGameId(request.GameId);
+        var user = await userRepository.GetUsersGameByGameId(request.GameId);
+        return mapper.Map<List<UsersReadDto>>(user);
     }
 }

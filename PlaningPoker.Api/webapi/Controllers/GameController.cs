@@ -22,9 +22,9 @@ public class GameController : ControllerBase
         this.userRepository = userRepository;
         this.cardRepository = cardRepository;
         this.mapper = mapper;
-        _getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository);
-        _getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository);
-        _getAllCardsListQueryHandler = new GetAllCardsListQueryHandler(cardRepository);
+        _getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository, mapper);
+        _getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository, mapper);
+        _getAllCardsListQueryHandler = new GetAllCardsListQueryHandler(cardRepository, mapper);
     }
 
     [HttpGet("{guid}")]
@@ -34,17 +34,14 @@ public class GameController : ControllerBase
     {
         try
         {
-            var game = await _getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid), default);
-            var usersGame = await _getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
-            var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
-            var cards = await _getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
-            var cardDtoList = mapper.Map<IEnumerable<CardReadDto>>(cards);
-            return Ok(new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
-                game.Expiration, usersReadDto, cardDtoList.ToList()));
+            var usersReadDto = await _getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
+            var cardDtoList = await _getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
+            var gameReadDto = await _getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList), default);
+            return Ok(gameReadDto);
         }
         catch (InvalidOperationException ex)
         {
-            return NotFound(ex.Message);
+            return NotFound("Guid game contains no elements");
         }
     }
 

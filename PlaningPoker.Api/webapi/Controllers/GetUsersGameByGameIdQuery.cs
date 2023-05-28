@@ -2,7 +2,7 @@
 
 namespace webapi.Controllers;
 
-public class GetUsersGameByGameIdQuery : IRequest<IEnumerable<User>>
+public class GetUsersGameByGameIdQuery : IRequest<IEnumerable<UsersReadDto>>
 {
     public GetUsersGameByGameIdQuery(string gameId)
     {

@@ -46,7 +46,7 @@ namespace PlaningPoker.Api.Test
             var result = actionResult.Result as NotFoundObjectResult;
 
             result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-            result.Value.Should().Be("Sequence contains no elements");
+            result.Value.Should().Be("Guid game contains no elements");
         }
 
         [Test]

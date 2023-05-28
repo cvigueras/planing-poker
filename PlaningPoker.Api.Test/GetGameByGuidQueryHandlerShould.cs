@@ -39,7 +39,7 @@ namespace PlaningPoker.Api.Test
 
             var queryGame =
                 new GetGameByGuidQuery(guid, Enumerable.Empty<UsersReadDto>(), Enumerable.Empty<CardReadDto>());
-            var action= async () => await getGameByGuidQueryHandler.Handle(queryGame, default);
+            var action = async () => await getGameByGuidQueryHandler.Handle(queryGame, default);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
         }

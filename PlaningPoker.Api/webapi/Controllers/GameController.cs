@@ -12,6 +12,7 @@ public class GameController : ControllerBase
     private readonly ICardRepository cardRepository;
     private readonly IMapper mapper;
     private readonly GetGameByGuidQueryHandler _getGameByGuidQueryHandler;
+    private readonly GetUsersGameByGameIdQueryHandler _getUsersGameByGameIdQueryHandler;
 
     public GameController(IGameRepository gameRepository, IUserRepository userRepository,
         ICardRepository cardRepository, IMapper mapper)
@@ -21,6 +22,7 @@ public class GameController : ControllerBase
         this.cardRepository = cardRepository;
         this.mapper = mapper;
         _getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository);
+        _getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository);
     }
 
     [HttpGet("{guid}")]
@@ -32,7 +34,8 @@ public class GameController : ControllerBase
         {
             var queryGame = new GetGameByGuidQuery(guid);
             var game = await _getGameByGuidQueryHandler.Handle(queryGame, default);
-            var usersGame = await userRepository.GetUsersGameByGameId(guid);
+            var queryUser = new GetUsersGameByGameIdQuery(guid);
+            var usersGame = await _getUsersGameByGameIdQueryHandler.Handle(queryUser, default);
             var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
             var cards = await cardRepository.GetAll();
             var cardDtoList = mapper.Map<IEnumerable<CardReadDto>>(cards);

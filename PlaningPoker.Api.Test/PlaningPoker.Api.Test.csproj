@@ -31,10 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Fixtures\Game.json">
+    <None Update="Games\Fixtures\Game.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="GameCreateFeature.RetrieveAGameAfterPostAsync.verified.txt">
+    <None Update="Games\Features\GameCreateFeature.RetrieveAGameAfterPostAsync.verified.txt">
       <DependentUpon>GameCreateFeature.cs</DependentUpon>
     </None>
   </ItemGroup>

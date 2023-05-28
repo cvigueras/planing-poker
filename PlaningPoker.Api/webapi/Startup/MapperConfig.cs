@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using webapi.Cards.Models;
+using webapi.Games.Models;
+using webapi.Helpers;
+using webapi.Users.Models;
 
 namespace webapi.Startup
 {

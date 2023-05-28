@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System.Data.SQLite;
+using webapi.Cards.Models;
 
 namespace webapi.Startup
 {

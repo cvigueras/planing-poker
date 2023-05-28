@@ -1,4 +1,8 @@
 ﻿using System.Data.SQLite;
+using webapi.Cards.Repositories;
+using webapi.Games.Repositories;
+using webapi.Helpers;
+using webapi.Users.Repositories;
 
 namespace webapi.Startup;
 

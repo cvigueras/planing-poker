@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace webapi.Controllers;
 
@@ -57,19 +58,16 @@ public class GameController : ControllerBase
         return Ok(game.Id);
     }
 
-    [HttpPut("{gameId}")]
+    [HttpPut("{guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Game))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> Put(string gameId, UsersAddDto userAdd)
+    public async Task<ActionResult> Put(string guid, UsersAddDto userAdd)
     {
-        var user = webapi.User.Create(userAdd.Name, gameId);
+        var user = webapi.User.Create(userAdd.Name, guid);
         await userRepository.Add(user);
-        var game = await gameRepository.GetByGuid(gameId);
-        var usersGame = await userRepository.GetUsersGameByGameId(gameId);
-        var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
-        var cards = await cardRepository.GetAll();
-        var cardDtoList = mapper.Map<IEnumerable<CardReadDto>>(cards);
-        return Ok(new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
-            game.Expiration, usersReadDto, cardDtoList.ToList()));
+        var usersReadDto = await _getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
+        var cardDtoList = await _getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
+        var gameReadDto = await _getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList), default);
+        return Ok(gameReadDto);
     }
 }

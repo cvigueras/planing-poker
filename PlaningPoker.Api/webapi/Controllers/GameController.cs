@@ -13,6 +13,7 @@ public class GameController : ControllerBase
     private readonly IMapper mapper;
     private readonly GetGameByGuidQueryHandler _getGameByGuidQueryHandler;
     private readonly GetUsersGameByGameIdQueryHandler _getUsersGameByGameIdQueryHandler;
+    private readonly GetAllCardsListQueryHandler _getAllCardsListQueryHandler;
 
     public GameController(IGameRepository gameRepository, IUserRepository userRepository,
         ICardRepository cardRepository, IMapper mapper)
@@ -23,6 +24,7 @@ public class GameController : ControllerBase
         this.mapper = mapper;
         _getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository);
         _getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository);
+        _getAllCardsListQueryHandler = new GetAllCardsListQueryHandler(cardRepository);
     }
 
     [HttpGet("{guid}")]
@@ -32,16 +34,13 @@ public class GameController : ControllerBase
     {
         try
         {
-            var queryGame = new GetGameByGuidQuery(guid);
-            var game = await _getGameByGuidQueryHandler.Handle(queryGame, default);
-            var queryUser = new GetUsersGameByGameIdQuery(guid);
-            var usersGame = await _getUsersGameByGameIdQueryHandler.Handle(queryUser, default);
+            var game = await _getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid), default);
+            var usersGame = await _getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
             var usersReadDto = mapper.Map<List<UsersReadDto>>(usersGame);
-            var cards = await cardRepository.GetAll();
+            var cards = await _getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
             var cardDtoList = mapper.Map<IEnumerable<CardReadDto>>(cards);
-            var gameReadDto = new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
-                game.Expiration, usersReadDto, cardDtoList.ToList());
-            return Ok(gameReadDto);
+            return Ok(new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
+                game.Expiration, usersReadDto, cardDtoList.ToList()));
         }
         catch (InvalidOperationException ex)
         {

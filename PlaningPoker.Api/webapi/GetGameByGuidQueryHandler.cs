@@ -16,8 +16,15 @@ public class GetGameByGuidQueryHandler : IRequestHandler<GetGameByGuidQuery, Gam
 
     public async Task<GameReadDto> Handle(GetGameByGuidQuery request, CancellationToken cancellationToken)
     {
-        var game = await gameRepository.GetByGuid(request.Guid);
-        return new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
-            game.Expiration, request.UsersReadDto.ToList(), request.CardReadReadDto.ToList());
+        try
+        {
+            var game = await gameRepository.GetByGuid(request.Guid);
+            return new GameReadDto(game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime,
+                game.Expiration, request.UsersReadDto.ToList(), request.CardReadReadDto.ToList());
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw ex;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace webapi.Controllers;
@@ -11,16 +12,18 @@ public class GameController : ControllerBase
     private readonly GetUsersGameByGameIdQueryHandler getUsersGameByGameIdQueryHandler;
     private readonly GetAllCardsListQueryHandler getAllCardsListQueryHandler;
     private readonly CreateUserCommandHandler createUserCommandHandler;
-    private readonly CreateGameCommandHandler _createGameCommandHandler;
+    private readonly CreateGameCommandHandler createGameCommandHandler;
+    private ISender sender;
 
     public GameController(IGameRepository gameRepository, IUserRepository userRepository,
-        ICardRepository cardRepository, IMapper mapper)
+        ICardRepository cardRepository, IMapper mapper, ISender sender)
     {
+        this.sender = sender;
         getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository, mapper);
         getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository, mapper);
         getAllCardsListQueryHandler = new GetAllCardsListQueryHandler(cardRepository, mapper);
         createUserCommandHandler = new CreateUserCommandHandler(userRepository);
-        _createGameCommandHandler = new CreateGameCommandHandler(gameRepository, mapper);
+        createGameCommandHandler = new CreateGameCommandHandler(gameRepository, mapper);
     }
 
     [HttpGet("{guid}")]
@@ -30,7 +33,7 @@ public class GameController : ControllerBase
     {
         try
         {
-            var usersReadDto = await getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
+            var usersReadDto = await sender.Send(new GetUsersGameByGameIdQuery(guid));
             var cardDtoList = await getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
             return Ok(await getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList), default));
         }
@@ -46,7 +49,7 @@ public class GameController : ControllerBase
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
         var gameQuery = new CreateGameCommand(gameCreated);
-        var gameId = await _createGameCommandHandler.Handle(gameQuery, default);
+        var gameId = await createGameCommandHandler.Handle(gameQuery, default);
         await createUserCommandHandler.Handle(new CreateUserCommand(new UsersAddDto(gameCreated.CreatedBy, gameId)), default);
         return Ok(gameId);
     }

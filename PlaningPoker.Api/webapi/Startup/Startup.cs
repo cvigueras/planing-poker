@@ -19,6 +19,7 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddScoped(_ => new SQLiteConnection("Data Source=./PlaningPoker.db"));
         services.AddAutoMapper(typeof(MapperConfig));
         services.AddScoped<IGameRepository, GameRepository>();

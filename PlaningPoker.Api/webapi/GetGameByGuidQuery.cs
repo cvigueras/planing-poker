@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace webapi.Controllers;
+namespace webapi;
 
 public class GetGameByGuidQuery : IRequest<GameReadDto>
 {

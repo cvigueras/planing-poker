@@ -1,5 +1,5 @@
 ﻿using MediatR;
 
-namespace webapi.Controllers;
+namespace webapi;
 
 public class GetAllCardsListQuery : IRequest<IEnumerable<CardReadDto>> { }

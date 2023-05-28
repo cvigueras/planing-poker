@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 
-namespace webapi.Controllers;
+namespace webapi;
 
 public class GetGameByGuidQueryHandler : IRequestHandler<GetGameByGuidQuery, GameReadDto>
 {

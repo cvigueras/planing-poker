@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace webapi.Controllers;
+namespace webapi;
 
 public class GetUsersGameByGameIdQuery : IRequest<IEnumerable<UsersReadDto>>
 {

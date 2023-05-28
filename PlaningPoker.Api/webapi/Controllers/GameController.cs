@@ -7,22 +7,20 @@ namespace webapi.Controllers;
 [Route("[controller]")]
 public class GameController : ControllerBase
 {
-    private readonly IGameRepository gameRepository;
-    private readonly IMapper mapper;
-    private readonly GetGameByGuidQueryHandler _getGameByGuidQueryHandler;
-    private readonly GetUsersGameByGameIdQueryHandler _getUsersGameByGameIdQueryHandler;
-    private readonly GetAllCardsListQueryHandler _getAllCardsListQueryHandler;
-    private readonly CreateUserCommandHandler _createUserCommandHandler;
+    private readonly GetGameByGuidQueryHandler getGameByGuidQueryHandler;
+    private readonly GetUsersGameByGameIdQueryHandler getUsersGameByGameIdQueryHandler;
+    private readonly GetAllCardsListQueryHandler getAllCardsListQueryHandler;
+    private readonly CreateUserCommandHandler createUserCommandHandler;
+    private readonly CreateGameCommandHandler _createGameCommandHandler;
 
     public GameController(IGameRepository gameRepository, IUserRepository userRepository,
         ICardRepository cardRepository, IMapper mapper)
     {
-        this.gameRepository = gameRepository;
-        this.mapper = mapper;
-        _getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository, mapper);
-        _getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository, mapper);
-        _getAllCardsListQueryHandler = new GetAllCardsListQueryHandler(cardRepository, mapper);
-        _createUserCommandHandler = new CreateUserCommandHandler(userRepository);
+        getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository, mapper);
+        getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository, mapper);
+        getAllCardsListQueryHandler = new GetAllCardsListQueryHandler(cardRepository, mapper);
+        createUserCommandHandler = new CreateUserCommandHandler(userRepository);
+        _createGameCommandHandler = new CreateGameCommandHandler(gameRepository, mapper);
     }
 
     [HttpGet("{guid}")]
@@ -32,9 +30,9 @@ public class GameController : ControllerBase
     {
         try
         {
-            var usersReadDto = await _getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
-            var cardDtoList = await _getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
-            return Ok(await _getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList), default));
+            var usersReadDto = await getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
+            var cardDtoList = await getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
+            return Ok(await getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList), default));
         }
         catch (InvalidOperationException ex)
         {
@@ -47,10 +45,10 @@ public class GameController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
-        var game = mapper.Map<Game>(gameCreated);
-        await gameRepository.Add(game);
-        await _createUserCommandHandler.Handle(new CreateUserCommand(new UsersAddDto(game.CreatedBy, game.Id)), default);
-        return Ok(game.Id);
+        var gameQuery = new CreateGameCommand(gameCreated);
+        var gameId = await _createGameCommandHandler.Handle(gameQuery, default);
+        await createUserCommandHandler.Handle(new CreateUserCommand(new UsersAddDto(gameCreated.CreatedBy, gameId)), default);
+        return Ok(gameId);
     }
 
     [HttpPut("{guid}")]
@@ -58,9 +56,9 @@ public class GameController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Put(string guid, UsersAddDto userAdd)
     {
-        await _createUserCommandHandler.Handle(new CreateUserCommand(userAdd),default);
-        var usersReadDto = await _getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
-        var cardDtoList = await _getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
-        return Ok(await _getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList), default));
+        await createUserCommandHandler.Handle(new CreateUserCommand(userAdd), default);
+        var usersReadDto = await getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(guid), default);
+        var cardDtoList = await getAllCardsListQueryHandler.Handle(new GetAllCardsListQuery(), default);
+        return Ok(await getGameByGuidQueryHandler.Handle(new GetGameByGuidQuery(guid, usersReadDto, cardDtoList), default));
     }
 }

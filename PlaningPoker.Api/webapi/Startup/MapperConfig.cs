@@ -20,6 +20,7 @@ namespace webapi.Startup
                     x.GameId));
             CreateMap<User, UsersReadDto>();
             CreateMap<Game, GameReadDto>().ReverseMap();
+            CreateMap<Card, CardReadDto>().ReverseMap();
         }
     }
 }

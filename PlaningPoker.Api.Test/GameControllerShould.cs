@@ -18,6 +18,7 @@ namespace PlaningPoker.Api.Test
         private IMapper mapper;
         private IUserRepository userRepository;
         private IGameRepository gameRepository;
+        private ICardRepository cardRepository;
         private GameController gameController;
         private IGuidGenerator guidGenerator;
         private Guid gameGuid;
@@ -30,9 +31,10 @@ namespace PlaningPoker.Api.Test
             connection = setupFixture.GetSQLiteConnection();
             userRepository = new UserRepository(connection);
             gameRepository = new GameRepository(connection);
+            cardRepository = new CardRepository(connection);
             gameGuid = new GuidGenerator().Generate();
             mapper = setupFixture.AutoMapperConfigTest(gameGuid);
-            gameController = new GameController(gameRepository, userRepository, mapper);
+            gameController = new GameController(gameRepository, userRepository, cardRepository, mapper);
         }
 
         [Test]
@@ -70,10 +72,11 @@ namespace PlaningPoker.Api.Test
             var action = await gameController.Get(givenGame.Id);
             var result = action as OkObjectResult;
 
+            var cards = CardMother.GetAll();
             var expectedGame = new GameReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, new List<UsersReadDto>
             {
                 new (givenGame.CreatedBy, givenGame.Id),
-            });
+            }, cards);
             result.Value.Should().BeEquivalentTo(expectedGame);
         }
 
@@ -89,11 +92,12 @@ namespace PlaningPoker.Api.Test
             var result = gameController.Put(givenGame.Id, userAddedDto);
             var userResult = await result as OkObjectResult;
 
+            var cards = CardMother.GetAll();
             var expectedGame = new GameReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, new List<UsersReadDto>
             {
                 new (givenGame.CreatedBy, givenGame.Id),
                 new (userAddedDto.Name, givenGame.Id)
-            });
+            }, cards);
             userResult.Value.Should().BeEquivalentTo(expectedGame);
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace PlaningPoker.Api.Test;
+﻿using webapi;
+
+namespace PlaningPoker.Api.Test;
 
 public class CardMother
 {

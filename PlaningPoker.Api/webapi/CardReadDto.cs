@@ -1,3 +1,3 @@
-﻿namespace PlaningPoker.Api.Test;
+﻿namespace webapi;
 
 public record CardReadDto(string Value);

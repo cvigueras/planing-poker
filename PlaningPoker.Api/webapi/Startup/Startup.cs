@@ -23,7 +23,8 @@ public class Startup
         services.AddAutoMapper(typeof(MapperConfig));
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddSingleton<IGuidGenerator, GuidGenerator>();
+        services.AddScoped<IGuidGenerator, GuidGenerator>();
+        services.AddScoped<ICardRepository, CardRepository>();
         DataBase.Create();
         services.AddCors(
             x =>

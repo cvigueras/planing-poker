@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SQLite;
+using AutoFixture.Kernel;
 using webapi;
 
 namespace PlaningPoker.Api.Test.Startup;
@@ -20,7 +21,10 @@ public class SetupFixture : WebApplicationFactory<Program>
         connection.Open();
 
         CreateDataBase();
+
+        Seed();
     }
+
 
     private void CreateDataBase()
     {
@@ -37,6 +41,20 @@ public class SetupFixture : WebApplicationFactory<Program>
                 Name VARCHAR(20) NOT NULL,
                 GameId VARCHAR(60) NOT NULL)"
         );
+
+        connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
+                Value VARCHAR(5) NOT NULL)"
+        );
+    }
+
+    private void Seed()
+    {
+        var cards = CardMother.GetAll();
+        foreach (var card in cards)
+        {
+            connection.Execute(
+                $"INSERT INTO Cards VALUES('{card.Value}')");
+        }
     }
 
     protected override IHost CreateHost(IHostBuilder builder)
@@ -47,6 +65,7 @@ public class SetupFixture : WebApplicationFactory<Program>
             services.AddSingleton<IGameRepository, GameRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IGuidGenerator, GuidGenerator>();
+            services.AddSingleton<ICardRepository, CardRepository>();
             services.AddSignalR(options => { options.EnableDetailedErrors = true; });
         });
 
@@ -98,6 +117,7 @@ public class SetupFixture : WebApplicationFactory<Program>
                     x.GameId));
             cfg.CreateMap<User, UsersReadDto>();
             cfg.CreateMap<Game, GameReadDto>().ReverseMap();
+            cfg.CreateMap<Card, CardReadDto>().ReverseMap();
         });
 
         return config.CreateMapper();

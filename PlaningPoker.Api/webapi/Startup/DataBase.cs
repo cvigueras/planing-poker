@@ -23,8 +23,35 @@ namespace webapi.Startup
                 GameId VARCHAR(60) NOT NULL)"
             );
 
+            connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
+                Value VARCHAR(5) NOT NULL)"
+            );
+
+            Seed(connection);
+
             connection.Close();
             connection.Dispose();
+        }
+
+        private static void Seed(SQLiteConnection connection)
+        {
+            var cards = new List<Card>
+            {
+                Card.Restore("?"),
+                Card.Restore("coffee"),
+                Card.Restore("0"),
+                Card.Restore("0,5"),
+                Card.Restore("1"),
+                Card.Restore("2"),
+                Card.Restore("3"),
+                Card.Restore("5"),
+                Card.Restore("8"),
+                Card.Restore("13"),
+                Card.Restore("20"),
+                Card.Restore("40"),
+                Card.Restore("100"),
+            };
+            connection.Execute("INSERT INTO Cards VALUES (@Value)", cards);
         }
     }
 }

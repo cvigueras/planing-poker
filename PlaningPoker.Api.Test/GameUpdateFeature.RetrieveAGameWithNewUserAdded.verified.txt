@@ -5,7 +5,7 @@
   "description": "New game to vote release1",
   "roundTime": 60,
   "expiration": 60,
-  "usersReadDtos": [
+  "users": [
     {
       "name": "Carlos",
       "gameId": "Guid_1"
@@ -15,7 +15,7 @@
       "gameId": "Guid_1"
     }
   ],
-  "cardReadDtos": [
+  "cards": [
     {
       "value": "?"
     },
@@ -53,7 +53,7 @@
       "value": "40"
     },
     {
-      "value": "10"
+      "value": "100"
     }
   ]
 }

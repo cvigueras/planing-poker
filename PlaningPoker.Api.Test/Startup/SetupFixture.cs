@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SQLite;
-using AutoFixture.Kernel;
 using webapi;
 
 namespace PlaningPoker.Api.Test.Startup;
@@ -50,11 +49,7 @@ public class SetupFixture : WebApplicationFactory<Program>
     private void Seed()
     {
         var cards = CardMother.GetAll();
-        foreach (var card in cards)
-        {
-            connection.Execute(
-                $"INSERT INTO Cards VALUES('{card.Value}')");
-        }
+        connection.Execute("INSERT INTO Cards VALUES (@Value)", cards);
     }
 
     protected override IHost CreateHost(IHostBuilder builder)

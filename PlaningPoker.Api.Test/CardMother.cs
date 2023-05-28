@@ -20,7 +20,7 @@ public class CardMother
             new("13"),
             new("20"),
             new("40"),
-            new("10"),
+            new("100"),
         };
     }
 }

@@ -21,7 +21,7 @@ When
 
 Then
 - The Game is returned with the following details:
-    - UniqueId, Title, description, createdBy, round time, date expiration game and user associate to the Game.
+    - UniqueId, Title, description, createdBy, round time, date expiration game, users associate to the Game and Card List Values.
 
 # Add user an existing game
 
@@ -33,4 +33,4 @@ When
 
 Then
 - The Game is returned with the following details:
-    - UniqueId, Title, description, createdBy, round time, date expiration game and user associate to the Game included him.
+    - UniqueId, Title, description, createdBy, round time, date expiration game, user associate to the Game included him and Card List Values.

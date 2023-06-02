@@ -2,12 +2,12 @@ import { createStore } from 'vuex'
 
 export default createStore({
     state: {
-        id: '',
-        createdBy: 'CreatedByStore',
-        title: 'TitleStore',
-        description: 'DescriptionStore',
-        roundTime: 0,
-        expiration: 0,
+        //id: '',
+        //createdBy: 'CreatedByStore',
+        //title: 'TitleStore',
+        //description: 'DescriptionStore',
+        //roundTime: 0,
+        //expiration: 0,
         games: []
     },
     mutations: {

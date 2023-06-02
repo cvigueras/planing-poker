@@ -3,8 +3,11 @@
     <div class="divContainer">
         <label for="uname"><b>Planing Poker</b></label>
         <br /><br />
-        <input v-model="username" type="text" placeholder="Username" name="uname" required>
-        <input v-model="gamename" type="text" placeholder="GameName" name="psw" required>
+        <input v-model="username" type="text" placeholder="Username" name="username" required>
+        <input v-model="gamename" type="text" placeholder="GameName" name="gamename" required>
+        <input v-model="description" type="text" placeholder="Description" name="description" required>
+        <input v-model="roundTime" type="number" placeholder="Round Time" name="roundTime" required>
+        <input v-model="expiration" type="number" placeholder="Expiration Game" name="expiration" required>
         <button @click="getValues" type="submit">
             <router-link to="/planing"> Create game</router-link>
         </button>
@@ -31,36 +34,35 @@
         methods: {
             getValues() {
                 const gameCreated = {
+                    id: '',
                     createdBy: this.username,
                     title: this.gamename,
-                    description: "Vote for Release1",
-                    roundTime: 60,
-                    expiration: 60
+                    description: this.description,
+                    roundTime: this.roundTime,
+                    expiration: this.expiration
                 };
-                console.log(this.username);
-                console.log(this.gamename);
                 this.fetchData(gameCreated);
             },
             fetchData(game) {
                 axios.post('game', game)
                     .then(response => {
-                        this.getGame(response.data)
+                        //this.getGame(response.data)
+                        game.id = response.data;
                         this.post = response;
-                        this.$store.dispatch('addToGames', response.data)
+                        this.$store.dispatch('addToGames', game)
                         this.loading = false;
                         this.$router.push('/planing'); 
                         return;
                     }).catch(error => console.log(error))
             },
-            getGame(Id) {
-                console.log("GameId value: " + Id);
-                axios.get('game/' + Id)
-                    .then(response => {
+            //getGame(Id) {
+            //    axios.get('game/' + Id)
+            //        .then(response => {
 
-                        this.info = console.log(response.data);
-                    })
-                    .catch(error => console.log(error))
-            }
+            //            this.info = console.log(response.data);
+            //        })
+            //        .catch(error => console.log(error))
+            //}
         },
 
     }
@@ -75,12 +77,21 @@
         border-style: dotted;
     }
 
-    input[type=text], input[type=password] {
+    input[type=text] {
         width: 100%;
         padding: 12px 20px;
         margin: 8px 0;
         display: inline-block;
         border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    input[type=number] {
+        width: 40%;
+        padding: 12px 20px;
+        margin: 8px 24px;
+        display: inline-block;
+        border: 1px solid #04AA6D;
         box-sizing: border-box;
     }
 

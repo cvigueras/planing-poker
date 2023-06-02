@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿using System.Data.Common;
+using System.Data.SQLite;
 using Dapper;
 using PlaningPoker.Api.Cards.Models;
 
@@ -36,6 +37,7 @@ namespace PlaningPoker.Api.Startup
 
         private static void Seed(SQLiteConnection connection)
         {
+            if (ExistTableCards(connection)) return;
             var cards = new List<Card>
             {
                 Card.Restore("?"),
@@ -53,6 +55,12 @@ namespace PlaningPoker.Api.Startup
                 Card.Restore("100"),
             };
             connection.Execute("INSERT INTO Cards VALUES (@Value)", cards);
+        }
+
+        private static bool ExistTableCards(SQLiteConnection connection)
+        {
+            var exist = connection.Query<dynamic>("SELECT COUNT(*) as Count FROM Cards");
+            return exist.Single().Count > 1;
         }
     }
 }

@@ -13,6 +13,7 @@
 
 <script>
     import axios from 'axios';
+
     export default {
 
         data() {
@@ -38,23 +39,16 @@
                 };
                 console.log(this.username);
                 console.log(this.gamename);
-                this.$root.$emit("Game", gameCreated);
-                this.$router.push('/planing'); 
+                this.fetchData(gameCreated);
             },
-            fetchData() {
-                const game = {
-                    createdBy: "Carlos",
-                    title: "Release1",
-                    description: "Vote for Release1",
-                    roundTime: 60,
-                    expiration: 60
-                };
-
+            fetchData(game) {
                 axios.post('game', game)
                     .then(response => {
                         this.getGame(response.data)
                         this.post = response;
+                        this.$store.dispatch('addToGames', response.data)
                         this.loading = false;
+                        this.$router.push('/planing'); 
                         return;
                     }).catch(error => console.log(error))
             },
@@ -62,6 +56,7 @@
                 console.log("GameId value: " + Id);
                 axios.get('game/' + Id)
                     .then(response => {
+
                         this.info = console.log(response.data);
                     })
                     .catch(error => console.log(error))

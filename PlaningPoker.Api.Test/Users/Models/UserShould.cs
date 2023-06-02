@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using webapi.Users.Models;
+using PlaningPoker.Api.Users.Models;
 
 namespace PlaningPoker.Api.Test.Users.Models
 {

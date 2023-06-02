@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using webapi.Games.Models;
-using webapi.Helpers;
+using PlaningPoker.Api.Games.Models;
+using PlaningPoker.Api.Helpers;
 
 namespace PlaningPoker.Api.Test.Games.Models
 {

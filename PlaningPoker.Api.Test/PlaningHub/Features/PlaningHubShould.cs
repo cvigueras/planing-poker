@@ -64,7 +64,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             var clients = Substitute.For<IHubCallerClients>();
             var groups = Substitute.For<IGroupManager>();
             var hubContext = Substitute.For<HubCallerContext>();
-            var messageHub = Substitute.For<webapi.Startup.PlaningHub>();
+            var messageHub = Substitute.For<Api.Startup.PlaningHub>();
             messageHub.Context = hubContext;
             messageHub.Clients = clients;
             messageHub.Groups = groups;

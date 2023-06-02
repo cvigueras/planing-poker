@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using PlaningPoker.Api.Games.Repositories;
+using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Test.Games.Fixtures;
 using PlaningPoker.Api.Test.Startup;
+using PlaningPoker.Api.Users.Models;
+using PlaningPoker.Api.Users.Repositories;
 using System.Data.SQLite;
-using webapi.Games.Repositories;
-using webapi.Helpers;
-using webapi.Users.Models;
-using webapi.Users.Repositories;
 
 namespace PlaningPoker.Api.Test.Users.Repositories
 {

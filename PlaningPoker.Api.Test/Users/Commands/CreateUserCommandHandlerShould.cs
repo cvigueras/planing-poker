@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
+using PlaningPoker.Api.Cards.Queries;
+using PlaningPoker.Api.Cards.Repositories;
+using PlaningPoker.Api.Games.Commands;
+using PlaningPoker.Api.Games.Models;
+using PlaningPoker.Api.Games.Queries;
+using PlaningPoker.Api.Games.Repositories;
+using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Test.Games.Fixtures;
 using PlaningPoker.Api.Test.Startup;
+using PlaningPoker.Api.Users.Models;
+using PlaningPoker.Api.Users.Queries;
+using PlaningPoker.Api.Users.Repositories;
 using System.Data.SQLite;
-using webapi.Cards.Queries;
-using webapi.Cards.Repositories;
-using webapi.Games.Commands;
-using webapi.Games.Models;
-using webapi.Games.Queries;
-using webapi.Games.Repositories;
-using webapi.Helpers;
-using webapi.Users.Models;
-using webapi.Users.Queries;
-using webapi.Users.Repositories;
 
 namespace PlaningPoker.Api.Test.Users.Commands
 {

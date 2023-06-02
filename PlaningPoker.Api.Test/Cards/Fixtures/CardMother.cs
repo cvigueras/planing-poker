@@ -1,4 +1,4 @@
-﻿using webapi.Cards.Models;
+﻿using PlaningPoker.Api.Cards.Models;
 
 namespace PlaningPoker.Api.Test.Cards.Fixtures;
 

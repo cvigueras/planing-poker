@@ -5,16 +5,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PlaningPoker.Api.Cards.Models;
+using PlaningPoker.Api.Cards.Repositories;
+using PlaningPoker.Api.Games.Models;
+using PlaningPoker.Api.Games.Repositories;
+using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Test.Cards.Fixtures;
+using PlaningPoker.Api.Users.Models;
+using PlaningPoker.Api.Users.Repositories;
 using System.Data.SQLite;
-using webapi;
-using webapi.Cards.Models;
-using webapi.Cards.Repositories;
-using webapi.Games.Models;
-using webapi.Games.Repositories;
-using webapi.Helpers;
-using webapi.Users.Models;
-using webapi.Users.Repositories;
 
 namespace PlaningPoker.Api.Test.Startup;
 public class SetupFixture : WebApplicationFactory<Program>
@@ -79,7 +78,7 @@ public class SetupFixture : WebApplicationFactory<Program>
     {
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapHub<webapi.Startup.PlaningHub>("/hubs/planing");
+            endpoints.MapHub<Api.Startup.PlaningHub>("/hubs/planing");
         });
     }
 

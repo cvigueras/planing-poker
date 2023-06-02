@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PlaningPoker.Api\PlaningPoker.Api.csproj" />
     <ProjectReference Include="..\PlaningPoker.Api\webapi\PlaningPoker.Api.csproj" />
   </ItemGroup>
 

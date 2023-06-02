@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PlaningPoker.Api.Test.PlaningHub.Fixtures;
 using PlaningPoker.Api.Test.Startup;
-using webapi.Users.Models;
+using PlaningPoker.Api.Users.Models;
 
 namespace PlaningPoker.Api.Test.Games.Features
 {

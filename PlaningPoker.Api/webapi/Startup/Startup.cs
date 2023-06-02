@@ -36,12 +36,12 @@ public class Startup
             {
                 x.AddPolicy("AllowClientPolicy", options =>
                 {
-                    options.WithOrigins("https://localhost:8080")
+                    options.WithOrigins("https://localhost:5002")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
 
-                    options.WithOrigins("http://localhost:8080")
+                    options.WithOrigins("http://localhost:5002")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();

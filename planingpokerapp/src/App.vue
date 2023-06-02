@@ -1,17 +1,14 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Home msg="Welcome to Your Vue.js App"/>
-  </div>
+  <HomePlaning msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
-import Home from './components/Home.vue'
+    import HomePlaning from './components/HomePlaning.vue'
 
 export default {
   name: 'App',
   components: {
-    Home
+      HomePlaning
   }
 }
 </script>

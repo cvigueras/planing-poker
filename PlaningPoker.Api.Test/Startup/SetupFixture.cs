@@ -101,8 +101,12 @@ public class SetupFixture : WebApplicationFactory<Program>
         return hubConnection;
     }
 
-    public IMapper AutoMapperConfigTest(Guid gameGuid)
+    public IMapper AutoMapperConfigTest(Guid gameGuid = default)
     {
+        if (gameGuid == default)
+        {
+            gameGuid = new GuidGenerator().Generate();
+        }
         var config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Game, GameCreateDto>();

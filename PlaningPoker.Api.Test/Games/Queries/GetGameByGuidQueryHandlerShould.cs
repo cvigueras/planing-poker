@@ -23,7 +23,6 @@ namespace PlaningPoker.Api.Test.Games.Queries
         private IGameRepository gameRepository;
         private GetGameByGuidQueryHandler getGameByGuidQueryHandler;
         private IGuidGenerator guidGenerator;
-        private Guid gameGuid;
         private IUserRepository userRepository;
 
         [SetUp]
@@ -35,8 +34,8 @@ namespace PlaningPoker.Api.Test.Games.Queries
             gameRepository = new GameRepository(connection);
             getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository, mapper);
             userRepository = new UserRepository(connection);
-            gameGuid = new GuidGenerator().Generate();
-            mapper = setupFixture.AutoMapperConfigTest(gameGuid);
+            new GuidGenerator().Generate();
+            mapper = setupFixture.AutoMapperConfigTest();
         }
 
         [Test]

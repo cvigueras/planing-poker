@@ -15,10 +15,6 @@ namespace PlaningPoker.Api.Games.Controllers;
 public class GameController : ControllerBase
 {
     private ISender sender;
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
 
     public GameController(ISender sender)
     {
@@ -41,7 +37,6 @@ public class GameController : ControllerBase
             return NotFound("Guid game contains no elements");
         }
     }
-
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Game))]

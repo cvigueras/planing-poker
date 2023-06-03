@@ -9,7 +9,7 @@
         <input v-model="roundTime" type="number" placeholder="Round Time" name="roundTime" required>
         <input v-model="expiration" type="number" placeholder="Expiration Game" name="expiration" required>
         <button @click="getValues" type="submit">
-            <router-link to="/planing"> Create game</router-link>
+            Create game
         </button>
     </div>
 </template>
@@ -18,19 +18,6 @@
     import axios from 'axios';
 
     export default {
-
-        data() {
-            return {
-                loading: false,
-                post: null
-            };
-        },
-        created() {
-            this.fetchData();
-        },
-        watch: {
-            '$route': 'fetchData'
-        },
         methods: {
             getValues() {
                 const gameCreated = {
@@ -46,23 +33,12 @@
             fetchData(game) {
                 axios.post('game', game)
                     .then(response => {
-                        //this.getGame(response.data)
                         game.id = response.data;
-                        this.post = response;
-                        this.$store.dispatch('addToGames', game)
-                        this.loading = false;
+                        this.$store.dispatch('addToGames', JSON.stringify(game))
+                        localStorage.setItem("gameid", game.id);
                         this.$router.push('/planing'); 
-                        return;
                     }).catch(error => console.log(error))
             },
-            //getGame(Id) {
-            //    axios.get('game/' + Id)
-            //        .then(response => {
-
-            //            this.info = console.log(response.data);
-            //        })
-            //        .catch(error => console.log(error))
-            //}
         },
 
     }

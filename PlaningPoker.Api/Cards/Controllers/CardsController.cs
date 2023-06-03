@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PlaningPoker.Api.Cards.Models;
 using PlaningPoker.Api.Cards.Queries;
-using PlaningPoker.Api.Games.Models;
 
 namespace PlaningPoker.Api.Cards.Controllers
 {
@@ -16,8 +16,8 @@ namespace PlaningPoker.Api.Cards.Controllers
             this.sender = sender;
         }
 
-        [HttpGet()]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Game))]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Card))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Get()
         {

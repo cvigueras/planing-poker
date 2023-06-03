@@ -24,6 +24,9 @@ module.exports = {
             cert: fs.readFileSync(certFilePath),
         },
         proxy: {
+            '^/cards': {
+                target: 'https://localhost:7096/'
+            },
             '^/game': {
                 target: 'https://localhost:7096/'
             }

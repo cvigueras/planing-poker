@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using Microsoft.AspNet.SignalR.Client;
-using NSubstitute;
 using PlaningPoker.Api.Cards.Queries;
 using PlaningPoker.Api.Cards.Repositories;
-using PlaningPoker.Api.Games.Queries;
-using PlaningPoker.Api.Games.Repositories;
-using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Test.Cards.Fixtures;
-using PlaningPoker.Api.Users.Repositories;
-using System.Data.SQLite;
 using PlaningPoker.Api.Test.Startup;
+using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.Cards.Queries
 {

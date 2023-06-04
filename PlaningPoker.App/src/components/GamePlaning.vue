@@ -25,10 +25,23 @@
                     <td>{{ expiration }}</td>
                 </tr>
             </table>
-            <div class="cards">
+            <div class="content">
                 <div v-for="card in cards" v-bind:key="card.value" :class="getCardClass(card)">
                     {{ card.value }}
                 </div>
+            </div>
+
+            <div class="content">
+                <table id="players">
+                    <tr>
+                        <th>Player</th>
+                        <th>Vote</th>
+                    </tr>
+                    <tr>
+                        <td>{{ createdBy }}</td>
+                        <td>---</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
@@ -129,6 +142,7 @@
 
 <style scoped>
 
+    /*Cards CSS*/
     .interrogant {
         background-color: #FF5733;
     }
@@ -181,7 +195,7 @@
         background-color: #FFFF33;
     }
 
-    .cards {
+    .content {
         position: relative;
         float: left;
         width: 100%;
@@ -209,30 +223,62 @@
         margin-left: 10%;
     }
 
+    /*Customers CSS*/
     #customers {
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
     }
 
-        #customers td, #customers th {
+    #customers td, #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #customers tr:hover {
+        background-color: #ddd;
+    }
+
+    #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    /*Player css*/
+    #players {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 80%;
+        margin-left: 10%;
+        margin-top: 100px;
+    }
+
+       #players td, #customers th {
             border: 1px solid #ddd;
             padding: 8px;
         }
 
-        #customers tr:nth-child(even) {
+        #players tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
-        #customers tr:hover {
+        #players tr:hover {
             background-color: #ddd;
         }
 
-        #customers th {
+        #players th {
             padding-top: 12px;
             padding-bottom: 12px;
-            text-align: left;
-            background-color: #04AA6D;
+            text-align: center;
+            background-color: #3377FF;
             color: white;
         }
+
 </style>

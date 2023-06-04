@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="post">
         <div v-if="loading" class="loading">
             Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationvue">https://aka.ms/jspsintegrationvue</a> for more details.
@@ -25,12 +25,18 @@
                     <td>{{ expiration }}</td>
                 </tr>
             </table>
-            <div class="content">
-                <div v-for="card in cards" v-bind:key="card.value" :class="getCardClass(card)">
-                    {{ card.value }}
+            <div v-for="card in cards" v-bind:key="card.value" class="grid-container">
+                <div class="grid-item">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div v-if="card.value == 'coffee'" :class="getCardClass(card)">☕︎</div>
+                    <div v-else :class="getCardClass(card)">{{ card.value }}</div>
+                    <div></div>
+                    <div></div>
                 </div>
             </div>
-
             <div class="content">
                 <table id="players">
                     <tr>
@@ -107,33 +113,15 @@
             getCardClass(card) {
                 switch (card.value) {
                     case "?":
-                        return "card interrogant";
+                        return "interrogant";
                     case "coffee":
-                        return "card coffee";
+                        return "coffee";
                     case "0":
-                        return "card cero";
+                        return "cero";
                     case "0,5":
-                        return "card cerocinco"
-                    case "1":
-                        return "card uno";
-                    case "2":
-                        return "card dos";
-                    case "3":
-                        return "card tres";
-                    case "5":
-                        return "card cinco";
-                    case "8":
-                        return "card ocho";
-                    case "13":
-                        return "card trece";
-                    case "20":
-                        return "card veinte";
-                    case "40":
-                        return "card cuarenta";
-                    case "100":
-                        return "card cien";
+                        return "cerocinco"
                     default:
-                        return "card interrogant";
+                        return "cardNumber";
                 }
             }
         },
@@ -142,58 +130,61 @@
 
 <style scoped>
 
+    .grid-container {
+        position: relative;
+        float: left;
+        height: auto;
+        padding: 20px;
+    }
+
+    .grid-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 2fr 1fr;
+        grid-gap: 5px;
+        background-color: white;
+        height: 120px;
+        line-height: 120px;
+        position: relative;
+        float: left;
+        width: 80px;
+        color: black;
+        font-size: 2.9em;
+        padding: 10px;
+        border-radius: 5%;
+        box-shadow: 0px 5px 15px grey;
+        margin-left: 20px;
+    }
+
+    .heart {
+        text-align: center;
+        align-self: center;
+        font-size: 2em;
+        color: red;
+    }
+
     /*Cards CSS*/
     .interrogant {
-        background-color: #FF5733;
+        color: #FF5733;
     }
 
     .coffee {
-        background-color: #CEFF33;
+        color: #FF337D;
     }
 
     .cero {
-        background-color: #A233FF;
+        color: #A233FF;
     }
 
     .cerocinco {
-        background-color: #FF337D;
+        color: #FF337D;
     }
 
-    .uno {
-        background-color: #D4FF33;
+
+    .cardNumber {
+        color: #3361FF;
     }
 
-    .dos {
-        background-color: #E0FF33;
-    }
-
-    .tres {
-        background-color: #33FFB5;
-    }
-
-    .cinco {
-        background-color: #FFB233;
-    }
-
-    .ocho {
-        background-color: #33E3FF;
-    }
-
-    .trece {
-        background-color: #3361FF;
-    }
-
-    .veinte {
-        background-color: #FC33FF;
-    }
-
-    .cuarenta {
-        background-color: #4FFF33;
-    }
-
-    .cien {
-        background-color: #FFFF33;
-    }
 
     .content {
         position: relative;
@@ -201,19 +192,6 @@
         width: 100%;
     }
 
-    .card {
-        position: relative;
-        float: left;
-        border: 1px solid black;
-        width: 65px;
-        height: 100px;
-        margin: 2% 0 0 4%;
-        line-height: 100px;
-        font-weight: bold;
-        font-size: 21px;
-        color: white;
-        border-style: dotted;
-    }
 
     .infoGame {
         position: relative;

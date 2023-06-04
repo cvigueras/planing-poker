@@ -5,15 +5,30 @@
         </div>
 
         <div v-if="post" class="content">
-            <div>
-                <h1>Planing Poker Game details:</h1>
-                <p>Share game: {{ id }}</p>
-                <p>Player: {{ createdBy }}</p>
-                <p>Title: {{ title }}</p>
-                <p>Description: {{ description }}</p>
-                <p>RoundTime: {{ roundTime }}</p>
-                <p>Expiration Game: {{ expiration }}</p>
-                <p>This is an about page used to illustrate mapping a view to a router with Vue Router.</p>
+            <label for="urlShare">Share the game</label>
+            <input type="text" id="urlShare" name="urlValue" :value="urlValue">
+            <button @click="copyUrl">Copy url</button>
+
+            <table id="customers">
+                <tr>
+                    <th>Scrum master</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>RoundTime</th>
+                    <th>Expiration</th>
+                </tr>
+                <tr>
+                    <td>{{ createdBy }}</td>
+                    <td>{{ title }}</td>
+                    <td>{{ description }}</td>
+                    <td>{{ roundTime }}</td>
+                    <td>{{ expiration }}</td>
+                </tr>
+            </table>
+            <div class="cards">
+
+            </div>
+            <div class="infoGame">
             </div>
         </div>
     </div>
@@ -27,7 +42,13 @@
         mounted() {
             var id = localStorage.getItem("gameid");
             var game = this.$store.getters.getCurrentGame(id);
-            this.id = game.id;
+            if (game != undefined) {
+
+                this.id = game.id;
+            }
+            else {
+                this.id = id;
+            }
             this.createdBy = game.createdBy;
             this.title = game.title;
             this.description = game.description;
@@ -43,6 +64,11 @@
         created() {
             this.fetchData();
         },
+        computed: {
+            urlValue() {
+                return this.id;
+            }
+        },
         watch: {
             // call again the method if the route changes
             '$route': 'fetchData'
@@ -54,12 +80,55 @@
 
                 axios.get('cards')
                     .then(response => {
-                        console.log("El listado de cards es: " + response.data)
                         this.post = response.data;
                         this.loading = false;
                         return;
                     }).catch(error => console.log(error))
+            },
+            copyUrl() {
+                var copyText = document.getElementById("urlShare");
+                copyText.select();
+                copyText.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(copyText.value);
             }
         },
     };
 </script>
+
+<style scoped>
+
+    .infoGame {
+        position: relative;
+        float: left;
+        width: 80%;
+        border: 1px solid #04AA6D;
+        margin-left: 10%;
+    }
+
+    #customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+</style>

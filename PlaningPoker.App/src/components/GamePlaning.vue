@@ -1,21 +1,21 @@
 ﻿<template>
+    <div class="head">
+        Header
+    </div>
     <div class="post">
         <div v-if="loading" class="loading">
             Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationvue">https://aka.ms/jspsintegrationvue</a> for more details.
         </div>
 
         <div v-if="cards" class="content">
-            <label for="urlShare">Share the game</label>
-            <input type="text" id="urlShare" name="urlValue" :value="urlValue">
-            <button @click="copyUrl">Copy url</button>
-
             <table id="customers">
                 <tr>
-                    <th>Scrum master</th>
+                    <th>Admin</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>RoundTime</th>
                     <th>Expiration</th>
+                    <th>Share Game Id</th>
                 </tr>
                 <tr>
                     <td>{{ createdBy }}</td>
@@ -23,6 +23,10 @@
                     <td>{{ description }}</td>
                     <td>{{ roundTime }}</td>
                     <td>{{ expiration }}</td>
+                    <td>
+                        <input type="text" id="urlShare" name="urlValue" :value="urlValue">
+                        <input type="button" @click="copyUrl" value="Copy url">
+                    </td>
                 </tr>
             </table>
             <div v-for="card in cards" v-bind:key="card.value" class="grid-container">
@@ -130,6 +134,17 @@
 
 <style scoped>
 
+    .head {
+        position: relative;
+        float: left;
+        width: 100%;
+        background-color: #F1EDED;
+        border-bottom: 1px solid gray;
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 20px;
+    }
+
     .grid-container {
         position: relative;
         float: left;
@@ -227,6 +242,7 @@
         text-align: left;
         background-color: #04AA6D;
         color: white;
+        text-align: center;
     }
 
     /*Player css*/
@@ -259,4 +275,25 @@
             color: white;
         }
 
+    input[type=button] {
+        background-color: #B2B1B1;
+        border: none;
+        color: white;
+        padding: 3px 30px;
+        text-decoration: none;
+        margin: 4px 2px;
+        cursor: pointer;
+        margin-left: 12px;
+    }
+
+    input[type=text] {
+        background-color: #B2B1B1;
+        border: none;
+        color: white;
+        padding: 3px 30px;
+        text-decoration: none;
+        margin: 4px 2px;
+        margin-left: 12px;
+        width: 260px;
+    }
 </style>

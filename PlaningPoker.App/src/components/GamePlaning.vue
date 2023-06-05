@@ -25,7 +25,7 @@
                     <td>{{ expiration }}</td>
                     <td>
                         <input type="text" id="urlShare" name="urlValue" :value="urlValue">
-                        <input type="button" @click="copyUrl" value="Copy url">
+                        <input type="button" @click="copyUrl" value="Copy id">
                     </td>
                 </tr>
             </table>
@@ -102,7 +102,16 @@
                 if (event) {
                     event.preventDefault()
                 }
-                alert(event.target.id)
+
+                //Remove class selected in all elements
+                const allElements = document.querySelectorAll('*');
+                allElements.forEach((element) => {
+                    element.classList.remove('selected');
+                });
+
+                var element = document.getElementById(event.currentTarget.id).firstElementChild;
+                element.classList.add("selected");
+                console.log(event.currentTarget.id);
             },
             fetchData() {
                 this.cards = null;
@@ -140,6 +149,15 @@
 </script>
 
 <style scoped>
+
+    .selected {
+        box-shadow: 0 0px 3px 11px rgba(4, 170, 109, 0.6) !important;
+        position: relative !important;
+        z-index: 9999;
+        pointer-events: auto;
+        transition: all 0.5s ease;
+        transform: scale(1.2, 1.2);
+    }
 
     .head {
         position: relative;
@@ -228,6 +246,7 @@
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
+        margin-bottom: 30px;
     }
 
     #customers td, #customers th {

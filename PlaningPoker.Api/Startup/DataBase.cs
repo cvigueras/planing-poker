@@ -26,6 +26,7 @@ namespace PlaningPoker.Api.Startup
             );
 
             connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Value VARCHAR(5) NOT NULL)"
             );
 
@@ -40,21 +41,21 @@ namespace PlaningPoker.Api.Startup
             if (ExistTableCards(connection)) return;
             var cards = new List<Card>
             {
-                Card.Restore("?"),
-                Card.Restore("coffee"),
-                Card.Restore("0"),
-                Card.Restore("0,5"),
-                Card.Restore("1"),
-                Card.Restore("2"),
-                Card.Restore("3"),
-                Card.Restore("5"),
-                Card.Restore("8"),
-                Card.Restore("13"),
-                Card.Restore("20"),
-                Card.Restore("40"),
-                Card.Restore("100"),
+                Card.Restore("?", 1),
+                Card.Restore("coffee", 2),
+                Card.Restore("0", 3),
+                Card.Restore("0,5", 3),
+                Card.Restore("1", 4),
+                Card.Restore("2", 5),
+                Card.Restore("3", 6),
+                Card.Restore("5", 7),
+                Card.Restore("8", 8),
+                Card.Restore("13", 9),
+                Card.Restore("20", 10),
+                Card.Restore("40", 11),
+                Card.Restore("100", 12),
             };
-            connection.Execute("INSERT INTO Cards VALUES (@Value)", cards);
+            connection.Execute("INSERT INTO Cards(Value) VALUES (@Value)", cards);
         }
 
         private static bool ExistTableCards(SQLiteConnection connection)

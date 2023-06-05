@@ -3,14 +3,16 @@
 public class Card
 {
     public string Value { get; }
+    public int Id { get; }
 
-    private Card(string value)
+    private Card(string value, int id)
     {
         Value = value;
+        Id = id;
     }
 
-    public static Card Restore(string value)
+    public static Card Restore(string value, int id)
     {
-        return new Card(value);
+        return new Card(value, id);
     }
 }

@@ -1,3 +1,3 @@
 ﻿namespace PlaningPoker.Api.Cards.Models;
 
-public record CardReadDto(string Value);
+public record CardReadDto(string Value, int Id);

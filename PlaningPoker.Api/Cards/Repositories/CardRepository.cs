@@ -25,7 +25,7 @@ public class CardRepository : ICardRepository
         var cardList = new List<Card>();
         foreach (var row in dataList)
         {
-            cardList.Add(Card.Restore(row.Value));
+            cardList.Add(Card.Restore(row.Value, Convert.ToInt32(row.Id)));
         }
         return cardList;
     }

@@ -49,6 +49,7 @@ public class SetupFixture : WebApplicationFactory<Program>
         );
 
         connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Value VARCHAR(5) NOT NULL)"
         );
     }
@@ -56,7 +57,7 @@ public class SetupFixture : WebApplicationFactory<Program>
     private void Seed()
     {
         var cards = CardMother.GetAll();
-        connection.Execute("INSERT INTO Cards VALUES (@Value)", cards);
+        connection.Execute("INSERT INTO Cards(Value) VALUES (@Value)", cards);
     }
 
     protected override IHost CreateHost(IHostBuilder builder)

@@ -8,19 +8,19 @@ public class CardMother
     {
         return new List<CardReadDto>
         {
-            new("?"),
-            new("coffee"),
-            new("0"),
-            new("0,5"),
-            new("1"),
-            new("2"),
-            new("3"),
-            new("5"),
-            new("8"),
-            new("13"),
-            new("20"),
-            new("40"),
-            new("100"),
+            new("?", 1),
+            new("coffee", 2),
+            new("0", 3),
+            new("0,5", 4),
+            new("1", 5),
+            new("2", 6),
+            new("3", 7),
+            new("5", 8),
+            new("8", 9),
+            new("13", 10),
+            new("20", 11),
+            new("40", 12),
+            new("100", 13),
         };
     }
 }

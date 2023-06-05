@@ -51,7 +51,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             {
                 message = m;
             });
-            await connection.InvokeAsync("JoinGroup", "group1");
+            await connection.InvokeAsync("JoinGroup", "group1", "Carlos");
             await connection.InvokeAsync("SendMessageToGroup", "group1", "Hello Group!!");
             await Task.Delay(200);
 
@@ -69,7 +69,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             messageHub.Clients = clients;
             messageHub.Groups = groups;
 
-            await messageHub.JoinGroup("group1");
+            await messageHub.JoinGroup("group1", "Carlos");
 
             await messageHub.Groups.Received(1).AddToGroupAsync(Arg.Any<string>(), Arg.Any<string>(), default);
         }

@@ -85,6 +85,9 @@
             };
         },
         created() {
+            this.$signalr.on('OnJoinGroup', (user) => {
+                console.log(user)
+            })
             this.fetchData();
         },
         computed: {
@@ -98,12 +101,10 @@
         },
         methods: {
             getCard(event) {
-                // now we have access to the native event
                 if (event) {
                     event.preventDefault()
                 }
 
-                //Remove class selected in all elements
                 const allElements = document.querySelectorAll('*');
                 allElements.forEach((element) => {
                     element.classList.remove('selected');
@@ -112,6 +113,22 @@
                 var element = document.getElementById(event.currentTarget.id).firstElementChild;
                 element.classList.add("selected");
                 console.log(event.currentTarget.id);
+
+                //this.$signalr
+                //    .invoke('SendMessageToAll', "hmy", "Hola a todos")
+                //    .catch(function (err) { return console.error(err) })
+
+                this.$signalr
+                    .invoke('JoinGroup', this.id, this.createdBy)
+                    .catch(function (err) { return console.error(err) })
+
+                //this.$signalr
+                //    .invoke('SendMessageToGroup', this.id, "Hola a todo el grupo")
+                //    .catch(function (err) { return console.error(err) })
+
+                //this.$signalr.on('OnReceiveMessage', (user) => {
+                //    console.log(user)
+                //})
             },
             fetchData() {
                 this.cards = null;

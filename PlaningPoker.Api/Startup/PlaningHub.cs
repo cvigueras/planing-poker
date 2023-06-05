@@ -19,9 +19,15 @@ public class PlaningHub : Hub
         return Clients.Client(connectionId).SendAsync("OnReceiveMessage", message);
     }
 
-    public Task JoinGroup(string group)
+    public async Task JoinGroup(string group, string user)
     {
-        return Groups.AddToGroupAsync(Context.ConnectionId, group);
+        await Groups.AddToGroupAsync(Context.ConnectionId, group);
+        await PublishUser(group, user);
+    }
+    
+    public async Task PublishUser(string group, string user)
+    {
+        await Clients.Group(group).SendAsync("OnJoinGroup", user);
     }
 
     public async Task SendMessageToGroup(string group, string message)

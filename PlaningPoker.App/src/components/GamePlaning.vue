@@ -29,7 +29,7 @@
                     </td>
                 </tr>
             </table>
-            <div v-for="card in cards" v-bind:key="card.value" class="grid-container">
+            <div v-for="card in cards" v-bind:key="card.value" class="grid-container" @click="getCard($event)" v-bind:id="card.id">
                 <div class="grid-item">
                     <div></div>
                     <div></div>
@@ -97,6 +97,13 @@
             '$route': 'fetchData'
         },
         methods: {
+            getCard(event) {
+                // now we have access to the native event
+                if (event) {
+                    event.preventDefault()
+                }
+                alert(event.target.id)
+            },
             fetchData() {
                 this.cards = null;
                 this.loading = true;

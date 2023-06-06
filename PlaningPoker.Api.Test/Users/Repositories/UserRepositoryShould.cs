@@ -41,7 +41,6 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         [Test]
         public async Task RetrieveAnExistingUser()
         {
-            var userGuid = guidGenerator.Generate().ToString();
             var gameGuid = guidGenerator.Generate().ToString();
             var givenUser = User.Create("Carlos", gameGuid);
             await userRepository.Add(givenUser);
@@ -56,8 +55,6 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         public async Task RetrieveUsersForAGame()
         {
             var givenGame = GameMother.CarlosAsGame();
-            var guidUser1 = Guid.Parse("49c4d829-b7e7-45ba-8db0-9da9eaee4388").ToString();
-            var guidUser2 = Guid.Parse("2fdb57e9-d2bb-43dc-bd2b-c3577717d5da").ToString();
             await gameRepository.Add(givenGame);
             var user1 = User.Create("Carlos", givenGame.Id);
             await userRepository.Add(user1);

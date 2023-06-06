@@ -73,5 +73,22 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
 
             await messageHub.Groups.Received(1).AddToGroupAsync(Arg.Any<string>(), Arg.Any<string>(), default);
         }
+
+        [Test]
+        public async Task PublishNewUserInGroupSuccessfully()
+        {
+            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+
+            var user = "Pedro";
+            var publishedUser = string.Empty;
+            connection.On<string>("OnJoinGroup", (userReceived) =>
+            {
+                publishedUser = userReceived;
+            });
+            await connection.InvokeAsync("JoinGroup", "group1", "Pedro");
+            await Task.Delay(200);
+
+            publishedUser.Should().Be(user);
+        }
     }
 }

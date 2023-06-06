@@ -1,45 +1,42 @@
 ﻿<template>
     <HeaderPlaning />
-    <div class="post">
-        <img v-if="loading" src="../assets/loading.gif" alt="Loading" />
+    <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
 
-        <div v-else class="content">
-            <table id="customers">
-                <tr>
-                    <th>Admin</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>RoundTime</th>
-                    <th>Expiration</th>
-                    <th>Share Game Id</th>
-                </tr>
-                <tr>
-                    <td>{{ createdBy }}</td>
-                    <td>{{ title }}</td>
-                    <td>{{ description }}</td>
-                    <td>{{ roundTime }}</td>
-                    <td>{{ expiration }}</td>
-                    <td>
-                        <input type="text" id="urlShare" name="urlValue" :value="urlValue">
-                        <input type="button" @click="copyUrl" value="Copy id">
-                    </td>
-                </tr>
-            </table>
-            <CardList :id="this.id" />
+    <div v-else class="content">
+        <table id="customers">
+            <tr>
+                <th>Admin</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>RoundTime</th>
+                <th>Expiration</th>
+                <th>Share Game Id</th>
+            </tr>
+            <tr>
+                <td>{{ createdBy }}</td>
+                <td>{{ title }}</td>
+                <td>{{ description }}</td>
+                <td>{{ roundTime }}</td>
+                <td>{{ expiration }}</td>
+                <td>
+                    <input type="text" id="urlShare" name="urlValue" :value="urlValue">
+                    <input type="button" @click="copyUrl" value="Copy id">
+                </td>
+            </tr>
+        </table>
+        <CardList :id="this.id" />
 
-            <div class="content">
-                <table id="players">
-                    <tr>
-                        <th>Player</th>
-                        <th>Vote</th>
-                    </tr>
-                    <tr>
-                        <td>{{ createdBy }}</td>
-                        <td>---</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+
+        <table id="players">
+            <tr>
+                <th>Player</th>
+                <th>Vote</th>
+            </tr>
+            <tr>
+                <td>{{ createdBy }}</td>
+                <td>---</td>
+            </tr>
+        </table>
     </div>
 </template>
 
@@ -123,9 +120,14 @@
 
 <style scoped>
 
-    .post {
+    .loading{
+        margin-top: 110px;
+    }
+
+    .content {
         position: relative;
         float: left;
+        height: auto;
         width: 100%;
         margin-top: 110px;
     }

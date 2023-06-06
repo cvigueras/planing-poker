@@ -1,22 +1,22 @@
 ﻿<template>
-    <div class="post">
-        <div v-if="loading" class="loading">
-            Loading... CardList
-        </div>
-        <div v-for="card in cards" v-bind:key="card.value" class="grid-container" @click="getCard($event)" v-bind:id="card.id">
+    <div class="cardlist">
+        <div v-for="card in firstcards" v-bind:key="card.value" class="grid-container" @click="getCard($event)" v-bind:id="card.id">
             <div class="grid-item">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
                 <div v-if="card.value == 'coffee'" :class="getCardClass(card)">☕︎</div>
                 <div v-else :class="getCardClass(card)">{{ card.value }}</div>
-                <div></div>
-                <div></div>
             </div>
         </div>
     </div>
-    <h4>{{ id }}</h4>
+    <div class="cardlist">
+        <div v-for="card in secondcards" v-bind:key="card.value" class="grid-container" @click="getCard($event)" v-bind:id="card.id">
+            <div class="grid-item">
+                <div v-if="card.value == 'coffee'" :class="getCardClass(card)">☕︎</div>
+                <div v-else :class="getCardClass(card)">{{ card.value }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!--<h4>{{ id }}</h4>-->
 </template>
 
 <script lang="js">
@@ -27,8 +27,8 @@
         },
         data() {
             return {
-                loading: false,
-                cards: this.cards
+                firstcards: this.firstcards,
+                secondcards: this.secondcards
             };
         },
         created() {
@@ -36,13 +36,10 @@
         },
         methods: {
             fetchData() {
-                this.cards = null;
-                this.loading = true;
-
                 axios.get('cards')
                     .then(response => {
-                        this.cards = response.data;
-                        this.loading = false;
+                        this.firstcards = response.data.slice(0, 7);
+                        this.secondcards = response.data.slice(7, 13);
                         return;
                     }).catch(error => console.log(error))
             },
@@ -80,8 +77,18 @@
 
 <style scoped>
 
+    .cardlist {
+        position: relative;
+        float: left;
+        width: 80%;
+        text-align: center;
+        margin-left: 10%;
+        margin-right: 10%;
+        background-color: aliceblue;
+    }
+
     .selected {
-        box-shadow: 0 0px 3px 11px rgba(4, 170, 109, 0.6) !important;
+        box-shadow: 0 0px 3px 6px rgba(4, 170, 109, 0.6) !important;
         position: relative !important;
         z-index: 9999;
         pointer-events: auto;
@@ -93,26 +100,21 @@
         position: relative;
         float: left;
         height: auto;
-        padding: 20px;
+        padding: 14px;
     }
 
     .grid-item {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr 2fr 1fr;
-        grid-gap: 5px;
         background-color: white;
-        height: 120px;
-        line-height: 120px;
+        height: 80px;
+        line-height: 80px;
         position: relative;
         float: left;
-        width: 80px;
+        width: 40px;
         color: black;
-        font-size: 2.9em;
+        font-size: 1.5em;
         padding: 10px;
         border-radius: 5%;
         box-shadow: 0px 5px 15px grey;
-        margin-left: 20px;
     }
 
     /*Cards CSS*/

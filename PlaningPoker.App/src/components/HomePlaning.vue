@@ -1,11 +1,9 @@
 <template>
-
     <div class="head">
         <div class="logo"><img style=" width: 100px;" alt="Vue logo" src="../assets/logo.png"></div>
         Header
     </div>
 
-    
     <div class="divCreate">
         <input v-model="username" type="text" placeholder="Username" name="username" required>
         <input v-model="gamename" type="text" placeholder="GameName" name="gamename" required>

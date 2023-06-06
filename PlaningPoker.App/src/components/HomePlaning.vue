@@ -58,6 +58,10 @@
 
 <style scoped>
 
+    body {
+        margin: 0 8px 0  8px !important;
+    }
+
     .logo {
         position: relative;
         float: left;
@@ -66,25 +70,27 @@
     }
 
     .headText {
-        font-family: cursive;
+        font-family: auto;
         font-size: 47px;
-        color: #3377FF;
-        -webkit-text-stroke: 2px green;
+        color: #04AA6D;
+        -webkit-text-stroke: 1px #3377ff;
     }
 
     .head {
-        position: relative;
-        float: left;
+        position: fixed;
         width: 100%;
         border-bottom: 1px solid gray;
         height: 100px;
         line-height: 100px;
-        margin-bottom: 20px;
+        background-color: #FAF5F5;
+        margin: -8px 0 20px -8px;
+        padding: 0 8px 0 8px;
+        z-index: 999999999;
     }
 
     .divCreate {
         margin: auto;
-        margin-top: 30px;
+        margin-top: 110px;
         width: 50%;
         border: 1.5px solid #04AA6D;
         padding: 20px;

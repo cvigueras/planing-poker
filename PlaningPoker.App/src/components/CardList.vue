@@ -16,11 +16,15 @@
             </div>
         </div>
     </div>
+    <h4>{{ id }}</h4>
 </template>
 
 <script lang="js">
     import axios from 'axios';
     export default {
+        props: {
+            id: String
+        },
         data() {
             return {
                 loading: false,

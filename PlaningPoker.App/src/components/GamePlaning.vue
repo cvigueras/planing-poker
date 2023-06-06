@@ -1,6 +1,7 @@
 ﻿<template>
     <div class="head">
-        Header
+        <div class="logo"><img style=" width: 100px;" alt="Vue logo" src="../assets/logo.png"></div>
+        <div class="headText">Planing Poker</div>
     </div>
     <div class="post">
         <img v-if="loading" src="../assets/loading.gif" alt="Loading" />
@@ -27,7 +28,7 @@
                     </td>
                 </tr>
             </table>
-            <CardList />
+            <CardList :id="this.id" />
 
             <div class="content">
                 <table id="players">
@@ -124,15 +125,37 @@
 
 <style scoped>
 
-    .head {
+    .post {
         position: relative;
         float: left;
         width: 100%;
-        background-color: #F1EDED;
+        margin-top: 110px;
+    }
+
+    .logo {
+        position: relative;
+        float: left;
+        width: 120px;
+        height: 100%;
+    }
+
+    .headText {
+        font-family: auto;
+        font-size: 47px;
+        color: #04AA6D;
+        -webkit-text-stroke: 1px #3377ff;
+    }
+
+    .head {
+        position: fixed;
+        width: 100%;
         border-bottom: 1px solid gray;
-        height: 40px;
-        line-height: 40px;
-        margin-bottom: 20px;
+        height: 100px;
+        line-height: 100px;
+        background-color: #FAF5F5;
+        margin: -8px 0 20px -8px;
+        padding: 0 8px 0 8px;
+        z-index: 999999999;
     }
 
     /*Customers CSS*/

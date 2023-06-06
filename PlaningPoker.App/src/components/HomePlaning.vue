@@ -1,7 +1,7 @@
 <template>
     <div class="head">
         <div class="logo"><img style=" width: 100px;" alt="Vue logo" src="../assets/logo.png"></div>
-        Header
+        <div class="headText">Planing Poker</div>
     </div>
 
     <div class="divCreate">
@@ -65,13 +65,20 @@
         height: 100%;
     }
 
+    .headText {
+        font-family: cursive;
+        font-size: 47px;
+        color: #3377FF;
+        -webkit-text-stroke: 2px green;
+    }
+
     .head {
         position: relative;
         float: left;
         width: 100%;
         border-bottom: 1px solid gray;
         height: 100px;
-        line-height: 40px;
+        line-height: 100px;
         margin-bottom: 20px;
     }
 

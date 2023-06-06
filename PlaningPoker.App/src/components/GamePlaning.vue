@@ -3,11 +3,9 @@
         Header
     </div>
     <div class="post">
-        <div v-if="loading" class="loading">
-            Loading... GamePlaningVue
-        </div>
+        <img v-if="loading" src="../assets/loading.gif" alt="Loading" />
 
-        <div class="content">
+        <div v-else class="content">
             <table id="customers">
                 <tr>
                     <th>Admin</th>
@@ -55,8 +53,6 @@
         components: {
             CardList
         },
-        mounted() {
-        },
         data() {
             return {
                 loading: false,
@@ -73,9 +69,6 @@
             urlValue() {
                 return this.id;
             }
-        },
-        watch: {
-
         },
         methods: {
             fetchData() {
@@ -95,8 +88,11 @@
                 this.description = game.description;
                 this.roundTime = game.roundTime;
                 this.expiration = game.expiration;
-                this.game = game;
-                this.loading = false;
+                setTimeout(() => {
+                    this.game = game;
+                    this.loading = false;
+                }, "1500");
+
             },
             signalRTest() {
 
@@ -147,27 +143,27 @@
         margin-bottom: 30px;
     }
 
-    #customers td, #customers th {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
 
-    #customers tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-    #customers tr:hover {
-        background-color: #ddd;
-    }
+        #customers tr:hover {
+            background-color: #ddd;
+        }
 
-    #customers th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #04AA6D;
-        color: white;
-        text-align: center;
-    }
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+            text-align: center;
+        }
 
     /*Player css*/
     #players {
@@ -180,7 +176,7 @@
         float: left;
     }
 
-       #players td, #customers th {
+        #players td, #customers th {
             border: 1px solid #ddd;
             padding: 8px;
         }

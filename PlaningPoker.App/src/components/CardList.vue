@@ -21,9 +21,6 @@
 <script lang="js">
     import axios from 'axios';
     export default {
-
-        mounted() {
-        },
         data() {
             return {
                 loading: false,
@@ -32,10 +29,6 @@
         },
         created() {
             this.fetchData();
-        },
-        computed: {
-        },
-        watch: {
         },
         methods: {
             fetchData() {

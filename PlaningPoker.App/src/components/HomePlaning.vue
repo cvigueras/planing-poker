@@ -14,7 +14,7 @@
     <div class="divJoin">
         <input v-model="username" type="text" placeholder="Username" name="username" required>
         <input v-model="gameId" type="text" placeholder="Game Id" name="gameId" required>
-        <button class="btnJoin" @click="getValues" type="submit">
+        <button class="btnJoin" @click="joinGame" type="submit">
             Join game
         </button>
     </div>
@@ -40,16 +40,33 @@
                 };
                 this.fetchData(gameCreated);
             },
-            joinGame() {
-
-            },
             fetchData(game) {
                 axios.post('game', game)
                     .then(response => {
                         game.id = response.data;
                         this.$store.dispatch('addToGames', JSON.stringify(game))
                         localStorage.setItem("gameid", game.id);
+                        this.$signalr
+                            .invoke('JoinGroup', game.id, game.createdBy)
+                            .catch(function (err) { return console.error(err) })
                         this.$router.push('/planing'); 
+                    }).catch(error => console.log(error))
+            },
+            joinGame() {
+                const user = {
+                    name: this.username,
+                    gameId: this.gameId
+                }
+                axios.put('game/' + this.gameId, user)
+                    .then(response => {
+                        var game = response.data;
+                        this.$store.state.users = game.users;
+                        this.$store.dispatch('addToGames', JSON.stringify(game))
+                        localStorage.setItem("gameid", game.id);
+                        this.$signalr
+                            .invoke('JoinGroup', this.gameId, user.name)
+                            .catch(function (err) { return console.error(err) })
+                        this.$router.push('/planing');
                     }).catch(error => console.log(error))
             },
         },

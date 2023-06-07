@@ -1,5 +1,6 @@
 ﻿<template>
     <HeaderPlaning />
+
     <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
 
     <div v-else class="content">
@@ -26,14 +27,13 @@
         </table>
         <CardList :id="this.id" />
 
-
         <table id="players">
             <tr>
                 <th>Player</th>
                 <th>Vote</th>
             </tr>
-            <tr>
-                <td>{{ createdBy }}</td>
+            <tr v-for="user in users" v-bind:key="user">
+                <td>{{ user.name }}</td>
                 <td>---</td>
             </tr>
         </table>
@@ -49,6 +49,14 @@
         components: {
             CardList, HeaderPlaning
         },
+        computed: {
+            users() {
+                return this.$store.state.users
+            },
+            urlValue() {
+                return this.id;
+            }
+        },
         data() {
             return {
                 loading: false,
@@ -57,18 +65,19 @@
         },
         created() {
             this.$signalr.on('OnJoinGroup', (user) => {
-                console.log(user)
+                const userAdded = {
+                    name: user,
+                    gameId: this.id
+                }
+                var existUser = this.$store.getters.existUser(this.id, user);
+                if (existUser == false) {
+                    this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
+                }
             })
             this.fetchData();
         },
-        computed: {
-            urlValue() {
-                return this.id;
-            }
-        },
         methods: {
             fetchData() {
-                this.game = null;
                 this.loading = true;
                 var id = localStorage.getItem("gameid");
                 var game = this.$store.getters.getCurrentGame(id);
@@ -140,27 +149,27 @@
         margin-bottom: 30px;
     }
 
-        #customers td, #customers th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
+    #customers td, #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
 
-        #customers tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+    #customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
-        #customers tr:hover {
-            background-color: #ddd;
-        }
+    #customers tr:hover {
+        background-color: #ddd;
+    }
 
-        #customers th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #04AA6D;
-            color: white;
-            text-align: center;
-        }
+    #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+        text-align: center;
+    }
 
     /*Player css*/
     #players {
@@ -173,26 +182,26 @@
         float: left;
     }
 
-        #players td, #customers th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
+    #players td, #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
 
-        #players tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+    #players tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
-        #players tr:hover {
-            background-color: #ddd;
-        }
+    #players tr:hover {
+        background-color: #ddd;
+    }
 
-        #players th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: center;
-            background-color: #3377FF;
-            color: white;
-        }
+    #players th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: center;
+        background-color: #3377FF;
+        color: white;
+    }
 
     input[type=button] {
         background-color: #B2B1B1;

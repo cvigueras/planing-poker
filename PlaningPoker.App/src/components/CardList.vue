@@ -115,6 +115,8 @@
         padding: 10px;
         border-radius: 5%;
         box-shadow: 0px 5px 15px grey;
+        cursor: pointer;
+        font-weight: bold;
     }
 
     /*Cards CSS*/

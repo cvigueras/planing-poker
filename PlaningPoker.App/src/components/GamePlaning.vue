@@ -25,34 +25,24 @@
                 </td>
             </tr>
         </table>
+
         <CardList :id="this.id" />
 
-        <table id="players">
-            <tr>
-                <th>Player</th>
-                <th>Vote</th>
-            </tr>
-            <tr v-for="user in users" v-bind:key="user">
-                <td>{{ user.name }}</td>
-                <td>---</td>
-            </tr>
-        </table>
+        <PlayerList />
     </div>
 </template>
 
 
 <script lang="js">
     import CardList from './CardList.vue'
+    import PlayerList from './PlayerList.vue'
     import HeaderPlaning from './HeaderPlaning.vue';
 
     export default {
         components: {
-            CardList, HeaderPlaning
+            CardList, HeaderPlaning, PlayerList
         },
         computed: {
-            users() {
-                return this.$store.state.users
-            },
             urlValue() {
                 return this.id;
             }
@@ -64,16 +54,6 @@
             };
         },
         created() {
-            this.$signalr.on('OnJoinGroup', (user) => {
-                const userAdded = {
-                    name: user,
-                    gameId: this.id
-                }
-                var existUser = this.$store.getters.existUser(this.id, user);
-                if (existUser == false) {
-                    this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
-                }
-            })
             this.fetchData();
         },
         methods: {
@@ -96,7 +76,7 @@
                 setTimeout(() => {
                     this.game = game;
                     this.loading = false;
-                }, "1500");
+                }, "1000");
 
             },
             signalRTest() {
@@ -169,38 +149,6 @@
         background-color: #04AA6D;
         color: white;
         text-align: center;
-    }
-
-    /*Player css*/
-    #players {
-        font-family: Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 80%;
-        margin-left: 10%;
-        margin-top: 50px;
-        position: relative;
-        float: left;
-    }
-
-    #players td, #customers th {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-
-    #players tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    #players tr:hover {
-        background-color: #ddd;
-    }
-
-    #players th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: center;
-        background-color: #3377FF;
-        color: white;
     }
 
     input[type=button] {

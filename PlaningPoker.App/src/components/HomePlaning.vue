@@ -44,7 +44,13 @@
                 axios.post('game', game)
                     .then(response => {
                         game.id = response.data;
-                        this.$store.dispatch('addToGames', JSON.stringify(game))
+                        this.$store.dispatch('addToGames', JSON.stringify(game));
+                        const user =
+                        {
+                            name: game.createdBy,
+                            gameId: game.id
+                        };
+                        this.$store.dispatch('addToUsers', JSON.stringify(user));
                         localStorage.setItem("gameid", game.id);
                         this.$signalr
                             .invoke('JoinGroup', game.id, game.createdBy)

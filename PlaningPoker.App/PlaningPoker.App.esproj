@@ -13,8 +13,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\signalr\" />
-    <Folder Include="src\pages\" />
     <Folder Include="src\router\" />
     <Folder Include="src\store\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Remove="src\pages\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\pages\**" />
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ const routes = [
         component: GamePlaning,
     },
     {
-        path: '/:catchAll(.*)*',
+        path: '/:pathMatch(.*)*',
         name: "PageNotFound",
         component: PageNotFound,
     },

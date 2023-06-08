@@ -1,0 +1,74 @@
+.divCreate {
+    margin: auto;
+    margin-top: 110px;
+    width: 50%;
+    border: 1.5px solid #04AA6D;
+    padding: 20px;
+    border-style: dotted;
+    position: relative;
+    float: left;
+    margin-left: 25%;
+}
+
+.divJoin {
+    margin: auto;
+    width: 30%;
+    border: 1.5px solid #3377FF;
+    padding: 20px;
+    border-style: dotted;
+    margin-top: 30px;
+    position: relative;
+    float: left;
+    margin-left: 35%;
+}
+
+.inputHome {
+    background-color: whitesmoke !important;
+    width: 100% !important;
+    padding: 12px 20px !important;
+    margin: 8px 0 !important;
+    display: inline-block !important;
+    border: 1px solid #ccc !important;
+    box-sizing: border-box !important;
+    color: black!important;
+    font-weight: bold !important;
+}
+
+.btnNumber {
+    width: 40% !important;
+    padding: 12px 20px !important;
+    margin: 8px 24px !important;
+    display: inline-block !important;
+    border: 1px solid #04AA6D !important;
+    box-sizing: border-box !important;
+    color: black !important;
+    font-weight: bold !important;
+}
+
+.btnCreate {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btnCreate:hover {
+    opacity: 0.8;
+}
+
+.btnJoin {
+    background-color: #3377FF;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btnJoin:hover {
+    opacity: 0.8;
+}

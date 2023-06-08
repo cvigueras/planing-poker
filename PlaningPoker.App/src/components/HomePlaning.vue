@@ -2,18 +2,18 @@
     <HeaderPlaning />
 
     <div class="divCreate">
-        <input v-model="username" type="text" placeholder="Username" name="username" required>
-        <input v-model="gamename" type="text" placeholder="GameName" name="gamename" required>
-        <input v-model="description" type="text" placeholder="Description" name="description" required>
-        <input v-model="roundTime" type="number" placeholder="Round Time" name="roundTime" required>
-        <input v-model="expiration" type="number" placeholder="Expiration Game" name="expiration" required>
+        <input v-model="username" type="text" placeholder="Username" name="username" class="inputHome" required>
+        <input v-model="gamename" type="text" placeholder="GameName" name="gamename" class="inputHome" required>
+        <input v-model="description" type="text" placeholder="Description" name="description" class="inputHome" required>
+        <input v-model="roundTime" type="number" placeholder="Round Time" name="roundTime" class="btnNumber" required>
+        <input v-model="expiration" type="number" placeholder="Expiration Game" name="expiration" class="btnNumber" required>
         <button class="btnCreate" @click="createGame" type="submit">
             Create game
         </button>
     </div>
     <div class="divJoin">
-        <input v-model="username" type="text" placeholder="Username" name="username" required>
-        <input v-model="gameId" type="text" placeholder="Game Id" name="gameId" required>
+        <input v-model="username" type="text" placeholder="Username" name="username" class="inputHome" required>
+        <input v-model="gameId" type="text" placeholder="Game Id" name="gameId" class="inputHome" required>
         <button class="btnJoin" @click="joinGame" type="submit">
             Join game
         </button>
@@ -76,79 +76,9 @@
                     }).catch(error => console.log(error))
             },
         },
-
     }
 </script>
 
 <style scoped>
-
-    .divCreate {
-        margin: auto;
-        margin-top: 110px;
-        width: 50%;
-        border: 1.5px solid #04AA6D;
-        padding: 20px;
-        border-style: dotted;
-        position: relative;
-        float: left;
-        margin-left: 25%;
-    }
-
-    .divJoin {
-        margin: auto;
-        width: 30%;
-        border: 1.5px solid #3377FF;
-        padding: 20px;
-        border-style: dotted;
-        margin-top: 30px;
-        position: relative;
-        float: left;
-        margin-left: 35%;
-    }
-
-    input[type=text] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-
-    input[type=number] {
-        width: 40%;
-        padding: 12px 20px;
-        margin: 8px 24px;
-        display: inline-block;
-        border: 1px solid #04AA6D;
-        box-sizing: border-box;
-    }
-
-    .btnCreate {
-        background-color: #04AA6D;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-    }
-
-        .btnCreate:hover {
-            opacity: 0.8;
-        }
-
-    .btnJoin {
-        background-color: #3377FF;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-    }
-
-    .btnJoin:hover {
-        opacity: 0.8;
-    }
+    @import "../css/home.css";
 </style>

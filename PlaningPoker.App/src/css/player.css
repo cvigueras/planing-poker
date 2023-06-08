@@ -1,0 +1,30 @@
+#players {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 50px;
+    position: relative;
+    float: left;
+}
+
+#players td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#players tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#players tr:hover {
+    background-color: #ddd;
+}
+
+#players th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #3377FF;
+    color: white;
+}

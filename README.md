@@ -26,7 +26,7 @@ Then
 # Add user an existing game
 
 Given
-- An anonymous user want to join in a existing Game.
+- An anonymous user want to join in an existing Game.
 
 When
 - An anonymous user request to be added to new Game by Game unique Guid.
@@ -34,3 +34,14 @@ When
 Then
 - The Game is returned with the following details:
     - UniqueId, Title, description, createdBy, round time, date expiration game, user associate to the Game included him and Card List Values.
+
+# A user add a Vote in Planing
+
+Given
+- An anonymous user into an existing Game.
+
+When
+- An anonymous user send a vote.
+
+Then
+- The Vote is registered for that user.

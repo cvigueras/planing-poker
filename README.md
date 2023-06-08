@@ -45,3 +45,16 @@ When
 
 Then
 - The Vote is registered for that user.
+
+
+# All users in the same Game can watch all votes
+
+Given
+- An unknown number of users in the same game.
+- All votes registered for all users.
+
+When
+- An anonymous user click on send Votes button.
+
+Then
+- Votes from all Users are shown in Player Panel.

@@ -1,6 +1,6 @@
-﻿using System.Data.SQLite;
-using Dapper;
+﻿using Dapper;
 using PlaningPoker.Api.Games.Models;
+using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Games.Repositories;
 

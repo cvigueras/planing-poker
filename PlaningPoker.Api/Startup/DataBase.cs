@@ -1,7 +1,6 @@
-﻿using System.Data.Common;
-using System.Data.SQLite;
-using Dapper;
+﻿using Dapper;
 using PlaningPoker.Api.Cards.Models;
+using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Startup
 {

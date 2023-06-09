@@ -18,13 +18,18 @@
                 return this.$store.state.users
             },
         },
+        mounted() {
+            if (this.$store.state.users.length == 0) {
+                this.$store.state.users = JSON.parse(localStorage.getItem('users'));
+            }
+        },
         created() {
             this.$signalr.on('OnJoinGroup', (user) => {
                 const userAdded = {
                     name: user,
-                    gameId: this.id
+                    gameId: localStorage.getItem('gameid')
                 }
-                var existUser = this.$store.getters.existUser(this.id, user);
+                var existUser = this.$store.getters.existUser(userAdded.gameId, user);
                 if (existUser == false) {
                     this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
                 }

@@ -5,8 +5,6 @@
         <input v-model="username" type="text" placeholder="Username" name="username" class="inputHome" required>
         <input v-model="gamename" type="text" placeholder="GameName" name="gamename" class="inputHome" required>
         <input v-model="description" type="text" placeholder="Description" name="description" class="inputHome" required>
-        <input v-model="roundTime" type="number" placeholder="Round Time" name="roundTime" class="btnNumber" required>
-        <input v-model="expiration" type="number" placeholder="Expiration Game" name="expiration" class="btnNumber" required>
         <button class="btnCreate" @click="createGame" type="submit">
             Create game
         </button>
@@ -23,21 +21,18 @@
 <script>
     import axios from 'axios';
     import HeaderPlaning from './HeaderPlaning.vue';
+    import gameFactory from '../factories/game'
 
     export default {
         components: {
             HeaderPlaning
         },
+        mounted() {
+            localStorage.clear();
+        },
         methods: {
             createGame() {
-                const gameCreated = {
-                    id: '',
-                    createdBy: this.username,
-                    title: this.gamename,
-                    description: this.description,
-                    roundTime: this.roundTime,
-                    expiration: this.expiration
-                };
+                var gameCreated = gameFactory.create(this.username, this.gamename, this.description);
                 this.fetchData(gameCreated);
             },
             fetchData(game) {
@@ -45,35 +40,32 @@
                     .then(response => {
                         game.id = response.data;
                         this.$store.dispatch('addToGames', JSON.stringify(game));
-                        const user =
-                        {
-                            name: game.createdBy,
-                            gameId: game.id
-                        };
+                        var user = this.buildUser(game.createdBy, game.id);
                         this.$store.dispatch('addToUsers', JSON.stringify(user));
+                        localStorage.setItem("users", JSON.stringify([user]));
                         localStorage.setItem("gameid", game.id);
-                        this.$signalr
-                            .invoke('JoinGroup', game.id, game.createdBy)
-                            .catch(function (err) { return console.error(err) })
-                        this.$router.push('/planing'); 
+                        localStorage.setItem("username", game.createdBy);
+                        this.$router.push('/planing');
                     }).catch(error => console.log(error))
             },
             joinGame() {
-                const user = {
-                    name: this.username,
-                    gameId: this.gameId
-                }
+                var user = this.buildUser(this.username, this.gameId);
                 axios.put('game/' + this.gameId, user)
                     .then(response => {
                         var game = response.data;
                         this.$store.state.users = game.users;
                         this.$store.dispatch('addToGames', JSON.stringify(game))
+                        localStorage.setItem("users", JSON.stringify(game.users));
                         localStorage.setItem("gameid", game.id);
-                        this.$signalr
-                            .invoke('JoinGroup', this.gameId, user.name)
-                            .catch(function (err) { return console.error(err) })
+                        localStorage.setItem("username", user.name);
                         this.$router.push('/planing');
                     }).catch(error => console.log(error))
+            },
+            buildUser(userName, gameId) {
+                return {
+                    name: userName,
+                    gameId: gameId
+                }
             },
         },
     }

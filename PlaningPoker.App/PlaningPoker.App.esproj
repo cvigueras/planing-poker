@@ -12,6 +12,7 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="src\factories\" />
     <Folder Include="src\signalr\" />
     <Folder Include="src\router\" />
     <Folder Include="src\store\" />

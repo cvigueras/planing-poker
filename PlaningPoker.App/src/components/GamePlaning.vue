@@ -9,16 +9,12 @@
                 <th>Admin</th>
                 <th>Title</th>
                 <th>Description</th>
-                <th>RoundTime</th>
-                <th>Expiration</th>
                 <th>Share Game Id</th>
             </tr>
             <tr>
                 <td>{{ createdBy }}</td>
                 <td>{{ title }}</td>
                 <td>{{ description }}</td>
-                <td>{{ roundTime }}</td>
-                <td>{{ expiration }}</td>
                 <td>
                     <input type="text" id="urlShare" name="urlValue" :value="urlValue" class="inputGame">
                     <input type="button" @click="copyUrl" value="Copy id" class="btnGame">
@@ -34,6 +30,7 @@
 
 
 <script lang="js">
+    import axios from 'axios';
     import CardList from './CardList.vue'
     import PlayerList from './PlayerList.vue'
     import HeaderPlaning from './HeaderPlaning.vue';
@@ -54,48 +51,43 @@
             };
         },
         created() {
-            this.fetchData();
+            this.getGame();
         },
         methods: {
-            fetchData() {
+            getGame() {
                 this.loading = true;
-                var id = localStorage.getItem("gameid");
-                var game = this.$store.getters.getCurrentGame(id);
-                if (game != undefined) {
-
-                    this.id = game.id;
-                }
-                else {
-                    this.id = id;
-                }
+                var gameid = localStorage.getItem("gameid");
+                this.fetchGame(gameid);
+                this.joinGroup();
+            },
+            joinGroup() {
+                var gameId = localStorage.getItem("gameid");
+                var userName = localStorage.getItem("username");
+                this.$signalr.start().then(() => {
+                    this.$signalr
+                        .invoke('JoinGroup', gameId, userName)
+                        .catch(function (err) { console.error(err) })
+                });
+            },
+            buildGame(game) {
+                this.id = game.id;
                 this.createdBy = game.createdBy;
                 this.title = game.title;
                 this.description = game.description;
                 this.roundTime = game.roundTime;
                 this.expiration = game.expiration;
+                localStorage.setItem('users', game.users);
                 setTimeout(() => {
                     this.game = game;
                     this.loading = false;
                 }, "1000");
-
             },
-            signalRTest() {
-
-                //this.$signalr
-                //    .invoke('SendMessageToAll', "hmy", "Hola a todos")
-                //    .catch(function (err) { return console.error(err) })
-
-                this.$signalr
-                    .invoke('JoinGroup', this.id, this.createdBy)
-                    .catch(function (err) { return console.error(err) })
-
-                //this.$signalr
-                //    .invoke('SendMessageToGroup', this.id, "Hola a todo el grupo")
-                //    .catch(function (err) { return console.error(err) })
-
-                //this.$signalr.on('OnReceiveMessage', (user) => {
-                //    console.log(user)
-                //})
+            fetchGame(gameId) {
+                axios.get('game/' + gameId)
+                    .then(response => {
+                        this.$store.state.users = response.data.users;
+                        this.buildGame(response.data);
+                    }).catch(error => console.log(error))
             },
             copyUrl() {
                 var copyText = document.getElementById("urlShare");

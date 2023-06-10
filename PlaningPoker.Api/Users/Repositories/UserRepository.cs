@@ -57,4 +57,8 @@ public class UserRepository : IUserRepository
         return listUsers;
     }
 
+    public async Task UpdateByConnectionId(User givenUser)
+    {
+        throw new NotImplementedException();
+    }
 }

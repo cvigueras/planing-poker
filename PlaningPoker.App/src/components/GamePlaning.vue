@@ -52,6 +52,7 @@
         },
         created() {
             this.getGame();
+            this.onDisconnect();
         },
         methods: {
             getGame() {
@@ -76,7 +77,7 @@
                 this.description = game.description;
                 this.roundTime = game.roundTime;
                 this.expiration = game.expiration;
-                localStorage.setItem('users', game.users);
+                localStorage.setItem('users', JSON.stringify(game.users));
                 setTimeout(() => {
                     this.game = game;
                     this.loading = false;
@@ -95,6 +96,11 @@
                 copyText.setSelectionRange(0, 99999);
                 navigator.clipboard.writeText(copyText.value);
             },
+            onDisconnect() {
+                this.$signalr.on('UserDisconnected', (connectionId) => {
+                    console.log(connectionId);
+                }); 
+            }
         },
     }
 </script>

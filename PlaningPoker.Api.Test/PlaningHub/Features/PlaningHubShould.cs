@@ -4,14 +4,18 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
 using NSubstitute;
 using PlaningPoker.Api.Test.Startup;
+using PlaningPoker.Api.Users.Repositories;
+using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.PlaningHub.Features
 {
     public class PlaningHubShould
     {
         private SetupFixture setupFixture;
+        private SQLiteConnection connectionSql;
         private TestServer server;
         private HubConnection connection;
+        private UserRepository userRepository;
 
         [SetUp]
         public void Setup()
@@ -19,6 +23,9 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             setupFixture = new SetupFixture();
             setupFixture.CreateClient();
             server = setupFixture.Server;
+            setupFixture = new SetupFixture();
+            connectionSql = setupFixture.GetSQLiteConnection();
+            userRepository = new UserRepository(connectionSql);
         }
 
         [Test]
@@ -64,7 +71,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             var clients = Substitute.For<IHubCallerClients>();
             var groups = Substitute.For<IGroupManager>();
             var hubContext = Substitute.For<HubCallerContext>();
-            var messageHub = Substitute.For<Api.Startup.PlaningHub>();
+            var messageHub = new Api.Startup.PlaningHub(userRepository);
             messageHub.Context = hubContext;
             messageHub.Clients = clients;
             messageHub.Groups = groups;

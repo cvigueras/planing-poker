@@ -72,7 +72,7 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         }
 
         [Test]
-        public async Task RetrieveAUserByConnectionId()
+        public async Task RetrieveAnExistingUserByConnectionId()
         {
             var gameGuid = guidGenerator.Generate().ToString();
             var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
@@ -81,6 +81,21 @@ namespace PlaningPoker.Api.Test.Users.Repositories
             var result = await userRepository.GetByConnectionId("connectionId123");
 
             var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId123");
+            result.Should().BeEquivalentTo(expectedUser);
+        }
+
+        [Test]
+        public async Task UpdateByConnectionIdAnExistingUser()
+        {
+            var gameGuid = guidGenerator.Generate().ToString();
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            await userRepository.Add(givenUser);
+            givenUser.ConnectionId = "connectionId456";
+            await userRepository.UpdateByConnectionId(givenUser);
+
+            var result = await userRepository.GetByConnectionId("connectionId123");
+
+            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456");
             result.Should().BeEquivalentTo(expectedUser);
         }
     }

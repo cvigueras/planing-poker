@@ -67,10 +67,10 @@
                     gameId: gameId
                 }
             },
-            setLocalData(user, game)
-            {
+            //setLocalData(user, game)
+            //{
 
-            }
+            //}
         },
     }
 </script>

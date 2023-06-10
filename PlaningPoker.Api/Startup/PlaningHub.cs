@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
 
 namespace PlaningPoker.Api.Startup;
@@ -14,8 +15,8 @@ public class PlaningHub : Hub
 
     public async Task JoinGroup(string group, string user)
     {
-        //TODO ES UN UPDATE
-        //await userRepository.Add(User.Create(user, group, Context.ConnectionId));
+        var userCreate = User.Create(user, group, Context.ConnectionId);
+        await userRepository.UpdateByGameId(userCreate, userCreate.GameId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
         await PublishUser(group, user);
     }
@@ -39,7 +40,7 @@ public class PlaningHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception ex)
     {
-        //await RemoveFromGroup(Context.ConnectionId);
+        await RemoveFromGroup(Context.ConnectionId);
         await Clients.Others.SendAsync("UserDisconnected", Context.ConnectionId);
         await base.OnDisconnectedAsync(ex);
     }

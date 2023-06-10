@@ -49,6 +49,11 @@ public class UserRepository : IUserRepository
             $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE GameId = '{gameId}'");
     }
 
+    public async Task DeleteByGameId(string gameId)
+    {
+        throw new NotImplementedException();
+    }
+
     private User ToUser(dynamic rawData)
     {
         return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId);

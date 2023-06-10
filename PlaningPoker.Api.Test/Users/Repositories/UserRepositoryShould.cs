@@ -113,5 +113,18 @@ namespace PlaningPoker.Api.Test.Users.Repositories
             var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456");
             result.Should().BeEquivalentTo(expectedUser);
         }
+
+        [Test]
+        public async Task DeleteAnExistingUser()
+        {
+            var gameGuid = guidGenerator.Generate().ToString();
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            await userRepository.Add(givenUser);
+            await userRepository.DeleteByGameId(gameGuid);
+
+            var action = async () => await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
+
+            await action.Should().ThrowAsync<InvalidOperationException>();
+        }
     }
 }

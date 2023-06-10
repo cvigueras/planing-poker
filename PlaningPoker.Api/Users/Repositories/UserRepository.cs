@@ -22,8 +22,8 @@ public class UserRepository : IUserRepository
     public async Task Add(User user)
     {
         await connection.ExecuteAsync(
-            "INSERT INTO Users (Name, GameId) " +
-            $"VALUES ('{user.Name}', '{user.GameId}');");
+            "INSERT INTO Users (Name, GameId, ConnectionId) " +
+            $"VALUES ('{user.Name}', '{user.GameId}', '{user.ConnectionId}');");
     }
 
     public async Task<IEnumerable<User>> GetUsersGameByGameId(string gameId)
@@ -31,10 +31,15 @@ public class UserRepository : IUserRepository
         var rawData = (await connection.QueryAsync<dynamic>($"SELECT * FROM Users WHERE GameId = '{gameId}'")).ToList();
         return ToListUser(rawData);
     }
+    public async Task<User> GetByConnectionId(string connectionId)
+    {
+        var rawData = (await connection.QueryAsync<dynamic>($"SELECT * FROM Users WHERE ConnectionId = '{connectionId}'")).First();
+        return ToUser(rawData);
+    }
 
     private User ToUser(dynamic rawData)
     {
-        return User.Create(rawData.Name, rawData.GameId, string.Empty);
+        return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId);
     }
 
     private IEnumerable<User> ToListUser(IEnumerable<dynamic> rawData)
@@ -52,8 +57,4 @@ public class UserRepository : IUserRepository
         return listUsers;
     }
 
-    public async Task<object> GetByConnectionId(string connectionid123)
-    {
-        throw new NotImplementedException();
-    }
 }

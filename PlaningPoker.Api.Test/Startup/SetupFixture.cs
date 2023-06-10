@@ -44,6 +44,7 @@ public class SetupFixture : WebApplicationFactory<Program>
         );
 
         connection.Execute(@"CREATE TABLE IF NOT EXISTS Users(
+                ConnectionId VARCHAR(200),
                 Name VARCHAR(20) NOT NULL,
                 GameId VARCHAR(60) NOT NULL)"
         );

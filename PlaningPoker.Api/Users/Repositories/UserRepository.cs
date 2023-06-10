@@ -43,9 +43,10 @@ public class UserRepository : IUserRepository
             $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE ConnectionId = '{connectionId}'");
     }
 
-    public async Task UpdateByGameId(User givenUser, string givenUserGameId)
+    public async Task UpdateByGameId(User givenUser, string gameId)
     {
-        throw new NotImplementedException();
+        await connection.ExecuteAsync(
+            $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE GameId = '{gameId}'");
     }
 
     private User ToUser(dynamic rawData)

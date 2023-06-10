@@ -51,7 +51,8 @@ public class UserRepository : IUserRepository
 
     public async Task DeleteByGameId(string gameId)
     {
-        throw new NotImplementedException();
+        await connection.ExecuteAsync(
+            $"DELETE FROM Users WHERE GameId = '{gameId}'");
     }
 
     private User ToUser(dynamic rawData)

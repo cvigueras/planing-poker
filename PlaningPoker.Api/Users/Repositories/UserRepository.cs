@@ -37,6 +37,17 @@ public class UserRepository : IUserRepository
         return ToUser(rawData);
     }
 
+    public async Task UpdateByConnectionId(User givenUser, string connectionId)
+    {
+        await connection.ExecuteAsync(
+            $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE ConnectionId = '{connectionId}'");
+    }
+
+    public async Task UpdateByGameId(User givenUser, string givenUserGameId)
+    {
+        throw new NotImplementedException();
+    }
+
     private User ToUser(dynamic rawData)
     {
         return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId);
@@ -57,9 +68,4 @@ public class UserRepository : IUserRepository
         return listUsers;
     }
 
-    public async Task UpdateByConnectionId(User givenUser, string connectionId)
-    {
-        await connection.ExecuteAsync(
-            $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE ConnectionId = '{connectionId}'");
-    }
 }

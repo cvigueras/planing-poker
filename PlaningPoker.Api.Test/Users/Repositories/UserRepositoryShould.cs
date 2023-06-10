@@ -98,5 +98,20 @@ namespace PlaningPoker.Api.Test.Users.Repositories
             var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456");
             result.Should().BeEquivalentTo(expectedUser);
         }
+
+        [Test]
+        public async Task UpdateByGameIdAnExistingUser()
+        {
+            var gameGuid = guidGenerator.Generate().ToString();
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            await userRepository.Add(givenUser);
+            givenUser.ConnectionId = "connectionId456" ;
+            await userRepository.UpdateByGameId(givenUser, givenUser.GameId);
+
+            var result = await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
+
+            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456");
+            result.Should().BeEquivalentTo(expectedUser);
+        }
     }
 }

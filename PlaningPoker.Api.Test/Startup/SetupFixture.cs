@@ -121,7 +121,7 @@ public class SetupFixture : WebApplicationFactory<Program>
                     x.Expiration));
             cfg.CreateMap<UsersReadDto, User>()
                 .ConstructUsing(x => User.Create(x.Name,
-                    x.GameId));
+                    x.GameId, string.Empty));
             cfg.CreateMap<User, UsersReadDto>();
             cfg.CreateMap<Game, GameReadDto>().ReverseMap();
             cfg.CreateMap<Card, CardReadDto>().ReverseMap();

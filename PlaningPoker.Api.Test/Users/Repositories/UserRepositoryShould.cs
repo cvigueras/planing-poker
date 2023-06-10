@@ -42,12 +42,12 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         public async Task RetrieveAnExistingUser()
         {
             var gameGuid = guidGenerator.Generate().ToString();
-            var givenUser = User.Create("Carlos", gameGuid);
+            var givenUser = User.Create("Carlos", gameGuid, string.Empty);
             await userRepository.Add(givenUser);
 
             var result = await userRepository.GetByNameAndGameId("Carlos", gameGuid);
 
-            var expectedUser = User.Create("Carlos", givenUser.GameId);
+            var expectedUser = User.Create("Carlos", givenUser.GameId, string.Empty);
             result.Should().BeEquivalentTo(expectedUser);
         }
 
@@ -56,19 +56,32 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         {
             var givenGame = GameMother.CarlosAsGame();
             await gameRepository.Add(givenGame);
-            var user1 = User.Create("Carlos", givenGame.Id);
+            var user1 = User.Create("Carlos", givenGame.Id, string.Empty);
             await userRepository.Add(user1);
-            var user2 = User.Create("Pedro", givenGame.Id);
+            var user2 = User.Create("Pedro", givenGame.Id, string.Empty);
             await userRepository.Add(user2);
 
             var result = await userRepository.GetUsersGameByGameId(givenGame.Id);
 
             var expectedUsers = new List<User>
             {
-                User.Create("Carlos", givenGame.Id),
-                User.Create("Pedro", givenGame.Id),
+                User.Create("Carlos", givenGame.Id, string.Empty),
+                User.Create("Pedro", givenGame.Id, string.Empty),
             };
             result.Should().BeEquivalentTo(expectedUsers);
+        }
+
+        [Test]
+        public async Task RetrieveAUserByConnectionId()
+        {
+            var gameGuid = guidGenerator.Generate().ToString();
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            await userRepository.Add(givenUser);
+
+            var result = await userRepository.GetByConnectionId("connectionId123");
+
+            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId123");
+            result.Should().BeEquivalentTo(expectedUser);
         }
     }
 }

@@ -39,9 +39,9 @@
                 axios.post('game', game)
                     .then(response => {
                         game.id = response.data;
-                        this.$store.dispatch('addToGames', JSON.stringify(game));
                         var user = this.buildUser(game.createdBy, game.id);
                         this.$store.dispatch('addToUsers', JSON.stringify(user));
+                        this.$store.dispatch('addToGames', JSON.stringify(game));
                         localStorage.setItem("users", JSON.stringify([user]));
                         localStorage.setItem("gameid", game.id);
                         localStorage.setItem("username", game.createdBy);
@@ -67,6 +67,10 @@
                     gameId: gameId
                 }
             },
+            setLocalData(user, game)
+            {
+
+            }
         },
     }
 </script>

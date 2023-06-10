@@ -34,7 +34,7 @@ public class UserRepository : IUserRepository
 
     private User ToUser(dynamic rawData)
     {
-        return User.Create(rawData.Name, rawData.GameId);
+        return User.Create(rawData.Name, rawData.GameId, string.Empty);
     }
 
     private IEnumerable<User> ToListUser(IEnumerable<dynamic> rawData)
@@ -46,9 +46,14 @@ public class UserRepository : IUserRepository
         var listUsers = new List<User>();
         foreach (var userItem in dataList)
         {
-            var user = User.Create(userItem.Name, userItem.GameId);
+            var user = User.Create(userItem.Name, userItem.GameId, string.Empty);
             listUsers.Add(user);
         }
         return listUsers;
+    }
+
+    public async Task<object> GetByConnectionId(string connectionid123)
+    {
+        throw new NotImplementedException();
     }
 }

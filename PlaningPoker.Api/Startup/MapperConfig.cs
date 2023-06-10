@@ -21,7 +21,7 @@ namespace PlaningPoker.Api.Startup
                     x.Expiration));
             CreateMap<UsersReadDto, User>()
                 .ConstructUsing(x => User.Create(x.Name,
-                    x.GameId));
+                    x.GameId, string.Empty));
             CreateMap<User, UsersReadDto>();
             CreateMap<Game, GameReadDto>().ReverseMap();
             CreateMap<Card, CardReadDto>().ReverseMap();

@@ -57,8 +57,9 @@ public class UserRepository : IUserRepository
         return listUsers;
     }
 
-    public async Task UpdateByConnectionId(User givenUser)
+    public async Task UpdateByConnectionId(User givenUser, string connectionId)
     {
-        throw new NotImplementedException();
+        await connection.ExecuteAsync(
+            $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE ConnectionId = '{connectionId}'");
     }
 }

@@ -11,4 +11,5 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetUsersGameByGameId(string gameId);
 
     Task<User> GetByConnectionId(string connectionId);
+    Task UpdateByConnectionId(User givenUser, string connectionId);
 }

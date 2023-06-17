@@ -12,6 +12,6 @@ public interface IUserRepository
 
     Task<User> GetByConnectionId(string connectionId);
     Task UpdateByConnectionId(User givenUser, string connectionId);
-    Task UpdateByGameId(User givenUser, string gameId);
-    Task DeleteByGameId(string gameId);
+    Task UpdateByGameIdAndName(User givenUser, string gameId);
+    Task DeleteByGameIdAndName(string gameId, string name);
 }

@@ -19,7 +19,14 @@ public class GetUsersGameByGameIdQueryHandler : IRequestHandler<GetUsersGameByGa
 
     public async Task<IEnumerable<UsersReadDto>> Handle(GetUsersGameByGameIdQuery request, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetUsersGameByGameId(request.GameId);
-        return mapper.Map<List<UsersReadDto>>(user);
+        try
+        {
+            var user = await userRepository.GetUsersGameByGameId(request.GameId);
+            return mapper.Map<List<UsersReadDto>>(user);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Enumerable.Empty<UsersReadDto>();
+        }
     }
 }

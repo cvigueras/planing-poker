@@ -16,7 +16,7 @@ public class PlaningHub : Hub
     public async Task JoinGroup(string group, string user)
     {
         var userCreate = User.Create(user, group, Context.ConnectionId);
-        await userRepository.UpdateByGameId(userCreate, userCreate.GameId);
+        await userRepository.UpdateByGameIdAndName(userCreate, userCreate.GameId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
         await PublishUser(group, user);
     }
@@ -40,7 +40,7 @@ public class PlaningHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception ex)
     {
-        await RemoveFromGroup(Context.ConnectionId);
+        //await RemoveFromGroup(Context.ConnectionId);
         await Clients.Others.SendAsync("UserDisconnected", Context.ConnectionId);
         await base.OnDisconnectedAsync(ex);
     }

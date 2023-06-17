@@ -43,13 +43,13 @@ public class UserRepository : IUserRepository
             $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE ConnectionId = '{connectionId}'");
     }
 
-    public async Task UpdateByGameId(User givenUser, string gameId)
+    public async Task UpdateByGameIdAndName(User user, string gameId)
     {
         await connection.ExecuteAsync(
-            $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE GameId = '{gameId}'");
+            $"UPDATE Users SET Name = '{user.Name}', GameId = '{user.GameId}', ConnectionId = '{user.ConnectionId}' WHERE GameId = '{gameId}' AND Name= '{user.Name}'");
     }
 
-    public async Task DeleteByGameId(string gameId)
+    public async Task DeleteByGameIdAndName(string gameGuid, string gameId)
     {
         await connection.ExecuteAsync(
             $"DELETE FROM Users WHERE GameId = '{gameId}'");

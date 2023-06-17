@@ -106,7 +106,7 @@ namespace PlaningPoker.Api.Test.Users.Repositories
             var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
             await userRepository.Add(givenUser);
             givenUser.ConnectionId = "connectionId456" ;
-            await userRepository.UpdateByGameId(givenUser, givenUser.GameId);
+            await userRepository.UpdateByGameIdAndName(givenUser, givenUser.GameId);
 
             var result = await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
 
@@ -120,7 +120,7 @@ namespace PlaningPoker.Api.Test.Users.Repositories
             var gameGuid = guidGenerator.Generate().ToString();
             var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
             await userRepository.Add(givenUser);
-            await userRepository.DeleteByGameId(gameGuid);
+            await userRepository.DeleteByGameIdAndName(gameGuid, givenUser.Name);
 
             var action = async () => await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
 

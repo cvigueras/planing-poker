@@ -7,7 +7,9 @@
         </tr>
         <tr v-for="user in users" v-bind:key="user">
             <td>{{ user.name }}</td>
-            <td v-if="user.admin == false">Link to remove user</td>
+            <td v-if="user.admin == false">
+                <button class="btnCreate" @click="removeUser($event)" type="submit" v-bind:id="user.name" />
+            </td>
             <td v-if="user.admin == true">---</td>
             <td>---</td>
         </tr>
@@ -38,7 +40,19 @@
                 var gameId = localStorage.getItem("gameid");
                 var user = localStorage.getItem("username");
                 return this.$store.getters.userIsAdmin(gameId, user);
-            }
+            },
+            removeUser(event) {
+                if (event) {
+                    event.preventDefault()
+                }
+                var userName = event.currentTarget.id;
+                var gameId = localStorage.getItem("gameid");
+                this.$signalr
+                    .invoke('RemoveFromGroup', userName, gameId)
+                    .catch(function (err) { console.error(err) })
+                
+                console.log(event.currentTarget.id);
+            },
         },
         mounted() {
             if (this.$store.state.users.length == 0) {
@@ -56,7 +70,18 @@
                 if (existUser == false) {
                     this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
                 }
-            })
+            });
+
+            this.$signalr.on('OnRemoveGroup', (user) => {
+                const userAdded = {
+                    name: user,
+                    gameId: localStorage.getItem('gameid'),
+                }
+                var existUser = this.$store.getters.existUser(userAdded.gameId, user);
+                if (existUser == false) {
+                    this.$store.dispatch('removeToUsers', JSON.stringify(userAdded));
+                }
+            });
         },
     }
 </script>

@@ -19,9 +19,19 @@ export default createStore({
             context.commit('UPDATE_GAMES', game)
         },
         addToUsers(context, payload) {
-            var user = context.state.users.concat(JSON.parse(payload));
-            context.commit('UPDATE_USERS', user)
-        }
+            var users = context.state.users.concat(JSON.parse(payload));
+            context.commit('UPDATE_USERS', users);
+        },
+        removeToUsers(context, user) {
+            var users = context.state.users;
+            var user = this.$store.getters.getUserByNameAndGameId(user.name, user.gameId)
+            if (user != undefined) {
+                const index = users.indexOf(user.name);
+                const x = users.splice(index, 1);
+                context.commit('UPDATE_USERS', users);
+            }
+
+        },
     },
     getters: {
         getCurrentGame: (state) => (id) => {
@@ -36,6 +46,16 @@ export default createStore({
                 }
             });
             return exist;
+        },
+        getUserByNameAndGameId: (state) => (gameId, name) => {
+            var userFound;
+            state.users.forEach(function (user) {
+
+                if (user.name == name && user.gameId == gameId) {
+                    userFound = user;
+                }
+            });
+            return userFound;
         },
         userIsAdmin: (state) => (gameId, name) => {
             var isAdmin = false;

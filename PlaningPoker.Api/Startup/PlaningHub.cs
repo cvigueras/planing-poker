@@ -21,10 +21,11 @@ public class PlaningHub : Hub
         await PublishUser(group, user, admin);
     }
 
-    public async Task RemoveFromGroup(string connectionId)
+    public async Task RemoveFromGroup(string userName, string gameId)
     {
-        var user = await userRepository.GetByConnectionId(connectionId);
+        var user = await userRepository.GetByNameAndGameId(userName, gameId);
         await Groups.RemoveFromGroupAsync(user.ConnectionId, user.GameId);
+        await Clients.Group(user.GameId).SendAsync("OnRemoveGroup", user);
     }
 
     public async Task PublishUser(string group, string user, bool admin)

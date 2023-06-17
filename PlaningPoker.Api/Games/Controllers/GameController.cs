@@ -7,6 +7,7 @@ using PlaningPoker.Api.Games.Queries;
 using PlaningPoker.Api.Users.Commands;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Queries;
+using System;
 
 namespace PlaningPoker.Api.Games.Controllers;
 
@@ -43,9 +44,12 @@ public class GameController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(GameCreateDto gameCreated)
     {
-        var gameId = await sender.Send(new CreateGameCommand(gameCreated));
-        await sender.Send(new CreateUserCommand(new UsersAddDto(gameCreated.CreatedBy, gameId)));
-        return Ok(gameId);
+        var guid = await sender.Send(new CreateGameCommand(gameCreated));
+        var userAdded = new UsersAddDto(gameCreated.CreatedBy, guid, true);
+        await sender.Send(new CreateUserCommand(userAdded));
+        return Ok(await sender.Send(new GetGameByGuidQuery(guid,
+            await sender.Send(new GetUsersGameByGameIdQuery(guid)),
+            await sender.Send(new GetAllCardsListQuery()))));
     }
 
     [HttpPut("{guid}")]
@@ -53,7 +57,8 @@ public class GameController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Put(string guid, UsersAddDto userAdd)
     {
-        await sender.Send(new CreateUserCommand(userAdd));
+        var userAdded = userAdd with { Admin = false };
+        await sender.Send(new CreateUserCommand(userAdded));
         return Ok(await sender.Send(new GetGameByGuidQuery(guid,
             await sender.Send(new GetUsersGameByGameIdQuery(guid)),
             await sender.Send(new GetAllCardsListQuery()))));

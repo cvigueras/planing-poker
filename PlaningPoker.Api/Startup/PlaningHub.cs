@@ -13,12 +13,12 @@ public class PlaningHub : Hub
         this.userRepository = userRepository;
     }
 
-    public async Task JoinGroup(string group, string user)
+    public async Task JoinGroup(string group, string user, bool admin)
     {
-        var userCreate = User.Create(user, group, Context.ConnectionId);
+        var userCreate = User.Create(user, group, Context.ConnectionId, admin);
         await userRepository.UpdateByGameIdAndName(userCreate, userCreate.GameId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
-        await PublishUser(group, user);
+        await PublishUser(group, user, admin);
     }
 
     public async Task RemoveFromGroup(string connectionId)
@@ -27,9 +27,9 @@ public class PlaningHub : Hub
         await Groups.RemoveFromGroupAsync(user.ConnectionId, user.GameId);
     }
 
-    public async Task PublishUser(string group, string user)
+    public async Task PublishUser(string group, string user, bool admin)
     {
-        await Clients.Group(group).SendAsync("OnJoinGroup", user);
+        await Clients.Group(group).SendAsync("OnJoinGroup", user, admin);
     }
 
     public override async Task OnConnectedAsync()

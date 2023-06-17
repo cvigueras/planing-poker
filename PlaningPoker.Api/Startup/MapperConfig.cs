@@ -11,6 +11,7 @@ namespace PlaningPoker.Api.Startup
         public MapperConfig()
         {
             CreateMap<Game, GameCreateDto>();
+
             CreateMap<GameCreateDto, Game>()
                 .ConstructUsing(x => Game.Create(new GuidGenerator().Generate()
                         .ToString(),
@@ -19,9 +20,11 @@ namespace PlaningPoker.Api.Startup
                     x.Description,
                     x.RoundTime,
                     x.Expiration));
+
             CreateMap<UsersReadDto, User>()
                 .ConstructUsing(x => User.Create(x.Name,
-                    x.GameId, string.Empty));
+                    x.GameId, string.Empty, x.Admin));
+
             CreateMap<User, UsersReadDto>();
             CreateMap<Game, GameReadDto>().ReverseMap();
             CreateMap<Card, CardReadDto>().ReverseMap();

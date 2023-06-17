@@ -64,9 +64,9 @@ namespace PlaningPoker.Api.Test.Users.Commands
         {
             var givenGame = GameMother.CarlosAsGame();
             await gameRepository.Add(givenGame);
-            var userCreate = User.Create(givenGame.CreatedBy, givenGame.Id, string.Empty);
+            var userCreate = User.Create(givenGame.CreatedBy, givenGame.Id, string.Empty, false);
             await userRepository.Add(userCreate);
-            var newUser = User.Create("Juan", givenGame.Id, string.Empty);
+            var newUser = User.Create("Juan", givenGame.Id, string.Empty, false);
             await userRepository.Add(newUser);
 
             var usersReadDto = await getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(givenGame.Id), default);

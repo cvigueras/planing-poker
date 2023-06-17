@@ -36,15 +36,15 @@
                 this.fetchData(gameCreated);
             },
             fetchData(game) {
+                var user = this.buildUser(this.username, this.gameId);
                 axios.post('game', game)
                     .then(response => {
-                        game.id = response.data;
-                        var user = this.buildUser(game.createdBy, game.id);
-                        this.$store.dispatch('addToUsers', JSON.stringify(user));
-                        this.$store.dispatch('addToGames', JSON.stringify(game));
-                        localStorage.setItem("users", JSON.stringify([user]));
+                        var game = response.data;
+                        this.$store.state.users = game.users;
+                        this.$store.dispatch('addToGames', JSON.stringify(game))
+                        localStorage.setItem("users", JSON.stringify(game.users));
                         localStorage.setItem("gameid", game.id);
-                        localStorage.setItem("username", game.createdBy);
+                        localStorage.setItem("username", user.name);
                         this.$router.push('/planing');
                     }).catch(error => console.log(error))
             },

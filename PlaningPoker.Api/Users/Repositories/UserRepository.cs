@@ -22,8 +22,8 @@ public class UserRepository : IUserRepository
     public async Task Add(User user)
     {
         await connection.ExecuteAsync(
-            "INSERT INTO Users (Name, GameId, ConnectionId) " +
-            $"VALUES ('{user.Name}', '{user.GameId}', '{user.ConnectionId}');");
+            "INSERT INTO Users (Name, GameId, ConnectionId, Admin) " +
+            $"VALUES ('{user.Name}', '{user.GameId}', '{user.ConnectionId}', '{user.Admin}');");
     }
 
     public async Task<IEnumerable<User>> GetUsersGameByGameId(string gameId)
@@ -49,15 +49,15 @@ public class UserRepository : IUserRepository
             $"UPDATE Users SET Name = '{user.Name}', GameId = '{user.GameId}', ConnectionId = '{user.ConnectionId}' WHERE GameId = '{gameId}' AND Name= '{user.Name}'");
     }
 
-    public async Task DeleteByGameIdAndName(string gameGuid, string gameId)
+    public async Task DeleteByGameIdAndName(string gameGuid, string userName)
     {
         await connection.ExecuteAsync(
-            $"DELETE FROM Users WHERE GameId = '{gameId}'");
+            $"DELETE FROM Users WHERE GameId = '{gameGuid}' AND Name = '{userName}'");
     }
 
     private User ToUser(dynamic rawData)
     {
-        return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId);
+        return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId, rawData.Admin);
     }
 
     private IEnumerable<User> ToListUser(IEnumerable<dynamic> rawData)
@@ -69,7 +69,7 @@ public class UserRepository : IUserRepository
         var listUsers = new List<User>();
         foreach (var userItem in dataList)
         {
-            var user = User.Create(userItem.Name, userItem.GameId, string.Empty);
+            var user = User.Create(userItem.Name, userItem.GameId, string.Empty, userItem.Admin);
             listUsers.Add(user);
         }
         return listUsers;

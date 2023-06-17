@@ -42,12 +42,12 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         public async Task RetrieveAnExistingUser()
         {
             var gameGuid = guidGenerator.Generate().ToString();
-            var givenUser = User.Create("Carlos", gameGuid, string.Empty);
+            var givenUser = User.Create("Carlos", gameGuid, string.Empty, true);
             await userRepository.Add(givenUser);
 
             var result = await userRepository.GetByNameAndGameId("Carlos", gameGuid);
 
-            var expectedUser = User.Create("Carlos", givenUser.GameId, string.Empty);
+            var expectedUser = User.Create("Carlos", givenUser.GameId, string.Empty, true);
             result.Should().BeEquivalentTo(expectedUser);
         }
 
@@ -56,17 +56,17 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         {
             var givenGame = GameMother.CarlosAsGame();
             await gameRepository.Add(givenGame);
-            var user1 = User.Create("Carlos", givenGame.Id, string.Empty);
+            var user1 = User.Create("Carlos", givenGame.Id, string.Empty, true);
             await userRepository.Add(user1);
-            var user2 = User.Create("Pedro", givenGame.Id, string.Empty);
+            var user2 = User.Create("Pedro", givenGame.Id, string.Empty, false);
             await userRepository.Add(user2);
 
             var result = await userRepository.GetUsersGameByGameId(givenGame.Id);
 
             var expectedUsers = new List<User>
             {
-                User.Create("Carlos", givenGame.Id, string.Empty),
-                User.Create("Pedro", givenGame.Id, string.Empty),
+                User.Create("Carlos", givenGame.Id, string.Empty, true),
+                User.Create("Pedro", givenGame.Id, string.Empty, false),
             };
             result.Should().BeEquivalentTo(expectedUsers);
         }
@@ -75,12 +75,12 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         public async Task RetrieveAnExistingUserByConnectionId()
         {
             var gameGuid = guidGenerator.Generate().ToString();
-            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123", false);
             await userRepository.Add(givenUser);
 
             var result = await userRepository.GetByConnectionId("connectionId123");
 
-            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId123");
+            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId123", false);
             result.Should().BeEquivalentTo(expectedUser);
         }
 
@@ -88,14 +88,14 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         public async Task UpdateByConnectionIdAnExistingUser()
         {
             var gameGuid = guidGenerator.Generate().ToString();
-            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123", false);
             await userRepository.Add(givenUser);
             givenUser.ConnectionId = "connectionId456" ;
             await userRepository.UpdateByConnectionId(givenUser, "connectionId123");
 
             var result = await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
 
-            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456");
+            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456", false);
             result.Should().BeEquivalentTo(expectedUser);
         }
 
@@ -103,14 +103,14 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         public async Task UpdateByGameIdAnExistingUser()
         {
             var gameGuid = guidGenerator.Generate().ToString();
-            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123", false);
             await userRepository.Add(givenUser);
             givenUser.ConnectionId = "connectionId456" ;
             await userRepository.UpdateByGameIdAndName(givenUser, givenUser.GameId);
 
             var result = await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
 
-            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456");
+            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId456", false);
             result.Should().BeEquivalentTo(expectedUser);
         }
 
@@ -118,7 +118,7 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         public async Task DeleteAnExistingUser()
         {
             var gameGuid = guidGenerator.Generate().ToString();
-            var givenUser = User.Create("Carlos", gameGuid, "connectionId123");
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123", true);
             await userRepository.Add(givenUser);
             await userRepository.DeleteByGameIdAndName(gameGuid, givenUser.Name);
 

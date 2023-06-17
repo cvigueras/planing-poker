@@ -64,9 +64,13 @@
             joinGroup() {
                 var gameId = localStorage.getItem("gameid");
                 var userName = localStorage.getItem("username");
+                var admin = false;
+                if (JSON.parse(localStorage.getItem("users")).length == 1) {
+                    admin = true;
+                }
                 this.$signalr.start().then(() => {
                     this.$signalr
-                        .invoke('JoinGroup', gameId, userName)
+                        .invoke('JoinGroup', gameId, userName, admin)
                         .catch(function (err) { console.error(err) })
                 });
             },

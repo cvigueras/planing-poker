@@ -9,7 +9,7 @@ namespace PlaningPoker.Api.Test.Users.Models
         [Test]
         public void NotBeCreatedIfNameIsEmpty()
         {
-            var action = () => User.Create(string.Empty, Guid.NewGuid().ToString(), string.Empty);
+            var action = () => User.Create(string.Empty, Guid.NewGuid().ToString(), string.Empty, false);
 
             action.Should().Throw<ArgumentException>().WithMessage("The name cannot be blank, and must have at least 2 characters and maximum 20.");
         }
@@ -17,7 +17,7 @@ namespace PlaningPoker.Api.Test.Users.Models
         [Test]
         public void NotBeCreatedIfNameHasLessThanTwoCharacters()
         {
-            var action = () => User.Create("a", Guid.NewGuid().ToString(), string.Empty);
+            var action = () => User.Create("a", Guid.NewGuid().ToString(), string.Empty, false);
 
             action.Should().Throw<ArgumentException>().WithMessage("The name cannot be blank, and must have at least 2 characters and maximum 20.");
         }
@@ -25,7 +25,7 @@ namespace PlaningPoker.Api.Test.Users.Models
         [Test]
         public void NotBeCreatedIfNameHasMoreThanTwentyCharacters()
         {
-            var action = () => User.Create("MoreThanTwentyCharacter", Guid.NewGuid().ToString(), string.Empty);
+            var action = () => User.Create("MoreThanTwentyCharacter", Guid.NewGuid().ToString(), string.Empty, false);
 
             action.Should().Throw<ArgumentException>().WithMessage("The name cannot be blank, and must have at least 2 characters and maximum 20.");
         }

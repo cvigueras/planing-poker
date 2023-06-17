@@ -46,7 +46,8 @@ public class SetupFixture : WebApplicationFactory<Program>
         connection.Execute(@"CREATE TABLE IF NOT EXISTS Users(
                 ConnectionId VARCHAR(200),
                 Name VARCHAR(20) NOT NULL,
-                GameId VARCHAR(60) NOT NULL)"
+                GameId VARCHAR(60) NOT NULL,
+                Admin BOOLEAN)"
         );
 
         connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
@@ -112,6 +113,7 @@ public class SetupFixture : WebApplicationFactory<Program>
         var config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Game, GameCreateDto>();
+
             cfg.CreateMap<GameCreateDto, Game>()
                 .ConstructUsing(x => Game.Create(gameGuid
                         .ToString(),
@@ -120,9 +122,11 @@ public class SetupFixture : WebApplicationFactory<Program>
                     x.Description,
                     x.RoundTime,
                     x.Expiration));
+
             cfg.CreateMap<UsersReadDto, User>()
                 .ConstructUsing(x => User.Create(x.Name,
-                    x.GameId, string.Empty));
+                    x.GameId, string.Empty, x.Admin));
+
             cfg.CreateMap<User, UsersReadDto>();
             cfg.CreateMap<Game, GameReadDto>().ReverseMap();
             cfg.CreateMap<Card, CardReadDto>().ReverseMap();

@@ -58,7 +58,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             {
                 message = m;
             });
-            await connection.InvokeAsync("JoinGroup", "group1", "Carlos");
+            await connection.InvokeAsync("JoinGroup", "group1", "Carlos", true);
             await connection.InvokeAsync("SendMessageToGroup", "group1", "Hello Group!!");
             await Task.Delay(200);
 
@@ -76,7 +76,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             messageHub.Clients = clients;
             messageHub.Groups = groups;
 
-            await messageHub.JoinGroup("group1", "Carlos");
+            await messageHub.JoinGroup("group1", "Carlos", true);
 
             await messageHub.Groups.Received(1).AddToGroupAsync(Arg.Any<string>(), Arg.Any<string>(), default);
         }
@@ -87,12 +87,14 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
             var user = "Pedro";
+            var isAdmin = false;
             var publishedUser = string.Empty;
-            connection.On<string>("OnJoinGroup", (userReceived) =>
+            connection.On<string, bool>("OnJoinGroup", (userReceived, admin) =>
             {
                 publishedUser = userReceived;
+                isAdmin = admin;
             });
-            await connection.InvokeAsync("JoinGroup", "group1", "Pedro");
+            await connection.InvokeAsync("JoinGroup", "group1", "Pedro", false);
             await Task.Delay(200);
 
             publishedUser.Should().Be(user);

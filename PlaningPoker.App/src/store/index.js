@@ -37,5 +37,15 @@ export default createStore({
             });
             return exist;
         },
+        userIsAdmin: (state) => (gameId, name) => {
+            var isAdmin = false;
+            state.users.forEach(function (user) {
+
+                if (user.name == name && user.gameId == gameId && user.admin == true) {
+                    isAdmin = true;
+                }
+            });
+            return isAdmin;
+        },
     },
 })

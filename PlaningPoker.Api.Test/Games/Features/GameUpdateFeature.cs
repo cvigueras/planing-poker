@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PlaningPoker.Api.Games.Models;
 using PlaningPoker.Api.Test.PlaningHub.Fixtures;
 using PlaningPoker.Api.Test.Startup;
 using PlaningPoker.Api.Users.Models;
@@ -23,11 +24,12 @@ namespace PlaningPoker.Api.Test.Games.Features
             var json = await client.GetJsonContent(PathJson);
 
             var responsePost = await client.Post(RequestUriBase, json);
-            var gameId = responsePost.Content.ReadAsStringAsync().Result;
+            var game = responsePost.Content.ReadAsStringAsync().Result;
+            var gameResult = JsonConvert.DeserializeObject<GameReadDto>(game);
 
-            var userAddDto = new UsersAddDto("Pedro", gameId);
+            var userAddDto = new UsersAddDto("Pedro", gameResult.Id, false);
             var serializedDto = JsonConvert.SerializeObject(userAddDto, Formatting.Indented);
-            var responsePut = await client.Put($"{RequestUriBase}/{gameId}", serializedDto);
+            var responsePut = await client.Put($"{RequestUriBase}/{gameResult.Id}", serializedDto);
 
             var content = await responsePut.Content.ReadAsStringAsync();
             var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(content), Formatting.Indented);

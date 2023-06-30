@@ -24,13 +24,15 @@ export default createStore({
         },
         removeToUsers(context, user) {
             var users = context.state.users;
-            var user = this.$store.getters.getUserByNameAndGameId(user.name, user.gameId)
-            if (user != undefined) {
-                const index = users.indexOf(user.name);
-                const x = users.splice(index, 1);
+            user = JSON.parse(user);
+            var userRetrieved = this.getters.getUserByNameAndGameId(user.name, user.gameId)
+            if (userRetrieved != undefined) {
+                var index = users.map(function (e) {
+                    return e.name;
+                }).indexOf(user.name);
+                users.splice(index, 1);
                 context.commit('UPDATE_USERS', users);
             }
-
         },
     },
     getters: {
@@ -40,14 +42,13 @@ export default createStore({
         existUser: (state) => (gameId, name) => {
             var exist = false;
             state.users.forEach(function (user) {
-
                 if (user.name == name && user.gameId == gameId) {
                     exist = true;
                 }
             });
             return exist;
         },
-        getUserByNameAndGameId: (state) => (gameId, name) => {
+        getUserByNameAndGameId: (state) => (name, gameId) => {
             var userFound;
             state.users.forEach(function (user) {
 

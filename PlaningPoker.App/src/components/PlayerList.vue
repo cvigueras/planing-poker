@@ -50,7 +50,7 @@
                 this.$signalr
                     .invoke('RemoveFromGroup', userName, gameId)
                     .catch(function (err) { console.error(err) })
-                
+
                 console.log(event.currentTarget.id);
             },
         },
@@ -72,14 +72,25 @@
                 }
             });
 
-            this.$signalr.on('OnRemoveGroup', (user) => {
+            this.$signalr.on('OnReceiveMessage', (message) => {
+                alert(message);
+            });
+
+            this.$signalr.on('OnRemoveGroup', (user, connectionId) => {
                 const userAdded = {
-                    name: user,
+                    name: user.name,
                     gameId: localStorage.getItem('gameid'),
                 }
                 var existUser = this.$store.getters.existUser(userAdded.gameId, user);
                 if (existUser == false) {
                     this.$store.dispatch('removeToUsers', JSON.stringify(userAdded));
+                }
+                if (this.isAdmin() == true) {
+
+                    console.log("The connection Id of disconnected user is: " + connectionId);
+                    this.$signalr
+                        .invoke('SendMessageToUser', connectionId, "You has been disconnected")
+                        .catch(function (err) { console.error(err) })
                 }
             });
         },

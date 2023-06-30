@@ -25,12 +25,17 @@ public class PlaningHub : Hub
     {
         var user = await userRepository.GetByNameAndGameId(userName, gameId);
         await Groups.RemoveFromGroupAsync(user.ConnectionId, user.GameId);
-        await Clients.Group(user.GameId).SendAsync("OnRemoveGroup", user);
+        await Clients.Group(user.GameId).SendAsync("OnRemoveGroup", user, user.ConnectionId);
     }
 
     public async Task PublishUser(string group, string user, bool admin)
     {
         await Clients.Group(group).SendAsync("OnJoinGroup", user, admin);
+    }
+
+    public Task SendMessageToUser(string connectionId, string message)
+    {
+        return Clients.Client(connectionId).SendAsync("OnReceiveMessage", message);
     }
 
     public override async Task OnConnectedAsync()
@@ -57,10 +62,6 @@ public class PlaningHub : Hub
         return Clients.Caller.SendAsync("OnReceiveMessage", message);
     }
 
-    public Task SendMessageToUser(string connectionId, string message)
-    {
-        return Clients.Client(connectionId).SendAsync("OnReceiveMessage", message);
-    }
 
     public async Task SendMessageToGroup(string group, string message)
     {

@@ -10,7 +10,7 @@
             <td v-if="user.admin == false">
                 <button class="btnCreate" @click="removeUser($event)" type="submit" v-bind:id="user.name" />
             </td>
-            <td v-if="user.admin == true">---</td>
+            <td v-if="user.admin == true">Show votes</td>
             <td>---</td>
         </tr>
     </table>

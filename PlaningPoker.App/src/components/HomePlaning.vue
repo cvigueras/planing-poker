@@ -39,26 +39,14 @@
                 var user = this.buildUser(this.username, this.gameId);
                 axios.post('game', game)
                     .then(response => {
-                        var game = response.data;
-                        this.$store.state.users = game.users;
-                        this.$store.dispatch('addToGames', JSON.stringify(game))
-                        localStorage.setItem("users", JSON.stringify(game.users));
-                        localStorage.setItem("gameid", game.id);
-                        localStorage.setItem("username", user.name);
-                        this.$router.push('/planing');
+                        this.persistLocalData(response.data, user);
                     }).catch(error => console.log(error))
             },
             joinGame() {
                 var user = this.buildUser(this.username, this.gameId);
                 axios.put('game/' + this.gameId, user)
                     .then(response => {
-                        var game = response.data;
-                        this.$store.state.users = game.users;
-                        this.$store.dispatch('addToGames', JSON.stringify(game))
-                        localStorage.setItem("users", JSON.stringify(game.users));
-                        localStorage.setItem("gameid", game.id);
-                        localStorage.setItem("username", user.name);
-                        this.$router.push('/planing');
+                        this.persistLocalData(response.data, user);
                     }).catch(error => console.log(error))
             },
             buildUser(userName, gameId) {
@@ -67,10 +55,14 @@
                     gameId: gameId
                 }
             },
-            //setLocalData(user, game)
-            //{
-
-            //}
+            persistLocalData(game, user) {
+                this.$store.state.users = game.users;
+                this.$store.dispatch('addToGames', JSON.stringify(game))
+                localStorage.setItem("users", JSON.stringify(game.users));
+                localStorage.setItem("gameid", game.id);
+                localStorage.setItem("username", user.name);
+                this.$router.push('/planing');
+            }
         },
     }
 </script>

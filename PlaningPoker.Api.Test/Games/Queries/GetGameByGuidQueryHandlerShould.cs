@@ -55,12 +55,12 @@ namespace PlaningPoker.Api.Test.Games.Queries
         {
             var givenGame = GameMother.CarlosAsGame();
             await gameRepository.Add(givenGame);
-            var user = User.Create(givenGame.CreatedBy, givenGame.Id, string.Empty, false);
+            var user = User.Create(givenGame.CreatedBy, givenGame.Id, string.Empty, false, Vote.Create(string.Empty));
             await userRepository.Add(user);
             var cards = CardMother.GetAll();
             var expectedListUser = new List<UsersReadDto>
             {
-                new(givenGame.CreatedBy, givenGame.Id, false),
+                new(givenGame.CreatedBy, givenGame.Id, false, null),
             };
             var queryGame =
                 new GetGameByGuidQuery(givenGame.Id, expectedListUser, cards);

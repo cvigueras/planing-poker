@@ -10,6 +10,7 @@ using PlaningPoker.Api.Games.Repositories;
 using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Test.Games.Fixtures;
 using PlaningPoker.Api.Test.Startup;
+using PlaningPoker.Api.Test.Users.Fixtures;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Queries;
 using PlaningPoker.Api.Users.Repositories;
@@ -64,9 +65,9 @@ namespace PlaningPoker.Api.Test.Users.Commands
         {
             var givenGame = GameMother.CarlosAsGame();
             await gameRepository.Add(givenGame);
-            var userCreate = User.Create(givenGame.CreatedBy, givenGame.Id, string.Empty, false);
+            var userCreate = User.Create(givenGame.CreatedBy, givenGame.Id, string.Empty, false, Vote.Create("3"));
             await userRepository.Add(userCreate);
-            var newUser = User.Create("Juan", givenGame.Id, string.Empty, false);
+            var newUser = User.Create("Juan", givenGame.Id, string.Empty, false, Vote.Create("3"));
             await userRepository.Add(newUser);
 
             var usersReadDto = await getUsersGameByGameIdQueryHandler.Handle(new GetUsersGameByGameIdQuery(givenGame.Id), default);
@@ -82,6 +83,20 @@ namespace PlaningPoker.Api.Test.Users.Commands
                 usersReadDto.ToList(),
                 cardDtoList.ToList());
             result.Should().BeEquivalentTo(expectedGame);
+        }
+
+        [Test]
+        public async Task InsertNewVoteSuccesfullyAsync()
+        {
+            var givenUser = User.Create("Carlos","anyGameId", "anyConnectionId", true, Vote.Create(string.Empty));
+            await userRepository.Add(givenUser);
+            givenUser.Vote = Vote.Create("3");
+            await userRepository.UpdateByConnectionId(givenUser, givenUser.ConnectionId);
+
+            var expectedUser = UserMother.GetUserWithValidVote();
+            var result = await userRepository.GetByConnectionId(givenUser.ConnectionId);
+
+            result.Should().BeEquivalentTo(expectedUser);
         }
     }
 }

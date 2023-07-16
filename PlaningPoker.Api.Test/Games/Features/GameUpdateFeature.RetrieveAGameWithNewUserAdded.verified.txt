@@ -9,12 +9,14 @@
     {
       "name": "Carlos",
       "gameId": "Guid_1",
-      "admin": true
+      "admin": true,
+      "value": ""
     },
     {
       "name": "Pedro",
       "gameId": "Guid_1",
-      "admin": false
+      "admin": false,
+      "value": ""
     }
   ],
   "cards": [

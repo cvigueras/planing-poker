@@ -47,9 +47,10 @@ public class GameController : ControllerBase
         var guid = await sender.Send(new CreateGameCommand(gameCreated));
         var userAdded = new UsersAddDto(gameCreated.CreatedBy, guid, true);
         await sender.Send(new CreateUserCommand(userAdded));
-        return Ok(await sender.Send(new GetGameByGuidQuery(guid,
-            await sender.Send(new GetUsersGameByGameIdQuery(guid)),
-            await sender.Send(new GetAllCardsListQuery()))));
+        var userById = await sender.Send(new GetUsersGameByGameIdQuery(guid));
+        var allCardList = await sender.Send(new GetAllCardsListQuery());
+        var foo = new GetGameByGuidQuery(guid, userById, allCardList);
+        return Ok(await sender.Send(foo));
     }
 
     [HttpPut("{guid}")]

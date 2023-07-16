@@ -15,7 +15,7 @@ public class PlaningHub : Hub
 
     public async Task JoinGroup(string group, string user, bool admin)
     {
-        var userCreate = User.Create(user, group, Context.ConnectionId, admin);
+        var userCreate = User.Create(user, group, Context.ConnectionId, admin, Vote.Create(string.Empty));
         await userRepository.UpdateByGameIdAndName(userCreate, userCreate.GameId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
         await PublishUser(group, user, admin);

@@ -47,7 +47,8 @@ public class SetupFixture : WebApplicationFactory<Program>
                 ConnectionId VARCHAR(200),
                 Name VARCHAR(20) NOT NULL,
                 GameId VARCHAR(60) NOT NULL,
-                Admin BOOLEAN)"
+                Admin BOOLEAN,
+                Vote VARCHAR(10) NOT NULL)"
         );
 
         connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
@@ -125,9 +126,11 @@ public class SetupFixture : WebApplicationFactory<Program>
 
             cfg.CreateMap<UsersReadDto, User>()
                 .ConstructUsing(x => User.Create(x.Name,
-                    x.GameId, string.Empty, x.Admin));
+                    x.GameId, string.Empty, x.Admin, Vote.Create(x.Value)));
 
-            cfg.CreateMap<User, UsersReadDto>();
+            cfg.CreateMap<User, UsersReadDto>()
+                .ConstructUsing(x => new UsersReadDto(x.Name, x.GameId, x.Admin, x.Vote.Value));
+
             cfg.CreateMap<Game, GameReadDto>().ReverseMap();
             cfg.CreateMap<Card, CardReadDto>().ReverseMap();
         });

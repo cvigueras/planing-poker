@@ -23,7 +23,8 @@ namespace PlaningPoker.Api.Startup
                 ConnectionId VARCHAR(200),
                 Name VARCHAR(20) NOT NULL,
                 GameId VARCHAR(60) NOT NULL,
-                Admin BOOLEAN)"
+                Admin BOOLEAN,
+                Vote VARCHAR(10) NOT NULL)"
             );
 
             connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(

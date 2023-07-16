@@ -9,7 +9,8 @@
     {
       "name": "Carlos",
       "gameId": "Guid_1",
-      "admin": true
+      "admin": true,
+      "value": ""
     }
   ],
   "cards": [

@@ -22,8 +22,8 @@ public class UserRepository : IUserRepository
     public async Task Add(User user)
     {
         await connection.ExecuteAsync(
-            "INSERT INTO Users (Name, GameId, ConnectionId, Admin) " +
-            $"VALUES ('{user.Name}', '{user.GameId}', '{user.ConnectionId}', '{user.Admin}');");
+            "INSERT INTO Users (Name, GameId, ConnectionId, Admin, Vote) " +
+            $"VALUES ('{user.Name}', '{user.GameId}', '{user.ConnectionId}', '{user.Admin}', '{user.Vote.Value}');");
     }
 
     public async Task<IEnumerable<User>> GetUsersGameByGameId(string gameId)
@@ -40,13 +40,13 @@ public class UserRepository : IUserRepository
     public async Task UpdateByConnectionId(User givenUser, string connectionId)
     {
         await connection.ExecuteAsync(
-            $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}' WHERE ConnectionId = '{connectionId}'");
+            $"UPDATE Users SET Name = '{givenUser.Name}', GameId = '{givenUser.GameId}', ConnectionId = '{givenUser.ConnectionId}', Vote = '{givenUser.Vote.Value}' WHERE ConnectionId = '{connectionId}'");
     }
 
     public async Task UpdateByGameIdAndName(User user, string gameId)
     {
         await connection.ExecuteAsync(
-            $"UPDATE Users SET Name = '{user.Name}', GameId = '{user.GameId}', ConnectionId = '{user.ConnectionId}' WHERE GameId = '{gameId}' AND Name= '{user.Name}'");
+            $"UPDATE Users SET Name = '{user.Name}', GameId = '{user.GameId}', ConnectionId = '{user.ConnectionId}', Vote = '{user.Vote.Value}' WHERE GameId = '{gameId}' AND Name= '{user.Name}'");
     }
 
     public async Task DeleteByGameIdAndName(string gameGuid, string userName)
@@ -57,7 +57,7 @@ public class UserRepository : IUserRepository
 
     private User ToUser(dynamic rawData)
     {
-        return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId, rawData.Admin);
+        return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId, rawData.Admin, Vote.Create(rawData.Vote));
     }
 
     private IEnumerable<User> ToListUser(IEnumerable<dynamic> rawData)
@@ -69,7 +69,8 @@ public class UserRepository : IUserRepository
         var listUsers = new List<User>();
         foreach (var userItem in dataList)
         {
-            var user = User.Create(userItem.Name, userItem.GameId, string.Empty, userItem.Admin);
+            var vote = userItem.Vote == null ? string.Empty : userItem.Vote;
+            var user = User.Create(userItem.Name, userItem.GameId, string.Empty, userItem.Admin, Vote.Create(vote));
             listUsers.Add(user);
         }
         return listUsers;

@@ -3,7 +3,7 @@ using PlaningPoker.Api.Votes.Models;
 
 namespace PlaningPoker.Api.Votes.Queries
 {
-    public class GetAllVotesAllUsersByGameIdQuery : IRequest<IEnumerable<UsersVotesReadDto>>
+    public class GetAllVotesAllUsersByGameIdQuery : IRequest<IEnumerable<VotesUsersReadDto>>
     {
         public string GameId { get; set; }
 

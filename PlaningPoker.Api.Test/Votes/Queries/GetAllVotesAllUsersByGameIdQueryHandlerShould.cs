@@ -30,8 +30,8 @@ namespace PlaningPoker.Api.Test.Votes.Queries
             voteRepository = new VoteRepository(connection);
             userRepository = new UserRepository(connection);
             query = new GetAllVotesAllUsersByGameIdQuery(gameId);
-            handler = new GetAllVotesAllUsersByGameIdQueryHandler(voteRepository, mapper);
             mapper = setupFixture.AutoMapperConfigTest();
+            handler = new GetAllVotesAllUsersByGameIdQueryHandler(voteRepository, mapper);
         }
 
         [Test]
@@ -42,13 +42,15 @@ namespace PlaningPoker.Api.Test.Votes.Queries
             var givenSecondUser = User.Create("Juan", gameId, "anyConnectionId", true, Vote.Create("5"));
             await userRepository.Add(givenSecondUser);
             
-            var result = handler.Handle(query);
+            var result = await handler.Handle(query, default);
 
-            var expectedVotes = new List<UsersVotesReadDto> {
-                new UsersVotesReadDto("Carlos","5"),
-                new UsersVotesReadDto("Juan","3"),
-            };
-            result.Should().BeEquivalentTo(expectedVotes);
+            var expectedFirstVote = new VotesUsersReadDto("Carlos", "3");
+            var expectedSecondVote = new VotesUsersReadDto("Juan", "5");
+
+            result.ElementAt(0).Name.Should().BeEquivalentTo(expectedFirstVote.UserName);
+            result.ElementAt(0).Value.Should().BeEquivalentTo(expectedFirstVote.Vote);
+            result.ElementAt(1).Name.Should().BeEquivalentTo(expectedSecondVote.UserName);
+            result.ElementAt(1).Value.Should().BeEquivalentTo(expectedSecondVote.Vote);
         }
     }
 }

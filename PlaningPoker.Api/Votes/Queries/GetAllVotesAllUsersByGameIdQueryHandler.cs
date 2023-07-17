@@ -1,14 +1,26 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using PlaningPoker.Api.Votes.Models;
 using PlaningPoker.Api.Votes.Queries;
+using PlaningPoker.Api.Votes.Repositories;
 
 namespace PlaningPoker.Api.Test.Votes.Queries
 {
-    internal class GetAllVotesAllUsersByGameIdQueryHandler : IRequestHandler<GetAllVotesAllUsersByGameIdQuery, IEnumerable<UsersVotesReadDto>>
+    public class GetAllVotesAllUsersByGameIdQueryHandler : IRequestHandler<GetAllVotesAllUsersByGameIdQuery, IEnumerable<VotesUsersReadDto>>
     {
-        public Task<IEnumerable<UsersVotesReadDto>> Handle(GetAllVotesAllUsersByGameIdQuery request, CancellationToken cancellationToken)
+        private IVoteRepository voteRepository;
+        private IMapper mapper;
+
+        public GetAllVotesAllUsersByGameIdQueryHandler(IVoteRepository voteRepository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            this.voteRepository = voteRepository;
+            this.mapper = mapper;
+        }
+
+        public async Task<IEnumerable<VotesUsersReadDto>> Handle(GetAllVotesAllUsersByGameIdQuery request, CancellationToken cancellationToken)
+        {
+            var votesUsers = await voteRepository.GetVotesByGameIdAsync(request.GameId);
+            return mapper.Map<List<VotesUsersReadDto>>(votesUsers);
         }
     }
 }

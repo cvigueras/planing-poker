@@ -2,6 +2,7 @@
 using PlaningPoker.Api.Games.Repositories;
 using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Users.Repositories;
+using PlaningPoker.Api.Votes.Repositories;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Startup;
@@ -30,6 +31,7 @@ public class Startup
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IGuidGenerator, GuidGenerator>();
         services.AddScoped<ICardRepository, CardRepository>();
+        services.AddScoped<IVoteRepository, VoteRepository>();
         DataBase.Create();
         services.AddCors(
             x =>

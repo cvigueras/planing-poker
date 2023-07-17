@@ -14,6 +14,7 @@ using PlaningPoker.Api.Test.Cards.Fixtures;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
 using PlaningPoker.Api.Votes.Models;
+using PlaningPoker.Api.Votes.Repositories;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.Startup;
@@ -73,6 +74,7 @@ public class SetupFixture : WebApplicationFactory<Program>
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IGuidGenerator, GuidGenerator>();
             services.AddSingleton<ICardRepository, CardRepository>();
+            services.AddSingleton<IVoteRepository, VoteRepository>();
             services.AddSignalR(options => { options.EnableDetailedErrors = true; });
         });
 
@@ -131,6 +133,13 @@ public class SetupFixture : WebApplicationFactory<Program>
 
             cfg.CreateMap<User, UsersReadDto>()
                 .ConstructUsing(x => new UsersReadDto(x.Name, x.GameId, x.Admin, x.Vote.Value));
+
+
+            cfg.CreateMap<VotesUsersReadDto, VotesUsers>()
+                .ConstructUsing(x => VotesUsers.Create(x.Name, Vote.Create(x.Value)));
+
+            cfg.CreateMap<VotesUsers, VotesUsersReadDto>()
+                .ConstructUsing(x => new VotesUsersReadDto(x.UserName, x.Vote.Value.ToString()));
 
             cfg.CreateMap<Game, GameReadDto>().ReverseMap();
             cfg.CreateMap<Card, CardReadDto>().ReverseMap();

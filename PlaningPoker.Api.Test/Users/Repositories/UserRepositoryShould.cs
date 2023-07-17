@@ -126,5 +126,21 @@ namespace PlaningPoker.Api.Test.Users.Repositories
 
             await action.Should().ThrowAsync<InvalidOperationException>();
         }
+
+        [Test]
+        public async Task InsertAVoteForAUserSuccesfullyAsync()
+        {
+            var gameGuid = guidGenerator.Generate().ToString();
+            var givenUser = User.Create("Carlos", gameGuid, "connectionId123", false, Vote.Create("3"));
+            await userRepository.Add(givenUser);
+
+            givenUser.Vote = Vote.Create("5");
+            await userRepository.UpdateByConnectionId(givenUser, "connectionId123");
+
+            var result = await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
+
+            var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId123", false, Vote.Create("5"));
+            result.Should().BeEquivalentTo(expectedUser);
+        }
     }
 }

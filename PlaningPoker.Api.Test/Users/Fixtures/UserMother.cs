@@ -1,4 +1,5 @@
 ﻿using PlaningPoker.Api.Users.Models;
+using PlaningPoker.Api.Votes.Models;
 
 namespace PlaningPoker.Api.Test.Users.Fixtures
 {

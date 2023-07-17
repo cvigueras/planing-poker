@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
+using PlaningPoker.Api.Votes.Models;
 
 namespace PlaningPoker.Api.Startup;
 

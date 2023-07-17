@@ -3,6 +3,7 @@ using PlaningPoker.Api.Cards.Models;
 using PlaningPoker.Api.Games.Models;
 using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Users.Models;
+using PlaningPoker.Api.Votes.Models;
 
 namespace PlaningPoker.Api.Startup
 {

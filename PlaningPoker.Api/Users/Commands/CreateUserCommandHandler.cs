@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
+using PlaningPoker.Api.Votes.Models;
 
 namespace PlaningPoker.Api.Users.Commands;
 

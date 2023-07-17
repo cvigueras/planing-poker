@@ -1,4 +1,4 @@
-﻿namespace PlaningPoker.Api.Users.Models;
+﻿namespace PlaningPoker.Api.Votes.Models;
 public class Vote
 {
     public string Value { get; set; }

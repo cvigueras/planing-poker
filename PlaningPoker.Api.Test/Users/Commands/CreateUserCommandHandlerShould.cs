@@ -14,6 +14,7 @@ using PlaningPoker.Api.Test.Users.Fixtures;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Queries;
 using PlaningPoker.Api.Users.Repositories;
+using PlaningPoker.Api.Votes.Models;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.Users.Commands

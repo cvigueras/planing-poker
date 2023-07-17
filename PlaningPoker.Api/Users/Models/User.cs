@@ -1,4 +1,6 @@
-﻿namespace PlaningPoker.Api.Users.Models;
+﻿using PlaningPoker.Api.Votes.Models;
+
+namespace PlaningPoker.Api.Users.Models;
 
 public class User
 {

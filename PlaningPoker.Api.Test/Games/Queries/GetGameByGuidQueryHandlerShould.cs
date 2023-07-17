@@ -11,6 +11,7 @@ using PlaningPoker.Api.Test.Games.Fixtures;
 using PlaningPoker.Api.Test.Startup;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
+using PlaningPoker.Api.Votes.Models;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.Games.Queries
@@ -21,7 +22,7 @@ namespace PlaningPoker.Api.Test.Games.Queries
         private SQLiteConnection connection;
         private IMapper mapper;
         private IGameRepository gameRepository;
-        private GetGameByGuidQueryHandler getGameByGuidQueryHandler;
+        private GetGameByGuidQueryHandler handle;
         private IGuidGenerator guidGenerator;
         private IUserRepository userRepository;
 
@@ -32,9 +33,8 @@ namespace PlaningPoker.Api.Test.Games.Queries
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
             gameRepository = new GameRepository(connection);
-            getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository, mapper);
+            handle = new GetGameByGuidQueryHandler(gameRepository, mapper);
             userRepository = new UserRepository(connection);
-            new GuidGenerator().Generate();
             mapper = setupFixture.AutoMapperConfigTest();
         }
 
@@ -45,7 +45,7 @@ namespace PlaningPoker.Api.Test.Games.Queries
 
             var queryGame =
                 new GetGameByGuidQuery(guid, Enumerable.Empty<UsersReadDto>(), Enumerable.Empty<CardReadDto>());
-            var action = async () => await getGameByGuidQueryHandler.Handle(queryGame, default);
+            var action = async () => await handle.Handle(queryGame, default);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
         }
@@ -64,7 +64,7 @@ namespace PlaningPoker.Api.Test.Games.Queries
             };
             var queryGame =
                 new GetGameByGuidQuery(givenGame.Id, expectedListUser, cards);
-            var result = await getGameByGuidQueryHandler.Handle(queryGame, default);
+            var result = await handle.Handle(queryGame, default);
 
             var expectedGame = new GameReadDto(givenGame.Id, givenGame.CreatedBy, givenGame.Title, givenGame.Description, 60, 60, expectedListUser, cards);
             result.Should().BeEquivalentTo(expectedGame);

@@ -13,6 +13,7 @@ using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Test.Cards.Fixtures;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
+using PlaningPoker.Api.Votes.Models;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.Startup;

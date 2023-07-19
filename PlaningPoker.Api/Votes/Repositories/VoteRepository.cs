@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Votes.Models;
 using System.Data.SQLite;
 
@@ -14,9 +13,9 @@ namespace PlaningPoker.Api.Votes.Repositories
             this.connection = connection;
         }
 
-        public Task<IEnumerable<User>> AddVoteByUserNameAndGroupIdAsync(string name, string gameId, string vote)
+        public async Task AddVoteByUserNameAndGroupIdAsync(string name, string gameId, string vote)
         {
-            throw new NotImplementedException();
+            await connection.ExecuteAsync($"UPDATE Users SET Vote = '{vote}' WHERE Name = '{name}' AND GameId = '{gameId}'");
         }
 
         public async Task<IEnumerable<VotesUsers>> GetAllVotesByGroupIdAsync(string gameId)

@@ -23,6 +23,7 @@ namespace PlaningPoker.Api.Test.Votes.Commands
         private SQLiteConnection connection;
         private IMapper mapper;
         private IVoteRepository voteRepository;
+        private IUserRepository userRepository;
         private CreateVoteCommandHandler handler;
 
         [SetUp]
@@ -32,6 +33,7 @@ namespace PlaningPoker.Api.Test.Votes.Commands
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
             voteRepository = new VoteRepository(connection);
+            userRepository = new UserRepository(connection);
             mapper = setupFixture.AutoMapperConfigTest();
             handler = new CreateVoteCommandHandler(voteRepository, mapper);
         }
@@ -39,8 +41,9 @@ namespace PlaningPoker.Api.Test.Votes.Commands
         [Test]
         public async Task InsertAVoteForAUserInAGroupSuccesfully()
         {
-            var givenUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
-
+            var givenUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create(""));
+            await userRepository.Add(givenUser);
+            givenUser.Vote = Vote.Create("3");
             await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId, givenUser.Vote.Value);
 
             var result = await voteRepository.GetAllVotesByGroupIdAsync(givenUser.GameId);

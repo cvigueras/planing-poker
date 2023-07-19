@@ -55,7 +55,7 @@ namespace PlaningPoker.Api.Test.Votes.Repositories
             givenUser.Vote = Vote.Create("3");
             await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId, givenUser.Vote.Value);
 
-            var result = userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
+            var result = await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
 
             var expectedUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
             result.Should().BeEquivalentTo(expectedUser);

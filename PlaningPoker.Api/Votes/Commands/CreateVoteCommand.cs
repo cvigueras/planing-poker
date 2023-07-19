@@ -3,11 +3,13 @@ using PlaningPoker.Api.Votes.Models;
 
 namespace PlaningPoker.Api.Test.Votes.Commands
 {
-    public class CreateVoteCommand : IRequest<VotesUsersReadDto>
+    public class CreateVoteCommand : IRequest
     {
-        public CreateVoteCommand()
+        public VotesUsersCreateDto VotesUsers { get; }
+        public CreateVoteCommand(VotesUsersCreateDto votesUsers)
         {
-            
+            VotesUsers = votesUsers;
         }
+
     }
 }

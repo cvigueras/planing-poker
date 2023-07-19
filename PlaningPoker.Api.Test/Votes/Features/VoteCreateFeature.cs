@@ -5,7 +5,7 @@ namespace PlaningPoker.Api.Test.Votes.Features
 {
     public class CreateVoteFeature
     {
-        public const string RequestUriBase = "Vote";
+        public const string RequestUriBase = "Votes";
         public const string PathJson = "./Votes/Fixtures/Vote.json";
         private PlaningPokerClient client;
 
@@ -16,7 +16,7 @@ namespace PlaningPoker.Api.Test.Votes.Features
         }
 
         [Test]
-        public async Task RetrieveAGameAfterPostAsync()
+        public async Task InsertVoteSuccessfully()
         {
             var json = await client.GetJsonContent(PathJson);
 

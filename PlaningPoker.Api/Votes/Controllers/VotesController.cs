@@ -1,23 +1,28 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PlaningPoker.Api.Test.Votes.Commands;
 using PlaningPoker.Api.Votes.Models;
 
 namespace PlaningPoker.Api.Votes.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class VotesController : ControllerBase
     {
-        public ISender Sender { get; }
+        private ISender sender { get; }
 
         public VotesController(ISender sender)
         {
-            Sender = sender;
+            this.sender = sender;
         }
 
-        public Task<IActionResult> Post(VotesUsersCreateDto votesUsers)
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Post(VotesUsersCreateDto votesUsers)
         {
-            throw new NotImplementedException();
+            await sender.Send(new CreateVoteCommand(votesUsers));
+            return Ok("Vote inserted succesfully");
         }
     }
 }

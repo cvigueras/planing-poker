@@ -7,7 +7,6 @@ using PlaningPoker.Api.Games.Queries;
 using PlaningPoker.Api.Users.Commands;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Queries;
-using System;
 
 namespace PlaningPoker.Api.Games.Controllers;
 

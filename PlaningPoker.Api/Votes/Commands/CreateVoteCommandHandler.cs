@@ -5,7 +5,7 @@ using PlaningPoker.Api.Votes.Repositories;
 
 namespace PlaningPoker.Api.Test.Votes.Commands
 {
-    public class CreateVoteCommandHandler : IRequestHandler<CreateVoteCommand, VotesUsersReadDto>
+    public class CreateVoteCommandHandler : IRequestHandler<CreateVoteCommand>
     {
         private IVoteRepository voteRepository;
         private IMapper mapper;
@@ -16,9 +16,10 @@ namespace PlaningPoker.Api.Test.Votes.Commands
             this.mapper = mapper;
         }
 
-        public Task<VotesUsersReadDto> Handle(CreateVoteCommand request, CancellationToken cancellationToken)
+        public async Task Handle(CreateVoteCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await voteRepository.AddVoteByUserNameAndGroupIdAsync(
+                request.VotesUsers.Name, request.VotesUsers.Group, request.VotesUsers.Value);
         }
     }
 }

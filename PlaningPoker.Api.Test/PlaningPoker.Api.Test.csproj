@@ -37,6 +37,13 @@
     <None Update="Games\Features\GameCreateFeature.RetrieveAGameAfterPostAsync.verified.txt">
       <DependentUpon>GameCreateFeature.cs</DependentUpon>
     </None>
+    <None Update="Votes\Fixtures\Vote.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Votes\Fixtures\" />
   </ItemGroup>
 
 </Project>

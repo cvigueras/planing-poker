@@ -31,14 +31,26 @@ namespace PlaningPoker.Api.Test.Votes.Repositories
         [Test]
         public async Task ReturnAllVotesByGameIdAsync()
         {
-            var givenFirtsUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
-            var givenSecondUser = User.Create("Juan", "anyGameId", "anyConnectionId", true, Vote.Create("5"));
+            await GivenTwoDifferentsUsersWithVote();
 
-            await userRepository.Add(givenFirtsUser);
-            await userRepository.Add(givenSecondUser);
+            var result = await WhenTheUsersAreRetrieved();
 
-            var result = await voteRepository.GetAllVotesByGroupIdAsync("anyGameId");
+            ThenBothUsersExistWithVote(result);
+        }
 
+        [Test]
+        public async Task InsertAVoteForAUserAndGroupIdSuccesfully()
+        {
+            var givenUser = await GivenANewUser();
+            await GivenSameUserWithInsertedVote(givenUser);
+
+            var result = await WhenTheUserIsRetrieved(givenUser);
+
+            TheUserExistWithVote(result);
+        }
+
+        private static void ThenBothUsersExistWithVote(IEnumerable<VotesUsers> result)
+        {
             var expectedVotesUsers = new List<VotesUsers>
             {
                 VotesUsers.Create("Carlos", Vote.Create("3")),
@@ -47,18 +59,41 @@ namespace PlaningPoker.Api.Test.Votes.Repositories
             result.Should().BeEquivalentTo(expectedVotesUsers);
         }
 
-        [Test]
-        public async Task InsertAVoteForAUserAndGroupIdSuccesfully()
+        private async Task<IEnumerable<VotesUsers>> WhenTheUsersAreRetrieved()
+        {
+            return await voteRepository.GetAllVotesByGroupIdAsync("anyGameId");
+        }
+
+        private async Task GivenTwoDifferentsUsersWithVote()
+        {
+            var givenFirtsUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
+            var givenSecondUser = User.Create("Juan", "anyGameId", "anyConnectionId", true, Vote.Create("5"));
+            await userRepository.Add(givenFirtsUser);
+            await userRepository.Add(givenSecondUser);
+        }
+
+        private static void TheUserExistWithVote(User result)
+        {
+            var expectedUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
+            result.Should().BeEquivalentTo(expectedUser);
+        }
+
+        private async Task<User> WhenTheUserIsRetrieved(User givenUser)
+        {
+            return await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
+        }
+
+        private async Task GivenSameUserWithInsertedVote(User givenUser)
+        {
+            givenUser.Vote = Vote.Create("3");
+            await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId, givenUser.Vote.Value);
+        }
+
+        private async Task<User> GivenANewUser()
         {
             var givenUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create(""));
             await userRepository.Add(givenUser);
-            givenUser.Vote = Vote.Create("3");
-            await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId, givenUser.Vote.Value);
-
-            var result = await userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
-
-            var expectedUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
-            result.Should().BeEquivalentTo(expectedUser);
+            return givenUser;
         }
     }
 }

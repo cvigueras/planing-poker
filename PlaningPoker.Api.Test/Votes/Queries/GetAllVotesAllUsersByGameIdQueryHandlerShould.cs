@@ -37,20 +37,34 @@ namespace PlaningPoker.Api.Test.Votes.Queries
         [Test]
         public async Task GetAllVotesAllUserByGameIdSuccesfully()
         {
-            var givenFirstUser = User.Create("Carlos", gameId, "anyConnectionId", true, Vote.Create("3"));
-            await userRepository.Add(givenFirstUser);            
-            var givenSecondUser = User.Create("Juan", gameId, "anyConnectionId", true, Vote.Create("5"));
-            await userRepository.Add(givenSecondUser);
-            
-            var result = await handler.Handle(query, default);
+            await GivenTwoDifferentsUsersWithVote();
 
+            var result = await WhenRetrieveHisVotes();
+
+            ThenTheVotesExistsInGroupId(result);
+        }
+
+        private static void ThenTheVotesExistsInGroupId(IEnumerable<VotesUsersReadDto> result)
+        {
             var expectedFirstVote = new VotesUsersReadDto("Carlos", "3");
             var expectedSecondVote = new VotesUsersReadDto("Juan", "5");
-
             result.ElementAt(0).Name.Should().BeEquivalentTo(expectedFirstVote.Name);
             result.ElementAt(0).Value.Should().BeEquivalentTo(expectedFirstVote.Value);
             result.ElementAt(1).Name.Should().BeEquivalentTo(expectedSecondVote.Name);
             result.ElementAt(1).Value.Should().BeEquivalentTo(expectedSecondVote.Value);
+        }
+
+        private async Task<IEnumerable<VotesUsersReadDto>> WhenRetrieveHisVotes()
+        {
+            return await handler.Handle(query, default);
+        }
+
+        private async Task GivenTwoDifferentsUsersWithVote()
+        {
+            var givenFirstUser = User.Create("Carlos", gameId, "anyConnectionId", true, Vote.Create("3"));
+            await userRepository.Add(givenFirstUser);
+            var givenSecondUser = User.Create("Juan", gameId, "anyConnectionId", true, Vote.Create("5"));
+            await userRepository.Add(givenSecondUser);
         }
     }
 }

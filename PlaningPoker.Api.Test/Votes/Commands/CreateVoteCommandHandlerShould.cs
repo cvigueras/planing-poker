@@ -41,16 +41,32 @@ namespace PlaningPoker.Api.Test.Votes.Commands
         [Test]
         public async Task InsertAVoteForAUserInAGroupSuccesfully()
         {
+            var givenUser = await GivenAUserWithAVote();
+
+            var result = await WhenRetrievedAllVotesForThatGroupId(givenUser);
+
+            ThenTheVoteExistsInGroupId(result);
+        }
+
+        private static void ThenTheVoteExistsInGroupId(IEnumerable<VotesUsers> result)
+        {
+            var expectedUserVote = new VotesUsersReadDto("Carlos", "3");
+            result.Single().UserName.Should().BeEquivalentTo(expectedUserVote.Name);
+            result.Single().Vote.Value.Should().BeEquivalentTo(expectedUserVote.Value);
+        }
+
+        private async Task<IEnumerable<VotesUsers>> WhenRetrievedAllVotesForThatGroupId(User givenUser)
+        {
+            return await voteRepository.GetAllVotesByGroupIdAsync(givenUser.GameId);
+        }
+
+        private async Task<User> GivenAUserWithAVote()
+        {
             var givenUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create(""));
             await userRepository.Add(givenUser);
             givenUser.Vote = Vote.Create("3");
             await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId, givenUser.Vote.Value);
-
-            var result = await voteRepository.GetAllVotesByGroupIdAsync(givenUser.GameId);
-
-            var expectedUserVote = new VotesUsersReadDto("Carlos", "3");
-            result.Single().UserName.Should().BeEquivalentTo(expectedUserVote.Name);
-            result.Single().Vote.Value.Should().BeEquivalentTo(expectedUserVote.Value);
+            return givenUser;
         }
     }
 }

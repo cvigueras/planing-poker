@@ -47,10 +47,10 @@ namespace PlaningPoker.Api.Test.Votes.Queries
             var expectedFirstVote = new VotesUsersReadDto("Carlos", "3");
             var expectedSecondVote = new VotesUsersReadDto("Juan", "5");
 
-            result.ElementAt(0).Name.Should().BeEquivalentTo(expectedFirstVote.UserName);
-            result.ElementAt(0).Value.Should().BeEquivalentTo(expectedFirstVote.Vote);
-            result.ElementAt(1).Name.Should().BeEquivalentTo(expectedSecondVote.UserName);
-            result.ElementAt(1).Value.Should().BeEquivalentTo(expectedSecondVote.Vote);
+            result.ElementAt(0).Name.Should().BeEquivalentTo(expectedFirstVote.Name);
+            result.ElementAt(0).Value.Should().BeEquivalentTo(expectedFirstVote.Value);
+            result.ElementAt(1).Name.Should().BeEquivalentTo(expectedSecondVote.Name);
+            result.ElementAt(1).Value.Should().BeEquivalentTo(expectedSecondVote.Value);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace PlaningPoker.Api.Test.Votes.Repositories
             await userRepository.Add(givenFirtsUser);
             await userRepository.Add(givenSecondUser);
 
-            var result = await voteRepository.GetVotesByGameIdAsync("anyGameId");
+            var result = await voteRepository.GetAllVotesByGroupIdAsync("anyGameId");
 
             var expectedVotesUsers = new List<VotesUsers>
             {
@@ -45,6 +45,20 @@ namespace PlaningPoker.Api.Test.Votes.Repositories
                 VotesUsers.Create("Juan", Vote.Create("5")),
             };
             result.Should().BeEquivalentTo(expectedVotesUsers);
+        }
+
+        [Test]
+        public async Task InsertAVoteForAUserAndGroupIdSuccesfully()
+        {
+            var givenUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create(""));
+            await userRepository.Add(givenUser);
+            givenUser.Vote = Vote.Create("3");
+            await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId, givenUser.Vote.Value);
+
+            var result = userRepository.GetByNameAndGameId(givenUser.Name, givenUser.GameId);
+
+            var expectedUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
+            result.Should().BeEquivalentTo(expectedUser);
         }
     }
 }

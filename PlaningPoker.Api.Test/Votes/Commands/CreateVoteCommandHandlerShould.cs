@@ -41,12 +41,12 @@ namespace PlaningPoker.Api.Test.Votes.Commands
         {
             var givenUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
 
-            await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId);
+            await voteRepository.AddVoteByUserNameAndGroupIdAsync(givenUser.Name, givenUser.GameId, givenUser.Vote.Value);
 
             var result = await voteRepository.GetAllVotesByGroupIdAsync(givenUser.GameId);
 
             var expectedUserVote = new VotesUsersReadDto("Carlos", "3");
-            result.Single().Name.Should().BeEquivalentTo(expectedUserVote.Name);
+            result.Single().UserName.Should().BeEquivalentTo(expectedUserVote.Name);
             result.Single().Vote.Value.Should().BeEquivalentTo(expectedUserVote.Value);
         }
     }

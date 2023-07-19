@@ -14,17 +14,12 @@ namespace PlaningPoker.Api.Votes.Repositories
             this.connection = connection;
         }
 
-        public Task<IEnumerable<User>> AddVoteByUserNameAndGroupIdAsync(string name, string gameId)
+        public Task<IEnumerable<User>> AddVoteByUserNameAndGroupIdAsync(string name, string gameId, string vote)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> GetAllVotesByGroupIdAsync(string gameId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<VotesUsers>> GetVotesByGameIdAsync(string gameId)
+        public async Task<IEnumerable<VotesUsers>> GetAllVotesByGroupIdAsync(string gameId)
         {
             var rawData = (await connection.QueryAsync<dynamic>($"SELECT Name, Vote FROM Users WHERE GameId = '{gameId}'")).ToList();
             return ToVotesUsers(rawData);

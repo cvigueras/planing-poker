@@ -5,8 +5,7 @@ namespace PlaningPoker.Api.Votes.Repositories
 {
     public interface IVoteRepository
     {
-        Task<IEnumerable<User>> AddVoteByUserNameAndGroupIdAsync(string name, string gameId);
-        Task<IEnumerable<User>> GetAllVotesByGroupIdAsync(string gameId);
-        Task<IEnumerable<VotesUsers>> GetVotesByGameIdAsync(string gameId);
+        Task<IEnumerable<User>> AddVoteByUserNameAndGroupIdAsync(string name, string gameId, string vote);
+        Task<IEnumerable<VotesUsers>> GetAllVotesByGroupIdAsync(string gameId);
     }
 }

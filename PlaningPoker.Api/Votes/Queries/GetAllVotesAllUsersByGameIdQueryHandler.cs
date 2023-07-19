@@ -19,7 +19,7 @@ namespace PlaningPoker.Api.Test.Votes.Queries
 
         public async Task<IEnumerable<VotesUsersReadDto>> Handle(GetAllVotesAllUsersByGameIdQuery request, CancellationToken cancellationToken)
         {
-            var votesUsers = await voteRepository.GetVotesByGameIdAsync(request.GameId);
+            var votesUsers = await voteRepository.GetAllVotesByGroupIdAsync(request.GameId);
             return mapper.Map<List<VotesUsersReadDto>>(votesUsers);
         }
     }

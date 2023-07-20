@@ -43,6 +43,17 @@
                         return;
                     }).catch(error => console.log(error))
             },
+            insertVote(vote) {
+                const votes = {
+                    name: localStorage.getItem('username'),
+                    group: localStorage.getItem('gameid'),
+                    value: vote
+                }
+                axios.post('votes', votes)
+                    .then(response => {
+                        console.log(response.data);
+                    }).catch(error => console.log(error))
+            },
             getCard(event) {
                 if (event) {
                     event.preventDefault()
@@ -56,6 +67,7 @@
                 var element = document.getElementById(event.currentTarget.id).firstElementChild;
                 element.classList.add("selected");
                 console.log(event.currentTarget.id);
+                this.insertVote(event.currentTarget.textContent);
             },
             getCardClass(card) {
                 switch (card.value) {

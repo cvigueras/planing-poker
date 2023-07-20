@@ -29,6 +29,9 @@ module.exports = {
             },
             '^/game': {
                 target: 'https://localhost:7096/'
+            },
+            '^/votes': {
+                target: 'https://localhost:7096/'
             }
         },
         port: 5002

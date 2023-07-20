@@ -59,6 +59,20 @@
     opacity: 0.8;
 }
 
+.btnDelete {
+    color: red;
+    padding: 0;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    font-weight: bold;
+}
+
+.btnDelete:hover {
+    opacity: 0.8;
+}
+
 .btnJoin {
     background-color: #3377FF;
     color: white;

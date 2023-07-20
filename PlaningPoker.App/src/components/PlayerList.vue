@@ -5,13 +5,13 @@
             <th>Actions</th>
             <th>Vote</th>
         </tr>
-        <tr v-for="user in users" v-bind:key="user">
+        <tr v-for="user in users" v-bind:key="user" v-bind:id="user.name">
             <td>{{ user.name }}</td>
             <td v-if="user.admin == false">
-                <button class="btnCreate" @click="removeUser($event)" type="submit" v-bind:id="user.name" />
+                <p class="btnDelete" @click="removeUser($event)" type="submit" v-bind:id="user.name" >Eliminar usuario</p>
             </td>
             <td v-if="user.admin == true">Show votes</td>
-            <td>---</td>
+            <td v-bind:id="`vote-${user.name}`">---</td>
         </tr>
     </table>
     <table v-if="isAdmin() == false" id="players">
@@ -20,10 +20,10 @@
             <th>Actions</th>
             <th>Vote</th>
         </tr>
-        <tr v-for="user in users" v-bind:key="user">
+        <tr v-for="user in users" v-bind:key="user" v-bind:id="user.name">
             <td>{{ user.name }}</td>
             <td>No privileges</td>
-            <td>---</td>
+            <td v-bind:id="`vote-${user.name}`">---</td>
         </tr>
     </table>
 </template>
@@ -39,6 +39,14 @@
         methods: {
             subscribeEvents() {
                 this.$signalr.on('OnNotifyUserHasVoted', (user, vote) => {
+                    document.getElementById(user).className = "highlightPlus";
+                    setTimeout(() => {
+                        document.getElementById(user).className = "highlight";
+                    }, 1000);
+                    setTimeout(() => {
+                        document.getElementById(user).className = "highlightPlus";
+                    }, 1200);
+                    document.getElementById("vote-" + user).innerHTML = "?";
                     console.log("El usuario: " + user + "ha votado: " + vote);
                 });
             },

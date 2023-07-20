@@ -57,14 +57,14 @@
         methods: {
             getGame() {
                 this.loading = true;
-                var gameid = localStorage.getItem("gameid");
+                let gameid = localStorage.getItem("gameid");
                 this.fetchGame(gameid);
                 this.joinGroup();
             },
             joinGroup() {
-                var gameId = localStorage.getItem("gameid");
-                var userName = localStorage.getItem("username");
-                var admin = false;
+                let gameId = localStorage.getItem("gameid");
+                let userName = localStorage.getItem("username");
+                let admin = false;
                 if (JSON.parse(localStorage.getItem("users")).length == 1) {
                     admin = true;
                 }
@@ -85,7 +85,7 @@
                 setTimeout(() => {
                     this.game = game;
                     this.loading = false;
-                }, "1000");
+                }, 1000);
             },
             fetchGame(gameId) {
                 axios.get('game/' + gameId)
@@ -95,7 +95,7 @@
                     }).catch(error => console.log(error))
             },
             copyUrl() {
-                var copyText = document.getElementById("urlShare");
+                let copyText = document.getElementById("urlShare");
                 copyText.select();
                 copyText.setSelectionRange(0, 99999);
                 navigator.clipboard.writeText(copyText.value);

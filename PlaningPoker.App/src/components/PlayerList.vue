@@ -29,6 +29,7 @@
 </template>
 
 <script lang="js">
+
     export default {
         computed: {
             users() {
@@ -37,16 +38,16 @@
         },
         methods: {
             isAdmin() {
-                var gameId = localStorage.getItem("gameid");
-                var user = localStorage.getItem("username");
+                let gameId = localStorage.getItem("gameid");
+                let user = localStorage.getItem("username");
                 return this.$store.getters.userIsAdmin(gameId, user);
             },
             removeUser(event) {
                 if (event) {
                     event.preventDefault()
                 }
-                var userName = event.currentTarget.id;
-                var gameId = localStorage.getItem("gameid");
+                let userName = event.currentTarget.id;
+                let gameId = localStorage.getItem("gameid");
                 this.$signalr
                     .invoke('RemoveFromGroup', userName, gameId)
                     .catch(function (err) { console.error(err) })
@@ -66,8 +67,8 @@
                     gameId: localStorage.getItem('gameid'),
                     admin: admin,
                 }
-                var existUser = this.$store.getters.existUser(userAdded.gameId, user);
-                if (existUser == false) {
+                let existUser = this.$store.getters.existUser(userAdded.gameId, user);
+                if (!existUser) {
                     this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
                 }
             });
@@ -81,11 +82,11 @@
                     name: user.name,
                     gameId: localStorage.getItem('gameid'),
                 }
-                var existUser = this.$store.getters.existUser(userAdded.gameId, user);
-                if (existUser == false) {
+                let existUser = this.$store.getters.existUser(userAdded.gameId, user);
+                if (!existUser) {
                     this.$store.dispatch('removeToUsers', JSON.stringify(userAdded));
                 }
-                if (this.isAdmin() == true) {
+                if (this.isAdmin()) {
 
                     console.log("The connection Id of disconnected user is: " + connectionId);
                     this.$signalr

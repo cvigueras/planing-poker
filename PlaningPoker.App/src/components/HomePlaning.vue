@@ -32,18 +32,18 @@
         },
         methods: {
             createGame() {
-                var gameCreated = gameFactory.create(this.username, this.gamename, this.description);
+                let gameCreated = gameFactory.create(this.username, this.gamename, this.description);
                 this.fetchData(gameCreated);
             },
             fetchData(game) {
-                var user = this.buildUser(this.username, this.gameId);
+                let user = this.buildUser(this.username, this.gameId);
                 axios.post('game', game)
                     .then(response => {
                         this.persistLocalData(response.data, user);
                     }).catch(error => console.log(error))
             },
             joinGame() {
-                var user = this.buildUser(this.username, this.gameId);
+                let user = this.buildUser(this.username, this.gameId);
                 axios.put('game/' + this.gameId, user)
                     .then(response => {
                         this.persistLocalData(response.data, user);

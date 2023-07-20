@@ -21,9 +21,15 @@
 
 <script lang="js">
     import axios from 'axios';
+    import { getCurrentInstance } from "vue";
+
     export default {
         props: {
             id: String
+        },
+        setup() {
+            const instance = getCurrentInstance();
+            window.signalR = instance.appContext.config.globalProperties.$signalr;
         },
         data() {
             return {
@@ -33,14 +39,19 @@
         },
         created() {
             this.fetchData();
+            this.subscribeEvents();
         },
         methods: {
+            subscribeEvents() {
+                this.$signalr.on('OnNotifyUserHasVoted', (user, vote) => {
+                    console.log("El usuario: " + user + "ha votado: " + vote);
+                });
+            },
             fetchData() {
                 axios.get('cards')
                     .then(response => {
                         this.firstcards = response.data.slice(0, 7);
                         this.secondcards = response.data.slice(7, 13);
-                        return;
                     }).catch(error => console.log(error))
             },
             insertVote(vote) {
@@ -50,8 +61,10 @@
                     value: vote
                 }
                 axios.post('votes', votes)
-                    .then(response => {
-                        console.log(response.data);
+                    .then(function () {
+                        window.signalR
+                            .invoke('NotifyUserHasVoted', votes.group, votes.name, votes.value)
+                            .catch(function (err) { console.error(err) })
                     }).catch(error => console.log(error))
             },
             getCard(event) {
@@ -64,9 +77,9 @@
                     element.classList.remove('selected');
                 });
 
-                var element = document.getElementById(event.currentTarget.id).firstElementChild;
+                let element = document.getElementById(event.currentTarget.id).firstElementChild;
                 element.classList.add("selected");
-                console.log(event.currentTarget.id);
+                
                 this.insertVote(event.currentTarget.textContent);
             },
             getCardClass(card) {

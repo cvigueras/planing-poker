@@ -99,5 +99,26 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
 
             publishedUser.Should().Be(user);
         }
+
+        [Test]
+        public async Task ConsiderAVoteHasBeenAddedSuccessfully()
+        {
+            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+
+            var userName = "";
+            var vote = "";
+            var expectedUserName = "Carlos";
+            var expectedVote = "3";
+            connection.On<string, string>("OnNotifyUserHasVoted", (userReceived, voteReceived) =>
+            {
+                userName = userReceived;
+                vote = voteReceived;
+            });
+            await connection.InvokeAsync("NotifyUserHasVoted", "group1", expectedUserName, expectedVote);
+            await Task.Delay(200);
+
+            userName.Should().Be(expectedUserName);
+            vote.Should().Be(expectedVote);
+        }
     }
 }

@@ -14,6 +14,11 @@ public class PlaningHub : Hub
         this.userRepository = userRepository;
     }
 
+    public Task NotifyUserHasVoted(string group, string name, string vote)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task JoinGroup(string group, string user, bool admin)
     {
         var userCreate = User.Create(user, group, Context.ConnectionId, admin, Vote.Create(string.Empty));

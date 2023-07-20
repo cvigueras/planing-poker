@@ -105,6 +105,8 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         {
             connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
+            await connection.InvokeAsync("JoinGroup", "group1", "Carlos", true);
+
             var userName = "";
             var vote = "";
             var expectedUserName = "Carlos";

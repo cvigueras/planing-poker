@@ -14,9 +14,9 @@ public class PlaningHub : Hub
         this.userRepository = userRepository;
     }
 
-    public Task NotifyUserHasVoted(string group, string name, string vote)
-    {
-        throw new NotImplementedException();
+    public async Task NotifyUserHasVoted(string group, string name, string vote)
+    {        
+        await Clients.Group(group).SendAsync("OnNotifyUserHasVoted", name, vote);
     }
 
     public async Task JoinGroup(string group, string user, bool admin)

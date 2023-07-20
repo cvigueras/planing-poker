@@ -37,6 +37,11 @@
             },
         },
         methods: {
+            subscribeEvents() {
+                this.$signalr.on('OnNotifyUserHasVoted', (user, vote) => {
+                    console.log("El usuario: " + user + "ha votado: " + vote);
+                });
+            },
             isAdmin() {
                 let gameId = localStorage.getItem("gameid");
                 let user = localStorage.getItem("username");
@@ -61,6 +66,7 @@
             }
         },
         created() {
+            this.subscribeEvents();
             this.$signalr.on('OnJoinGroup', (user, admin) => {
                 const userAdded = {
                     name: user,

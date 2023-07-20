@@ -39,14 +39,8 @@
         },
         created() {
             this.fetchData();
-            this.subscribeEvents();
         },
         methods: {
-            subscribeEvents() {
-                this.$signalr.on('OnNotifyUserHasVoted', (user, vote) => {
-                    console.log("El usuario: " + user + "ha votado: " + vote);
-                });
-            },
             fetchData() {
                 axios.get('cards')
                     .then(response => {

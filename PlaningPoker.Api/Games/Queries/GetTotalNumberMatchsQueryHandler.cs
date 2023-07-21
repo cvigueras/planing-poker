@@ -14,7 +14,7 @@ namespace PlaningPoker.Api.Test.Games.Queries
 
         public Task<long> Handle(GetTotalNumberMatchsQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return repository.GetTotalNumberMatchs();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using PlaningPoker.Api.Games.Models;
+using System;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Games.Repositories;
@@ -36,6 +37,6 @@ public class GameRepository : IGameRepository
 
     public async Task<long> GetTotalNumberMatchs()
     {
-        throw new NotImplementedException();
+        return connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM Games");
     }
 }

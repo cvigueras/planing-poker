@@ -1,18 +1,11 @@
 ﻿using FluentAssertions;
-using PlaningPoker.Api.Games.Repositories;
-using PlaningPoker.Api.Test.Games.Queries;
 using PlaningPoker.Api.Test.Startup;
 using PlaningPoker.Api.Users.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlaningPoker.Api.Test.Users.Queries
 {
-    public class GetTotalNumberUserssHandlerShould
+    public class GetTotalNumberUsersHandlerShould
     {
         private SetupFixture setupFixture;
         private SQLiteConnection connection;

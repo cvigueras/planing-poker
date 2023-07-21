@@ -12,9 +12,9 @@ namespace PlaningPoker.Api.Test.Users.Queries
             this.repository = repository;
         }
 
-        public Task<long> Handle(GetTotalNumberUsersQuery request, CancellationToken cancellationToken)
+        public async Task<long> Handle(GetTotalNumberUsersQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await repository.GetTotalNumberUsers();
         }
     }
 }

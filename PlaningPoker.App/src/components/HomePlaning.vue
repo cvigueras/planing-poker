@@ -17,26 +17,20 @@
         </button>
     </div>
 
-    <div class="divInfoMatch">
-        <div>200 partidas jugadas hasta hoy.</div>
-        <div class="iconInfoMatch">&#9731;</div>
-    </div>   
-    
-    <div class="divInfoMatch">
-        <div>400 jugadores han pasado por aquí</div>
-        <div class="iconInfoUser">&#9879;</div>
-    </div>
-    
+    <InfoHome />
+
 </template>
 
 <script>
     import axios from 'axios';
     import HeaderPlaning from './HeaderPlaning.vue';
+    import InfoHome from './InfoHome.vue';
     import gameFactory from '../factories/game'
 
     export default {
         components: {
-            HeaderPlaning
+            HeaderPlaning,
+            InfoHome
         },
         mounted() {
             localStorage.clear();

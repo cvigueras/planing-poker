@@ -2,8 +2,8 @@
     <div class="results">Results</div>
     <hr />
     <div class="actions">
-        <button class="btnShowVotes" @click="">Show votes</button>
-        <button class="btnResetMatch" @click="">Reset match</button>
+        <button class="btnShowVotes">Show votes</button>
+        <button class="btnResetMatch">Reset match</button>
     </div>
     <table v-if="isAdmin() == true" id="players">
         <tr>

@@ -4,6 +4,7 @@ using PlaningPoker.Api.Cards.Queries;
 using PlaningPoker.Api.Games.Commands;
 using PlaningPoker.Api.Games.Models;
 using PlaningPoker.Api.Games.Queries;
+using PlaningPoker.Api.Test.Games.Queries;
 using PlaningPoker.Api.Users.Commands;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Queries;
@@ -63,4 +64,13 @@ public class GameController : ControllerBase
             await sender.Send(new GetUsersGameByGameIdQuery(guid)),
             await sender.Send(new GetAllCardsListQuery()))));
     }
+
+    [HttpGet]
+    [Route("GetNumberMatchs")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(long))]
+    public async Task<ActionResult> GetNumberMatchsAsync()
+    {
+        return Ok(await sender.Send(new GetTotalNumberMatchsQuery()));
+    }
+
 }

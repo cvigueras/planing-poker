@@ -56,6 +56,11 @@ public class UserRepository : IUserRepository
             $"DELETE FROM Users WHERE GameId = '{gameGuid}' AND Name = '{userName}'");
     }
 
+    public async Task<long> GetTotalNumberUsers()
+    {
+        throw new NotImplementedException();
+    }
+
     private User ToUser(dynamic rawData)
     {
         return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId, rawData.Admin, Vote.Create(rawData.Vote));
@@ -76,5 +81,4 @@ public class UserRepository : IUserRepository
         }
         return listUsers;
     }
-
 }

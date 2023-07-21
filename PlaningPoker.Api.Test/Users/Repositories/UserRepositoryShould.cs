@@ -143,5 +143,13 @@ namespace PlaningPoker.Api.Test.Users.Repositories
             var expectedUser = User.Create("Carlos", givenUser.GameId, "connectionId123", false, Vote.Create("5"));
             result.Should().BeEquivalentTo(expectedUser);
         }
+
+        [Test]
+        public async Task RetrieveNumberAllTotalUsersAsync()
+        {
+            var result = await userRepository.GetTotalNumberUsers();
+
+            result.Should().BeGreaterThanOrEqualTo(0);
+        }
     }
 }

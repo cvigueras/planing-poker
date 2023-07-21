@@ -5,7 +5,7 @@
     border: 1px solid #64D0FF;
     border-radius: 10px;
     margin-left: 4%;
-    height: 14em;
+    height: 16em;
     width: 40%;
     padding: 20px;
 }
@@ -17,7 +17,7 @@
     border: 1px solid #FF0000;
     border-radius: 10px;
     margin-left: 4%;
-    height: 14em;
+    height: 16em;
     width: 40%;
     padding: 20px;
 }
@@ -31,4 +31,9 @@
 .iconInfoUser {
     color: #FF0000;
     font-size: 150px;
+}
+
+.textInfo {
+    font-family: cursive;
+    font-size: 32px;
 }

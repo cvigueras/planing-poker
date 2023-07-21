@@ -16,7 +16,7 @@
             <td v-if="user.admin == false">
                 <p class="btnDelete" @click="removeUser($event)" type="submit" v-bind:id="user.name" >Eliminar usuario</p>
             </td>
-            <td v-if="user.admin == true">Show votes</td>
+            <td v-if="user.admin == true"></td>
             <td v-bind:id="`vote-${user.name}`">---</td>
         </tr>
     </table>
@@ -28,7 +28,7 @@
         </tr>
         <tr v-for="user in users" v-bind:key="user" v-bind:id="user.name">
             <td>{{ user.name }}</td>
-            <td>No privileges</td>
+            <td></td>
             <td v-bind:id="`vote-${user.name}`">---</td>
         </tr>
     </table>

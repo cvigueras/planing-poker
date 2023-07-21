@@ -39,14 +39,8 @@
         methods: {
             subscribeEvents() {
                 this.$signalr.on('OnNotifyUserHasVoted', (user, vote) => {
-                    document.getElementById(user).className = "highlightPlus";
-                    setTimeout(() => {
-                        document.getElementById(user).className = "highlight";
-                    }, 1000);
-                    setTimeout(() => {
-                        document.getElementById(user).className = "highlightPlus";
-                    }, 1200);
-                    document.getElementById("vote-" + user).innerHTML = "?";
+                    document.getElementById(user).className = "highlight";
+                    document.getElementById("vote-" + user).innerHTML = "&#10004;";
                     console.log("El usuario: " + user + "ha votado: " + vote);
                 });
             },

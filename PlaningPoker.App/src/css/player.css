@@ -30,9 +30,15 @@
 }
 
 .highlight {
-    background-color: #D4E6F8 !important;
+    color: white !important;
+    font-weight: bold;
+    background-image: linear-gradient( to bottom right, transparent 50%, #b393d3 50% ), linear-gradient(#b393d3, #b393d3), linear-gradient(to top left, transparent 50%, #b393d3 50%);
+    background-repeat: no-repeat;
+    background-size: 10px 40px, calc(100% - 20px) 40px, 10px 40px;
+    background-position: left center, center, right;
 }
 
-.highlightPlus {
-    background-color: #D4E6F8 !important;
+td[id^=vote-] {
+    font-size: 20px;
+    color: green;
 }

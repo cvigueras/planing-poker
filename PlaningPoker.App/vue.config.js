@@ -32,6 +32,9 @@ module.exports = {
             },
             '^/votes': {
                 target: 'https://localhost:7096/'
+            },
+            '^/users': {
+                target: 'https://localhost:7096/'
             }
         },
         port: 5002

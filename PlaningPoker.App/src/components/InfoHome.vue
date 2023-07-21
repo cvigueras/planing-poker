@@ -9,7 +9,7 @@
         </div>
 
         <div class="divInfoUser">
-            <div class="textInfo">400 jugadores han pasado por aquí</div>
+            <div class="textInfo">{{ totalUsers }} jugadores han pasado por aquí</div>
             <div class="iconInfoUser">&#9879;</div>
         </div>
     </div>
@@ -21,7 +21,7 @@
 
     export default {
         created() {
-            this.fetchTotalGame();
+            this.fetchTotalUsers();
         },
         data() {
             return {
@@ -29,8 +29,15 @@
             };
         },
         methods: {
-            fetchTotalGame() {
+            fetchTotalUsers() {
                 this.loading = true;
+                axios.get('users/GetTotalNumberUsers')
+                    .then(response => {
+                        this.totalUsers = response.data;
+                        this.fetchTotalGame();
+                    }).catch(error => console.log(error))
+            },
+            fetchTotalGame() {
                 axios.get('game/GetNumberMatchs')
                     .then(response => {
                         this.totalMatchs = response.data;

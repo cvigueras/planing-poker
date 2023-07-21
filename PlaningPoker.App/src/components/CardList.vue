@@ -50,8 +50,8 @@
             },
             insertVote(vote) {
                 const votes = {
-                    name: localStorage.getItem('username'),
-                    group: localStorage.getItem('gameid'),
+                    name: sessionStorage.getItem('username'),
+                    group: sessionStorage.getItem('gameid'),
                     value: vote
                 }
                 axios.post('votes', votes)

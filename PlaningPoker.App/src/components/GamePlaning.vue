@@ -57,15 +57,15 @@
         methods: {
             getGame() {
                 this.loading = true;
-                let gameid = localStorage.getItem("gameid");
+                let gameid = sessionStorage.getItem("gameid");
                 this.fetchGame(gameid);
                 this.joinGroup();
             },
             joinGroup() {
-                let gameId = localStorage.getItem("gameid");
-                let userName = localStorage.getItem("username");
+                let gameId = sessionStorage.getItem("gameid");
+                let userName = sessionStorage.getItem("username");
                 let admin = false;
-                if (JSON.parse(localStorage.getItem("users")).length == 1) {
+                if (JSON.parse(sessionStorage.getItem("users")).length == 1) {
                     admin = true;
                 }
                 this.$signalr.start().then(() => {
@@ -81,7 +81,7 @@
                 this.description = game.description;
                 this.roundTime = game.roundTime;
                 this.expiration = game.expiration;
-                localStorage.setItem('users', JSON.stringify(game.users));
+                sessionStorage.setItem('users', JSON.stringify(game.users));
                 setTimeout(() => {
                     this.game = game;
                     this.loading = false;

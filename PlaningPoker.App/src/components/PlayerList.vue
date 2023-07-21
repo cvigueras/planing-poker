@@ -51,8 +51,8 @@
                 });
             },
             isAdmin() {
-                let gameId = localStorage.getItem("gameid");
-                let user = localStorage.getItem("username");
+                let gameId = sessionStorage.getItem("gameid");
+                let user = sessionStorage.getItem("username");
                 return this.$store.getters.userIsAdmin(gameId, user);
             },
             removeUser(event) {
@@ -60,7 +60,7 @@
                     event.preventDefault()
                 }
                 let userName = event.currentTarget.id;
-                let gameId = localStorage.getItem("gameid");
+                let gameId = sessionStorage.getItem("gameid");
                 this.$signalr
                     .invoke('RemoveFromGroup', userName, gameId)
                     .catch(function (err) { console.error(err) })
@@ -70,7 +70,7 @@
         },
         mounted() {
             if (this.$store.state.users.length == 0) {
-                this.$store.state.users = JSON.parse(localStorage.getItem('users'));
+                this.$store.state.users = JSON.parse(sessionStorage.getItem('users'));
             }
         },
         created() {
@@ -78,7 +78,7 @@
             this.$signalr.on('OnJoinGroup', (user, admin) => {
                 const userAdded = {
                     name: user,
-                    gameId: localStorage.getItem('gameid'),
+                    gameId: sessionStorage.getItem('gameid'),
                     admin: admin,
                 }
                 let existUser = this.$store.getters.existUser(userAdded.gameId, user);
@@ -94,7 +94,7 @@
             this.$signalr.on('OnRemoveGroup', (user, connectionId) => {
                 const userAdded = {
                     name: user.name,
-                    gameId: localStorage.getItem('gameid'),
+                    gameId: sessionStorage.getItem('gameid'),
                 }
                 let existUser = this.$store.getters.existUser(userAdded.gameId, user);
                 if (!existUser) {

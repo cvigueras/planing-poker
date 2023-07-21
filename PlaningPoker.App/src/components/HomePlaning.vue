@@ -33,7 +33,7 @@
             InfoHome
         },
         mounted() {
-            localStorage.clear();
+            sessionStorage.clear();
         },
         methods: {
             createGame() {
@@ -63,9 +63,9 @@
             persistLocalData(game, user) {
                 this.$store.state.users = game.users;
                 this.$store.dispatch('addToGames', JSON.stringify(game))
-                localStorage.setItem("users", JSON.stringify(game.users));
-                localStorage.setItem("gameid", game.id);
-                localStorage.setItem("username", user.name);
+                sessionStorage.setItem("users", JSON.stringify(game.users));
+                sessionStorage.setItem("gameid", game.id);
+                sessionStorage.setItem("username", user.name);
                 this.$router.push('/planing');
             }
         },

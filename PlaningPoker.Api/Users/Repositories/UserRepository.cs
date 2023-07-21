@@ -58,7 +58,7 @@ public class UserRepository : IUserRepository
 
     public async Task<long> GetTotalNumberUsers()
     {
-        throw new NotImplementedException();
+        return connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM Users");
     }
 
     private User ToUser(dynamic rawData)

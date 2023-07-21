@@ -1,25 +1,27 @@
 .divCreate {
     margin: auto;
-    margin-top: 110px;
-    width: 50%;
+    margin-top: 200px;
     border: 1.5px solid #04AA6D;
     padding: 20px;
     border-style: dotted;
     position: relative;
     float: left;
-    margin-left: 25%;
+    margin-left: 4%;
+    height: 14em;
+    width: 40%;
 }
 
 .divJoin {
     margin: auto;
-    width: 30%;
     border: 1.5px solid #3377FF;
     padding: 20px;
     border-style: dotted;
-    margin-top: 30px;
+    margin-top: 200px;
     position: relative;
     float: left;
-    margin-left: 35%;
+    margin-left: 4%;
+    height: 14em;
+    width: 40%;
 }
 
 .inputHome {
@@ -85,4 +87,27 @@
 
 .btnJoin:hover {
     opacity: 0.8;
+}
+
+.divInfoMatch {
+    position: relative;
+    float: left;
+    margin: 90px 0 0 4%;
+    border: 1px solid #30C0FF;
+    border-radius: 10px;
+    margin-left: 4%;
+    height: 14em;
+    width: 40%;
+    padding: 20px;
+}
+
+.iconInfoMatch {
+    color: #64D0FF;
+    font-size: 150px;
+}
+
+
+.iconInfoUser {
+    color: #FF0000;
+    font-size: 150px;
 }

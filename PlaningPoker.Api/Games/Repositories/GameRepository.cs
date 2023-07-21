@@ -33,4 +33,9 @@ public class GameRepository : IGameRepository
         return Game.Create(rawData.Id, rawData.CreatedBy, rawData.Title, rawData.Description, rawData.RoundTime,
             rawData.Expiration);
     }
+
+    public async Task<long> GetTotalNumberMatchs()
+    {
+        throw new NotImplementedException();
+    }
 }

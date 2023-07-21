@@ -45,6 +45,14 @@ namespace PlaningPoker.Api.Test.Games.Repositories
             ThenGameShouldBeExpectedGame(givenGame, result);
         }
 
+        [Test]
+        public async Task RetrieveNumberAllTotalMatchsAsync()
+        {
+            var result = await repository.GetTotalNumberMatchs();
+
+            result.Should().BeGreaterThanOrEqualTo(0);
+        }
+
         private static void ThenGameShouldBeExpectedGame(Game givenGame, Game result)
         {
             var expectedGame = Game.Create(givenGame.Id, "Carlos", "Release1", "Session for Release1", 60, 60);

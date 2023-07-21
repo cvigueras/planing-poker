@@ -17,10 +17,11 @@
     margin-bottom: 30px;
 }
 
-#customers td, #customers th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
+    #customers td, #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        font-size: 20px;
+    }
 
 #customers tr:nth-child(even) {
     background-color: #f2f2f2;
@@ -49,6 +50,7 @@
     margin: 4px 2px !important;
     cursor: pointer !important;
     margin-left: 12px !important;
+    font-size: 20px;
 }
 
 .inputGame {
@@ -60,5 +62,6 @@
     text-decoration: none !important;
     margin: 4px 2px !important;
     margin-left: 12px !important;
-    width: 270px !important;
+    width: 350px !important;
+    font-size: 18px;
 }

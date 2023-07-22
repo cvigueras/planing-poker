@@ -2,7 +2,7 @@
     <div class="results">Results</div>
     <hr />
     <div class="actions">
-        <button class="btnShowVotes">Show votes</button>
+        <button class="btnShowVotes" @click="showAllVotes()">Show votes</button>
         <button class="btnResetMatch">Reset match</button>
     </div>
     <table v-if="isAdmin() == true" id="players">
@@ -54,6 +54,9 @@
                 let gameId = sessionStorage.getItem("gameid");
                 let user = sessionStorage.getItem("username");
                 return this.$store.getters.userIsAdmin(gameId, user);
+            },
+            showAllVotes() {
+                console.log("Showing all votes");
             },
             removeUser(event) {
                 if (event) {

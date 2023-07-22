@@ -2,18 +2,18 @@
     <HeaderPlaning />
 
     <div class="divCreate">
-        <input v-model="username" type="text" placeholder="Username" name="username" class="inputHome" required>
-        <input v-model="gamename" type="text" placeholder="GameName" name="gamename" class="inputHome" required>
-        <input v-model="description" type="text" placeholder="Description" name="description" class="inputHome" required>
+        <input v-model="username" type="text" placeholder="user name" name="username" class="inputHome" required>
+        <input v-model="gamename" type="text" placeholder="game name" name="gamename" class="inputHome" required>
+        <input v-model="description" type="text" placeholder="description" name="description" class="inputHome" required>
         <button class="btnCreate" @click="createGame" type="submit">
-            Create game
+            create game
         </button>
     </div>
     <div class="divJoin">
-        <input v-model="username" type="text" placeholder="Username" name="username" class="inputHome" required>
-        <input v-model="gameId" type="text" placeholder="Game Id" name="gameId" class="inputHome" required>
+        <input v-model="username" type="text" placeholder="username" name="username" class="inputHome" required>
+        <input v-model="gameId" type="text" placeholder="game id" name="gameId" class="inputHome" required>
         <button class="btnJoin" @click="joinGame" type="submit">
-            Join game
+            join game
         </button>
     </div>
 

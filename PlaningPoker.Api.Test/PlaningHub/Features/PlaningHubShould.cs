@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
 using NSubstitute;
+using PlaningPoker.Api.Games.Models;
+using PlaningPoker.Api.Games.Repositories;
 using PlaningPoker.Api.Test.Startup;
+using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
+using PlaningPoker.Api.Votes.Models;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.PlaningHub.Features
@@ -16,6 +20,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         private TestServer server;
         private HubConnection connection;
         private UserRepository userRepository;
+        private GameRepository gameRepository;
 
         [SetUp]
         public void Setup()
@@ -26,6 +31,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             setupFixture = new SetupFixture();
             connectionSql = setupFixture.GetSQLiteConnection();
             userRepository = new UserRepository(connectionSql);
+            gameRepository = new GameRepository(connectionSql);
         }
 
         [Test]
@@ -121,6 +127,49 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
 
             userName.Should().Be(expectedUserName);
             vote.Should().Be(expectedVote);
+        }
+
+        [Test]
+        public async Task ConsiderReceivedAllVotesByGameIdAsync()
+        {
+            var game = await GIvenAGame();
+            await GivenThreeUsers(game);
+
+            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+
+            var votesList = new List<VotesUsersReadDto>();
+            connection.On<List<VotesUsersReadDto>>("OnReceiveAllVotes", (listVotes) =>
+            {
+                votesList = listVotes;
+            });
+
+            await connection.InvokeAsync("ReceiveAllVotes");
+            await Task.Delay(200);
+
+            var expectedVotesList = new List<VotesUsersReadDto>()
+            {
+                new("Carlos", "3"),
+                new("Juan", "5"),
+                new("Paco", "8"),
+            };
+            votesList.Should().BeEquivalentTo(expectedVotesList);
+        }
+
+        private async Task GivenThreeUsers(Game game)
+        {
+            var user1 = User.Create("Juan", game.Id, "anyConnectionId", false, Vote.Create("3"));
+            await userRepository.Add(user1);
+            var user2 = User.Create("Juan", game.Id, "anyConnectionId", false, Vote.Create("5"));
+            await userRepository.Add(user2);
+            var user3 = User.Create("Paco", game.Id, "anyConnectionId", false, Vote.Create("8"));
+            await userRepository.Add(user3);
+        }
+
+        private async Task<Game> GIvenAGame()
+        {
+            var game = Game.Create("anyGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            return game;
         }
     }
 }

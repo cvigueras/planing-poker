@@ -20,7 +20,7 @@ namespace PlaningPoker.Api.Votes.Repositories
 
         public async Task<IEnumerable<VotesUsers>> GetAllVotesByGroupIdAsync(string gameId)
         {
-            var rawData = (await connection.QueryAsync<dynamic>($"SELECT Name, Vote FROM Users WHERE GameId = '{gameId}'")).ToList();
+            var rawData = (await connection.QueryAsync<dynamic>($"SELECT * FROM Users WHERE GameId = '{gameId}'")).ToList();
             return ToVotesUsers(rawData);
         }
 
@@ -34,7 +34,7 @@ namespace PlaningPoker.Api.Votes.Repositories
             foreach (var userItem in dataList)
             {
                 var vote = userItem.Vote == null ? string.Empty : userItem.Vote;
-                var user = VotesUsers.Create(userItem.Name, Vote.Create(vote));
+                var user = VotesUsers.Create(userItem.Name, userItem.GameId, userItem.Admin, Vote.Create(vote));
                 listVotesUsers.Add(user);
             }
             return listVotesUsers;

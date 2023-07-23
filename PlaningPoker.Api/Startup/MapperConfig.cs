@@ -30,10 +30,10 @@ namespace PlaningPoker.Api.Startup
                 .ConstructUsing(x=> new UsersReadDto(x.Name, x.GameId, x.Admin, x.Vote.Value.ToString()));
             
             CreateMap<VotesUsersReadDto, VotesUsers>()
-                .ConstructUsing(x => VotesUsers.Create(x.Name,Vote.Create(x.Value)));
+                .ConstructUsing(x => VotesUsers.Create(x.Name, x.GameId, x.Admin, Vote.Create(x.Value)));
 
             CreateMap<VotesUsers, VotesUsersReadDto>()
-                .ConstructUsing(x=> new VotesUsersReadDto(x.UserName, x.Vote.Value.ToString()));
+                .ConstructUsing(x=> new VotesUsersReadDto(x.UserName, x.GameId, x.Admin, x.Vote.Value.ToString()));
 
             CreateMap<Game, GameReadDto>().ReverseMap();
             CreateMap<Card, CardReadDto>().ReverseMap();

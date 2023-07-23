@@ -53,8 +53,8 @@ namespace PlaningPoker.Api.Test.Votes.Repositories
         {
             var expectedVotesUsers = new List<VotesUsers>
             {
-                VotesUsers.Create("Carlos", Vote.Create("3")),
-                VotesUsers.Create("Juan", Vote.Create("5")),
+                VotesUsers.Create("Carlos", "anyGameId", true, Vote.Create("3")),
+                VotesUsers.Create("Juan", "anyGameId", false, Vote.Create("5")),
             };
             result.Should().BeEquivalentTo(expectedVotesUsers);
         }
@@ -67,7 +67,7 @@ namespace PlaningPoker.Api.Test.Votes.Repositories
         private async Task GivenTwoDifferentsUsersWithVote()
         {
             var givenFirtsUser = User.Create("Carlos", "anyGameId", "anyConnectionId", true, Vote.Create("3"));
-            var givenSecondUser = User.Create("Juan", "anyGameId", "anyConnectionId", true, Vote.Create("5"));
+            var givenSecondUser = User.Create("Juan", "anyGameId", "anyConnectionId", false, Vote.Create("5"));
             await userRepository.Add(givenFirtsUser);
             await userRepository.Add(givenSecondUser);
         }

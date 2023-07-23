@@ -1,17 +1,30 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
 using PlaningPoker.Api.Votes.Models;
+using PlaningPoker.Api.Votes.Repositories;
 
 namespace PlaningPoker.Api.Startup;
 
 public class PlaningHub : Hub
 {
     private readonly IUserRepository userRepository;
+    private readonly IVoteRepository voteRepository;
+    private readonly IMapper mapper;
 
-    public PlaningHub(IUserRepository userRepository)
+    public PlaningHub(IUserRepository userRepository, IVoteRepository voteRepository, IMapper mapper)
     {
         this.userRepository = userRepository;
+        this.voteRepository = voteRepository;
+        this.mapper = mapper;
+    }
+
+    public async Task ReceiveAllVotes(string gameId)
+    {
+        var votes = await voteRepository.GetAllVotesByGroupIdAsync(gameId);
+        var votesDTo = mapper.Map<List<VotesUsersReadDto>>(votes);
+        await Clients.Group(gameId).SendAsync("OnReceiveAllVotes", votesDTo);
     }
 
     public async Task NotifyUserHasVoted(string group, string name, string vote)

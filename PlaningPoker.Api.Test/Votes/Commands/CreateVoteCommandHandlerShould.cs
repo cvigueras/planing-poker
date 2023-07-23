@@ -50,7 +50,7 @@ namespace PlaningPoker.Api.Test.Votes.Commands
 
         private static void ThenTheVoteExistsInGroupId(IEnumerable<VotesUsers> result)
         {
-            var expectedUserVote = new VotesUsersReadDto("Carlos", "3");
+            var expectedUserVote = new VotesUsersReadDto("Carlos", "anyGameId", true, "3");
             result.Single().UserName.Should().BeEquivalentTo(expectedUserVote.Name);
             result.Single().Vote.Value.Should().BeEquivalentTo(expectedUserVote.Value);
         }

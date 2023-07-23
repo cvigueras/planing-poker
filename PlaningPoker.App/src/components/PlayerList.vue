@@ -17,7 +17,7 @@
                 <p class="btnDelete" @click="removeUser($event)" type="submit" v-bind:id="user.name" >Eliminar usuario</p>
             </td>
             <td v-if="user.admin == true"></td>
-            <td v-bind:id="`vote-${user.name}`">---</td>
+            <td v-bind:id="`vote-${user.name}`">{{user.value}}</td>
         </tr>
     </table>
     <table v-if="isAdmin() == false" id="players">
@@ -29,7 +29,7 @@
         <tr v-for="user in users" v-bind:key="user" v-bind:id="user.name">
             <td>{{ user.name }}</td>
             <td></td>
-            <td v-bind:id="`vote-${user.name}`">---</td>
+            <td v-bind:id="`vote-${user.name}`">{{user.value}}</td>
         </tr>
     </table>
 </template>
@@ -56,6 +56,10 @@
                 return this.$store.getters.userIsAdmin(gameId, user);
             },
             showAllVotes() {
+                let gameId = sessionStorage.getItem("gameid");
+                this.$signalr
+                    .invoke('ReceiveAllVotes', gameId)
+                    .catch(function (err) { console.error(err) })
                 console.log("Showing all votes");
             },
             removeUser(event) {
@@ -110,6 +114,11 @@
                         .invoke('SendMessageToUser', connectionId, "You has been disconnected")
                         .catch(function (err) { console.error(err) })
                 }
+            });
+
+            this.$signalr.on('OnReceiveAllVotes', (votes) => {
+                this.$store.state.users = votes;
+                console.info(votes);
             });
         },
     }

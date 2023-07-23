@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoMapper;
+using FluentAssertions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
@@ -9,6 +10,7 @@ using PlaningPoker.Api.Test.Startup;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Users.Repositories;
 using PlaningPoker.Api.Votes.Models;
+using PlaningPoker.Api.Votes.Repositories;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.PlaningHub.Features
@@ -19,8 +21,10 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         private SQLiteConnection connectionSql;
         private TestServer server;
         private HubConnection connection;
-        private UserRepository userRepository;
-        private GameRepository gameRepository;
+        private IUserRepository userRepository;
+        private IGameRepository gameRepository;
+        private IVoteRepository voteRepository;
+        private IMapper mapper;
 
         [SetUp]
         public void Setup()
@@ -32,6 +36,8 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             connectionSql = setupFixture.GetSQLiteConnection();
             userRepository = new UserRepository(connectionSql);
             gameRepository = new GameRepository(connectionSql);
+            mapper = Substitute.For<IMapper>();
+
         }
 
         [Test]
@@ -77,7 +83,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             var clients = Substitute.For<IHubCallerClients>();
             var groups = Substitute.For<IGroupManager>();
             var hubContext = Substitute.For<HubCallerContext>();
-            var messageHub = new Api.Startup.PlaningHub(userRepository);
+            var messageHub = new Api.Startup.PlaningHub(userRepository, voteRepository, mapper);
             messageHub.Context = hubContext;
             messageHub.Clients = clients;
             messageHub.Groups = groups;
@@ -143,14 +149,14 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
                 votesList = listVotes;
             });
 
-            await connection.InvokeAsync("ReceiveAllVotes");
+            await connection.InvokeAsync("ReceiveAllVotes", "anyGameId");
             await Task.Delay(200);
 
             var expectedVotesList = new List<VotesUsersReadDto>()
             {
-                new("Carlos", "3"),
-                new("Juan", "5"),
-                new("Paco", "8"),
+                new("Carlos", "anyGameId", true, "3"),
+                new("Juan", "anyGameId", false, "5"),
+                new("Paco", "anyGameId", false, "8"),
             };
             votesList.Should().BeEquivalentTo(expectedVotesList);
         }

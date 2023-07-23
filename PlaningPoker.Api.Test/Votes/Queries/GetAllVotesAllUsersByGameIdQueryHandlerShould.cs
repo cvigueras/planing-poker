@@ -46,8 +46,8 @@ namespace PlaningPoker.Api.Test.Votes.Queries
 
         private static void ThenTheVotesExistsInGroupId(IEnumerable<VotesUsersReadDto> result)
         {
-            var expectedFirstVote = new VotesUsersReadDto("Carlos", "3");
-            var expectedSecondVote = new VotesUsersReadDto("Juan", "5");
+            var expectedFirstVote = new VotesUsersReadDto("Carlos", "anyGameId", true, "3");
+            var expectedSecondVote = new VotesUsersReadDto("Juan", "anyGameId", false, "5");
             result.ElementAt(0).Name.Should().BeEquivalentTo(expectedFirstVote.Name);
             result.ElementAt(0).Value.Should().BeEquivalentTo(expectedFirstVote.Value);
             result.ElementAt(1).Name.Should().BeEquivalentTo(expectedSecondVote.Name);

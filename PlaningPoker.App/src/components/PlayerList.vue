@@ -3,7 +3,7 @@
     <hr />
     <div class="actions">
         <button class="btnShowVotes" @click="showAllVotes()">Show votes</button>
-        <button class="btnResetMatch">Reset match</button>
+        <button class="btnResetMatch" @click="resetMatch()">Reset match</button>
     </div>
     <table v-if="isAdmin() == true" id="players">
         <tr>
@@ -62,6 +62,10 @@
                     .catch(function (err) { console.error(err) })
                 console.log("Showing all votes");
             },
+            resetMatch() {
+                let users = JSON.parse(sessionStorage.getItem("users"));
+                this.$store.state.users = users;
+            },
             removeUser(event) {
                 if (event) {
                     event.preventDefault()
@@ -87,10 +91,12 @@
                     name: user,
                     gameId: sessionStorage.getItem('gameid'),
                     admin: admin,
+                    value: ""
                 }
                 let existUser = this.$store.getters.existUser(userAdded.gameId, user);
                 if (!existUser) {
                     this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
+                    sessionStorage.setItem('users', JSON.stringify(this.$store.state.users));
                 }
             });
 

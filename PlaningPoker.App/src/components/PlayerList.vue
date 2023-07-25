@@ -1,4 +1,5 @@
 ﻿<template>
+    <ShowMessageModal modaltype="disconnected" v-show="showMessageModal" />
     <div class="results">Results</div>
     <hr />
     <div class="actions">
@@ -14,7 +15,7 @@
         <tr v-for="user in users" v-bind:key="user" v-bind:id="user.name">
             <td>{{ user.name }}</td>
             <td v-if="user.admin == false">
-                <p class="btnDelete" @click="removeUser($event)" type="submit" v-bind:id="user.name" >Eliminar usuario</p>
+                <p class="btnDelete" @click="removeUser($event)" type="submit" v-bind:id="user.name">Eliminar usuario</p>
             </td>
             <td v-if="user.admin == true"></td>
             <td v-bind:id="`vote-${user.name}`">{{user.value}}</td>
@@ -36,11 +37,21 @@
 
 <script lang="js">
 
+    import ShowMessageModal from './ShowMessageModal.vue';
+
     export default {
+        components: {
+            ShowMessageModal
+        },
         computed: {
             users() {
                 return this.$store.state.users
             },
+        },
+        data() {
+            return {
+                showMessageModal: false,
+            };
         },
         methods: {
             subscribeEvents() {
@@ -101,7 +112,8 @@
             });
 
             this.$signalr.on('OnReceiveMessage', (message) => {
-                alert(message);
+                console.log(message);
+                this.showMessageModal = true;
             });
 
             this.$signalr.on('OnRemoveGroup', (user, connectionId) => {

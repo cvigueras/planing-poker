@@ -1,6 +1,6 @@
 <template>
     <HeaderPlaning />
-
+    <ShowMessageModal modaltype="info" v-show="showMessageModal" @close-modal="showMessageModal = false"/>
     <div class="divCreate">
         <input v-model="username" type="text" placeholder="user name" name="username" class="inputHome" required>
         <input v-model="gamename" type="text" placeholder="game name" name="gamename" class="inputHome" required>
@@ -26,11 +26,18 @@
     import HeaderPlaning from './HeaderPlaning.vue';
     import InfoHome from './InfoHome.vue';
     import gameFactory from '../factories/game'
+    import ShowMessageModal from './ShowMessageModal.vue';
 
     export default {
         components: {
             HeaderPlaning,
-            InfoHome
+            InfoHome,
+            ShowMessageModal
+        },
+        data() {
+            return {
+                showMessageModal: false,
+            };
         },
         mounted() {
             sessionStorage.clear();
@@ -45,14 +52,14 @@
                 axios.post('game', game)
                     .then(response => {
                         this.persistLocalData(response.data, user);
-                    }).catch(error => console.log(error))
+                    }).catch(error => { this.showMessageModal = true; console.log(error); })
             },
             joinGame() {
                 let user = this.buildUser(this.username, this.gameId);
                 axios.put('game/' + this.gameId, user)
                     .then(response => {
                         this.persistLocalData(response.data, user);
-                    }).catch(error => console.log(error))
+                    }).catch(error => { this.showMessageModal = true; console.log(error); })
             },
             buildUser(userName, gameId) {
                 return {

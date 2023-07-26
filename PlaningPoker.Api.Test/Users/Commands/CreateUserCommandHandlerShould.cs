@@ -43,7 +43,7 @@ namespace PlaningPoker.Api.Test.Users.Commands
             gameRepository = new GameRepository(connection);
             cardRepository = new CardRepository(connection);
             gameGuid = new GuidGenerator().Generate();
-            mapper = setupFixture.AutoMapperConfigTest(gameGuid);
+            mapper = AutoMapperProfileStartup.AutoMapperConfig(gameGuid);
             getGameByGuidQueryHandler = new GetGameByGuidQueryHandler(gameRepository, mapper);
             getUsersGameByGameIdQueryHandler = new GetUsersGameByGameIdQueryHandler(userRepository, mapper);
             getAllCardsListQueryHandler = new GetAllCardsListQueryHandler(cardRepository, mapper);

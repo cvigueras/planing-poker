@@ -34,7 +34,7 @@ namespace PlaningPoker.Api.Test.Votes.Commands
             connection = setupFixture.GetSQLiteConnection();
             voteRepository = new VoteRepository(connection);
             userRepository = new UserRepository(connection);
-            mapper = setupFixture.AutoMapperConfigTest();
+            mapper = AutoMapperProfileStartup.AutoMapperConfig();
             handler = new CreateVoteCommandHandler(voteRepository, mapper);
         }
 

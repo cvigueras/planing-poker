@@ -35,7 +35,7 @@ namespace PlaningPoker.Api.Test.Games.Queries
             gameRepository = new GameRepository(connection);
             handle = new GetGameByGuidQueryHandler(gameRepository, mapper);
             userRepository = new UserRepository(connection);
-            mapper = setupFixture.AutoMapperConfigTest();
+            mapper = AutoMapperProfileStartup.AutoMapperConfig();
         }
 
         [Test]

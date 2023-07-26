@@ -43,7 +43,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         [Test]
         public async Task SendMessageToAllSuccessfully()
         {
-            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
             var user = string.Empty;
             var message = string.Empty;
@@ -62,7 +62,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         [Test]
         public async Task SendMessageToGroupSuccessfully()
         {
-            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
             var user = string.Empty;
             var message = string.Empty;
@@ -96,7 +96,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         [Test]
         public async Task PublishNewUserInGroupSuccessfully()
         {
-            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
             var user = "Pedro";
             var isAdmin = false;
@@ -115,7 +115,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         [Test]
         public async Task ConsiderAVoteHasBeenAddedSuccessfully()
         {
-            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
             await connection.InvokeAsync("JoinGroup", "group1", "Carlos", true);
 
@@ -141,7 +141,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             var game = await GIvenAGame();
             await GivenThreeUsers(game);
 
-            connection = await setupFixture.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
 
             var votesList = new List<VotesUsersReadDto>();
             connection.On<List<VotesUsersReadDto>>("OnReceiveAllVotes", (listVotes) =>

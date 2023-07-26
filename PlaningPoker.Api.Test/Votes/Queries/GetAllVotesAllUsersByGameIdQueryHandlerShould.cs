@@ -30,7 +30,7 @@ namespace PlaningPoker.Api.Test.Votes.Queries
             voteRepository = new VoteRepository(connection);
             userRepository = new UserRepository(connection);
             query = new GetAllVotesAllUsersByGameIdQuery(gameId);
-            mapper = setupFixture.AutoMapperConfigTest();
+            mapper = AutoMapperProfileStartup.AutoMapperConfig();
             handler = new GetAllVotesAllUsersByGameIdQueryHandler(voteRepository, mapper);
         }
 

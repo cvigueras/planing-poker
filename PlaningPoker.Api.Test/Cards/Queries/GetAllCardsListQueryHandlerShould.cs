@@ -21,7 +21,7 @@ namespace PlaningPoker.Api.Test.Cards.Queries
         {
             setupFixture = new SetupFixture();
             connection = setupFixture.GetSQLiteConnection();
-            mapper = setupFixture.AutoMapperConfigTest();
+            mapper = AutoMapperProfileStartup.AutoMapperConfig();
             cardRepository = new CardRepository(connection);
             handler = new GetAllCardsListQueryHandler(cardRepository, mapper);
         }

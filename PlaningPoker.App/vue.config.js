@@ -25,16 +25,16 @@ module.exports = {
         },
         proxy: {
             '^/cards': {
-                target: 'https://localhost:7096/'
+                target: process.env.VUE_APP_ENVIROMENT
             },
             '^/game': {
-                target: 'https://localhost:7096/'
+                target: process.env.VUE_APP_ENVIROMENT
             },
             '^/votes': {
-                target: 'https://localhost:7096/'
+                target: process.env.VUE_APP_ENVIROMENT
             },
             '^/users': {
-                target: 'https://localhost:7096/'
+                target: process.env.VUE_APP_ENVIROMENT
             }
         },
         port: 5002

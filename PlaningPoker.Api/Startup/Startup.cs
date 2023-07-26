@@ -3,7 +3,9 @@ using PlaningPoker.Api.Games.Repositories;
 using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Users.Repositories;
 using PlaningPoker.Api.Votes.Repositories;
+using System.Configuration;
 using System.Data.SQLite;
+using Microsoft.Extensions.Configuration;
 
 namespace PlaningPoker.Api.Startup;
 
@@ -38,12 +40,12 @@ public class Startup
             {
                 x.AddPolicy("AllowClientPolicy", options =>
                 {
-                    options.WithOrigins("https://localhost:5002")
+                    options.WithOrigins(GetPolicyUrlSettings())
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
 
-                    options.WithOrigins("http://localhost:5002")
+                    options.WithOrigins(GetPolicyUrlSettings())
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -73,4 +75,6 @@ public class Startup
 
         app.Run();
     }
+
+    private string GetPolicyUrlSettings() => this.ConfigRoot.GetSection("Enviroments").Get<Enviroments>().ClientPolicyUrl;
 }

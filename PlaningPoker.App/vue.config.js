@@ -37,6 +37,6 @@ module.exports = {
                 target: process.env.VUE_APP_ENVIROMENT
             }
         },
-        port: 5002
+        port: process.env.VUE_APP_REDIRECT_PORT
     }
 }

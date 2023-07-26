@@ -1,6 +1,6 @@
 import * as signalR from '@aspnet/signalr'
 
-const url = "https://localhost:7096/hubs/planing"
+const url = process.env.VUE_APP_ENVIROMENT_SIGNALR
 
 const signal = new signalR.HubConnectionBuilder()
     .withUrl(url, {

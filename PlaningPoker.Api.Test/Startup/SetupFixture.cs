@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PlaningPoker.Api.Cards.Repositories;
@@ -19,6 +20,15 @@ public class SetupFixture : WebApplicationFactory<Program>
         connection = new SQLiteConnection("Data Source=:memory:");
         connection.Open();
         _ = new DataBaseStartUp(connection);
+    }
+
+    public static IConfiguration InitConfiguration()
+    {
+        var config = new ConfigurationBuilder()
+           .AddJsonFile("appsettings.test.json")
+            .AddEnvironmentVariables()
+            .Build();
+        return config;
     }
 
     protected override IHost CreateHost(IHostBuilder builder)

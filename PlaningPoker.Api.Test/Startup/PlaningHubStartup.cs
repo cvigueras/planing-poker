@@ -5,8 +5,10 @@ namespace PlaningPoker.Api.Test.Startup
     {
         public static async Task<HubConnection> StartHubConnectionAsync(HttpMessageHandler handler, string hubName)
         {
+            var config = SetupFixture.InitConfiguration();
+            var baseUrl = config["BaseUrl"];
             var hubConnection = new HubConnectionBuilder()
-                .WithUrl($"ws://localhost/hubs/{hubName}", o =>
+                .WithUrl($"ws://{baseUrl}/hubs/{hubName}", o =>
                 {
                     o.HttpMessageHandlerFactory = _ => handler;
                 })

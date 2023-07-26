@@ -1,6 +1,10 @@
 <template>
     <HeaderPlaning />
-    <ShowMessageModal modaltype="info" v-show="showMessageModal" @close-modal="showMessageModal = false"/>
+    <ShowMessageModal modaltype="info" v-show="showMessageModal" @close-modal="showMessageModal = false" />
+    <div v-if="loading" class="ring">
+        Loading
+        <span></span>
+    </div>
     <div class="divCreate">
         <input v-model="username" type="text" placeholder="user name" name="username" class="inputHome" required>
         <input v-model="gamename" type="text" placeholder="game name" name="gamename" class="inputHome" required>
@@ -37,6 +41,7 @@
         data() {
             return {
                 showMessageModal: false,
+                loading: false,
             };
         },
         mounted() {
@@ -44,6 +49,7 @@
         },
         methods: {
             createGame() {
+                this.loading = true;
                 let gameCreated = gameFactory.create(this.username, this.gamename, this.description);
                 this.fetchData(gameCreated);
             },
@@ -52,14 +58,17 @@
                 axios.post('game', game)
                     .then(response => {
                         this.persistLocalData(response.data, user);
-                    }).catch(error => { this.showMessageModal = true; console.log(error); })
+                        this.loading = false;
+                    }).catch(error => { this.showMessageModal = true; console.log(error); this.loading = false; })
             },
             joinGame() {
+                this.loading = true;
                 let user = this.buildUser(this.username, this.gameId);
                 axios.put('game/' + this.gameId, user)
                     .then(response => {
                         this.persistLocalData(response.data, user);
-                    }).catch(error => { this.showMessageModal = true; console.log(error); })
+                        this.loading = false;
+                    }).catch(error => { this.showMessageModal = true; console.log(error); this.loading = false; })
             },
             buildUser(userName, gameId) {
                 return {
@@ -81,4 +90,5 @@
 
 <style scoped>
     @import "../css/home.css";
+    @import "../css/loader.css";
 </style>

@@ -57,3 +57,17 @@ p {
     cursor: pointer;
     margin-top: 90px;
 }
+
+@media only screen and (max-device-width : 900px) {
+    .modal {
+        text-align: center;
+        background-color: white;
+        height: 60%;
+        width: 60%;
+        margin-top: 15%;
+        padding: 60px 0;
+        border-radius: 20px;
+    }
+}
+
+

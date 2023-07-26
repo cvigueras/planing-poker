@@ -4,10 +4,10 @@
     margin: 90px 0 0 4%;
     border: 1px solid #64D0FF;
     border-radius: 10px;
-    margin-left: 4%;
+    margin-left: 2%;
     height: 16em;
-    width: 40%;
-    padding: 20px;
+    width: 44%;
+    padding: 1%;
 }
 
 .divInfoUser {
@@ -18,8 +18,8 @@
     border-radius: 10px;
     margin-left: 4%;
     height: 16em;
-    width: 40%;
-    padding: 20px;
+    width: 44%;
+    padding: 1%;
 }
 
 .iconInfoMatch {
@@ -37,4 +37,23 @@
     font-family: cursive;
     font-size: 32px;
     color: gray;
+}
+
+@media only screen and (max-device-width : 900px) {
+
+    .divInfoMatch {
+        padding: 1%;
+        margin-top: 50px;
+        margin-left: 3%;
+        height: auto;
+        width: 90%;
+    }
+
+    .divInfoUser {
+        padding: 1%;
+        margin-top: 50px;
+        margin-left: 3%;
+        height: auto;
+        width: 90%;
+    }
 }

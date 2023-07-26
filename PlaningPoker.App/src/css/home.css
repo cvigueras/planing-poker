@@ -2,26 +2,26 @@
     margin: auto;
     margin-top: 200px;
     border: 1.5px solid #04AA6D;
-    padding: 20px;
+    padding: 1%;
     border-style: dotted;
     position: relative;
     float: left;
-    margin-left: 4%;
+    margin-left: 2%;
     height: 16em;
-    width: 40%;
+    width: 44%;
 }
 
 .divJoin {
     margin: auto;
     border: 1.5px solid #3377FF;
-    padding: 20px;
+    padding: 1%;
     border-style: dotted;
     margin-top: 200px;
     position: relative;
     float: left;
     margin-left: 4%;
     height: 16em;
-    width: 40%;
+    width: 44%;
 }
 
 .inputHome {
@@ -90,4 +90,22 @@
 
 .btnJoin:hover {
     opacity: 0.8;
+}
+
+@media only screen and (max-device-width : 900px) {
+    .divCreate {
+        padding: 1%;
+        margin-top: 150px;
+        margin-left: 3%;
+        height: auto;
+        width: 90%;
+    }
+
+    .divJoin {
+        padding: 1%;
+        margin-top: 50px;
+        margin-left: 3%;
+        height: auto;
+        width: 90%;
+    }
 }

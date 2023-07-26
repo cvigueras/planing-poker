@@ -14,7 +14,7 @@
         </button>
     </div>
     <div class="divJoin">
-        <input v-model="username" type="text" placeholder="username" name="username" class="inputHome" required>
+        <input v-model="name" type="text" placeholder="user name" name="name" class="inputHome" required>
         <input v-model="gameId" type="text" placeholder="game id" name="gameId" class="inputHome" required>
         <button class="btnJoin" @click="joinGame" type="submit">
             join game
@@ -63,7 +63,7 @@
             },
             joinGame() {
                 this.loading = true;
-                let user = this.buildUser(this.username, this.gameId);
+                let user = this.buildUser(this.name, this.gameId);
                 axios.put('game/' + this.gameId, user)
                     .then(response => {
                         this.persistLocalData(response.data, user);

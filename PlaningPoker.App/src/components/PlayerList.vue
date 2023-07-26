@@ -89,6 +89,12 @@
 
                 console.log(event.currentTarget.id);
             },
+            removeStorage()
+            {
+                sessionStorage.removeItem('users');
+                sessionStorage.removeItem('username');
+                sessionStorage.removeItem('gameid');
+            }
         },
         mounted() {
             if (this.$store.state.users.length == 0) {
@@ -113,7 +119,10 @@
 
             this.$signalr.on('OnReceiveMessage', (message) => {
                 console.log(message);
+                this.removeStorage();
+                this.$signalr.stop();
                 this.showMessageModal = true;
+
             });
 
             this.$signalr.on('OnRemoveGroup', (user, connectionId) => {

@@ -43,6 +43,7 @@ public class PlaningHub : Hub
     public async Task RemoveFromGroup(string userName, string gameId)
     {
         var user = await userRepository.GetByNameAndGameId(userName, gameId);
+        await userRepository.DeleteByGameIdAndName(gameId, userName);
         await Groups.RemoveFromGroupAsync(user.ConnectionId, user.GameId);
         await Clients.Group(user.GameId).SendAsync("OnRemoveGroup", user, user.ConnectionId);
     }

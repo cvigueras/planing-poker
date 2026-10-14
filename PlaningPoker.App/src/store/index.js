@@ -3,7 +3,8 @@ import { createStore } from 'vuex'
 export default createStore({
     state: {
         games: [],
-        users: []
+        users: [],
+        selectedCard: null
     },
     mutations: {
         UPDATE_GAMES(state, payload) {
@@ -11,6 +12,9 @@ export default createStore({
         },
         UPDATE_USERS(state, payload) {
             state.users = payload
+        },
+        SET_SELECTED_CARD(state, payload) {
+            state.selectedCard = payload
         },
         SET_USER_VOTED(state, { name, gameId }) {
             const user = state.users.find(u => u.name == name && u.gameId == gameId);

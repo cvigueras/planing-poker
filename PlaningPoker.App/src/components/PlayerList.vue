@@ -12,13 +12,13 @@
             <th>Actions</th>
             <th>Vote</th>
         </tr>
-        <tr v-for="user in users" v-bind:key="user" v-bind:id="user.name">
+        <tr v-for="user in users" v-bind:key="user.name" :class="{ highlight: user.hasVoted }">
             <td>{{ user.name }}</td>
             <td v-if="user.admin == false">
-                <p class="btnDelete" @click="removeUser($event)" type="submit" v-bind:id="user.name">Eliminar usuario</p>
+                <p class="btnDelete" @click="removeUser($event, user.name)" type="submit">Eliminar usuario</p>
             </td>
             <td v-if="user.admin == true"></td>
-            <td v-bind:id="`vote-${user.name}`">{{user.value}}</td>
+            <td v-bind:id="`vote-${user.name}`">{{ voteText(user) }}</td>
         </tr>
     </table>
     <table v-if="isAdmin() == false" id="players">
@@ -27,10 +27,10 @@
             <th>Actions</th>
             <th>Vote</th>
         </tr>
-        <tr v-for="user in users" v-bind:key="user" v-bind:id="user.name">
+        <tr v-for="user in users" v-bind:key="user.name" :class="{ highlight: user.hasVoted }">
             <td>{{ user.name }}</td>
             <td></td>
-            <td v-bind:id="`vote-${user.name}`">{{user.value}}</td>
+            <td v-bind:id="`vote-${user.name}`">{{ voteText(user) }}</td>
         </tr>
     </table>
 </template>
@@ -54,11 +54,64 @@
             };
         },
         methods: {
+            voteText(user) {
+                if (user.value) {
+                    return user.value;
+                }
+                return user.hasVoted ? "✔" : "";
+            },
             subscribeEvents() {
-                this.$signalr.on('OnNotifyUserHasVoted', (user, vote) => {
-                    document.getElementById(user).className = "highlight";
-                    document.getElementById("vote-" + user).innerHTML = "&#10004;";
-                    console.log("El usuario: " + user + "ha votado: " + vote);
+                this.signalHandlers = {
+                    OnNotifyUserHasVoted: (user) => {
+                        this.$store.commit('SET_USER_VOTED', {
+                            name: user,
+                            gameId: sessionStorage.getItem('gameid')
+                        });
+                    },
+                    OnJoinGroup: (user, admin) => {
+                        const userAdded = {
+                            name: user,
+                            gameId: sessionStorage.getItem('gameid'),
+                            admin: admin,
+                            value: ""
+                        }
+                        let existUser = this.$store.getters.existUser(userAdded.gameId, user);
+                        if (!existUser) {
+                            this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
+                            sessionStorage.setItem('users', JSON.stringify(this.$store.state.users));
+                        }
+                    },
+                    OnReceiveMessage: (message) => {
+                        console.log(message);
+                        this.removeStorage();
+                        this.$signalr.stop();
+                        this.showMessageModal = true;
+                    },
+                    OnRemoveGroup: (user, connectionId) => {
+                        const userRemoved = {
+                            name: user.name,
+                            gameId: sessionStorage.getItem('gameid'),
+                        }
+                        this.$store.dispatch('removeToUsers', JSON.stringify(userRemoved));
+                        if (this.isAdmin()) {
+                            console.log("The connection Id of disconnected user is: " + connectionId);
+                            this.$signalr
+                                .invoke('SendMessageToUser', connectionId, "You has been disconnected")
+                                .catch(function (err) { console.error(err) })
+                        }
+                    },
+                    OnReceiveAllVotes: (votes) => {
+                        this.$store.commit('UPDATE_USERS', votes);
+                        console.info(votes);
+                    },
+                };
+                Object.entries(this.signalHandlers).forEach(([event, handler]) => {
+                    this.$signalr.on(event, handler);
+                });
+            },
+            unsubscribeEvents() {
+                Object.entries(this.signalHandlers).forEach(([event, handler]) => {
+                    this.$signalr.off(event, handler);
                 });
             },
             isAdmin() {
@@ -74,20 +127,20 @@
                 console.log("Showing all votes");
             },
             resetMatch() {
-                let users = JSON.parse(sessionStorage.getItem("users"));
-                this.$store.state.users = users;
+                let users = JSON.parse(sessionStorage.getItem("users"))
+                    .map(user => ({ ...user, hasVoted: false }));
+                this.$store.commit('UPDATE_USERS', users);
             },
-            removeUser(event) {
+            removeUser(event, userName) {
                 if (event) {
                     event.preventDefault()
                 }
-                let userName = event.currentTarget.id;
                 let gameId = sessionStorage.getItem("gameid");
                 this.$signalr
                     .invoke('RemoveFromGroup', userName, gameId)
                     .catch(function (err) { console.error(err) })
 
-                console.log(event.currentTarget.id);
+                console.log(userName);
             },
             removeStorage()
             {
@@ -103,50 +156,9 @@
         },
         created() {
             this.subscribeEvents();
-            this.$signalr.on('OnJoinGroup', (user, admin) => {
-                const userAdded = {
-                    name: user,
-                    gameId: sessionStorage.getItem('gameid'),
-                    admin: admin,
-                    value: ""
-                }
-                let existUser = this.$store.getters.existUser(userAdded.gameId, user);
-                if (!existUser) {
-                    this.$store.dispatch('addToUsers', JSON.stringify(userAdded));
-                    sessionStorage.setItem('users', JSON.stringify(this.$store.state.users));
-                }
-            });
-
-            this.$signalr.on('OnReceiveMessage', (message) => {
-                console.log(message);
-                this.removeStorage();
-                this.$signalr.stop();
-                this.showMessageModal = true;
-
-            });
-
-            this.$signalr.on('OnRemoveGroup', (user, connectionId) => {
-                const userAdded = {
-                    name: user.name,
-                    gameId: sessionStorage.getItem('gameid'),
-                }
-                let existUser = this.$store.getters.existUser(userAdded.gameId, user);
-                if (!existUser) {
-                    this.$store.dispatch('removeToUsers', JSON.stringify(userAdded));
-                }
-                if (this.isAdmin()) {
-
-                    console.log("The connection Id of disconnected user is: " + connectionId);
-                    this.$signalr
-                        .invoke('SendMessageToUser', connectionId, "You has been disconnected")
-                        .catch(function (err) { console.error(err) })
-                }
-            });
-
-            this.$signalr.on('OnReceiveAllVotes', (votes) => {
-                this.$store.state.users = votes;
-                console.info(votes);
-            });
+        },
+        beforeUnmount() {
+            this.unsubscribeEvents();
         },
     }
 </script>

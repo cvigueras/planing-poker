@@ -11,6 +11,12 @@ export default createStore({
         },
         UPDATE_USERS(state, payload) {
             state.users = payload
+        },
+        SET_USER_VOTED(state, { name, gameId }) {
+            const user = state.users.find(u => u.name == name && u.gameId == gameId);
+            if (user) {
+                user.hasVoted = true;
+            }
         }
     },
     actions: {

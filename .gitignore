@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Local SQLite database, created automatically when the API starts
+*.db
+*.db-journal
+*.db-shm
+*.db-wal

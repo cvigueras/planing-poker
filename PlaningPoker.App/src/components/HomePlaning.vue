@@ -41,7 +41,7 @@
                         <router-link to="/" class="linkBtn">Create or join another game</router-link>
                     </template>
 
-                    <template v-else>
+                    <template v-else-if="inviteGame">
                         <div class="intro">
                             <span class="inviteBy">{{ inviteGame.createdBy }} invited you to</span>
                             <h2>{{ inviteGame.title }}</h2>
@@ -169,9 +169,12 @@
                 this.loadInvite();
             }
         },
+        created() {
+            // Before the first render, so the invite is already "checking" when the page is painted.
+            this.loadInvite();
+        },
         mounted() {
             sessionStorage.clear();
-            this.loadInvite();
         },
         methods: {
             loadInvite() {

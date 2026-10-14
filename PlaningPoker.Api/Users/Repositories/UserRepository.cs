@@ -62,6 +62,12 @@ public class UserRepository : IUserRepository
             "DELETE FROM Users WHERE GameId = @gameGuid AND Name = @userName", new { gameGuid, userName });
     }
 
+    public async Task ResetVotesByGameId(string gameId)
+    {
+        await connection.ExecuteAsync(
+            "UPDATE Users SET Vote = '' WHERE GameId = @gameId", new { gameId });
+    }
+
     public async Task<long> GetTotalNumberUsers()
     {
         return connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM Users");

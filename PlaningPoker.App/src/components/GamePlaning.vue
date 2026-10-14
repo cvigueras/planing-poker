@@ -2,7 +2,7 @@
     <div v-if="!mobile" class="room">
         <HeaderPlaning />
 
-        <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
+        <LoadingPlaning v-if="loading" />
 
         <div v-else class="roomBody">
             <div class="mainCol">
@@ -32,7 +32,7 @@
     </div>
 
     <div v-else class="mRoom">
-        <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
+        <LoadingPlaning v-if="loading" />
 
         <template v-else>
             <header class="mHead">
@@ -89,6 +89,7 @@
     import CardList from './CardList.vue'
     import PlayerList from './PlayerList.vue'
     import GameActions from './GameActions.vue';
+    import LoadingPlaning from './LoadingPlaning.vue';
     import HeaderPlaning from './HeaderPlaning.vue';
     import signalr from '../signalr/signalR.js';
     import { buildGameLink } from '../utils/gameLink';
@@ -97,7 +98,7 @@
 
     export default {
         components: {
-            CardList, HeaderPlaning, PlayerList, GameActions
+            CardList, HeaderPlaning, PlayerList, GameActions, LoadingPlaning
         },
         data() {
             return {
@@ -127,7 +128,8 @@
         },
         created() {
             this.watchViewport();
-            this.$store.commit('SET_REVEALED', false);
+            // After a refresh the votes stay shown if they were shown before.
+            this.$store.commit('SET_REVEALED', sessionStorage.getItem('revealed') === 'true');
             this.$store.commit('SET_SELECTED_CARD', null);
             this.getGame();
             this.onDisconnect();
@@ -172,7 +174,11 @@
             fetchGame(gameId) {
                 axios.get('game/' + gameId)
                     .then(response => {
-                        this.$store.state.users = response.data.users;
+                        // The server keeps the votes of the current round: whoever has one has already voted.
+                        const users = response.data.users.map(user => ({ ...user, hasVoted: !!user.value }));
+                        this.$store.commit('UPDATE_USERS', users);
+                        const me = users.find(user => user.name === sessionStorage.getItem('username'));
+                        this.$store.commit('SET_SELECTED_CARD', me && me.value ? me.value : null);
                         this.buildGame(response.data);
                     }).catch(error => console.log(error))
             },

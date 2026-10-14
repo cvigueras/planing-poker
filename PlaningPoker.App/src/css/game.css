@@ -8,26 +8,23 @@
     text-align: left;
 }
 
-.loading {
-    display: block;
-    margin: 120px auto 0;
-}
-
 .roomBody {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    gap: 24px;
-    padding: clamp(16px, 4vw, 32px);
+    justify-content: center;
+    gap: 20px;
+    padding: clamp(16px, 3vw, 56px);
     box-sizing: border-box;
     width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
 }
 
+/* The left panels stop growing at 770 px (what 7 cards per row need); the rest of the width becomes
+   margin at both sides of the page. The players panel keeps its own width. */
 .mainCol {
-    flex: 999 1 560px;
+    flex: 3 1 520px;
+    max-width: 770px;
     min-width: 0;
     display: flex;
     flex-direction: column;

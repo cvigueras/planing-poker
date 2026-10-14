@@ -24,11 +24,11 @@
                 console.log("Showing all votes");
             },
             resetMatch() {
-                let users = JSON.parse(sessionStorage.getItem("users"))
-                    .map(user => ({ ...user, hasVoted: false }));
-                this.$store.commit('UPDATE_USERS', users);
-                this.$store.commit('SET_SELECTED_CARD', null);
-                this.$store.commit('SET_REVEALED', false);
+                // The server clears the saved votes and tells every player (OnResetVotes).
+                let gameId = sessionStorage.getItem("gameid");
+                this.$signalr
+                    .invoke('ResetVotes', gameId)
+                    .catch(function (err) { console.error(err) })
             }
         }
     }

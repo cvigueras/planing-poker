@@ -19,12 +19,23 @@ export default createStore({
         },
         SET_REVEALED(state, payload) {
             state.revealed = payload
+            // Kept in the session so the votes stay shown when the page is refreshed.
+            sessionStorage.setItem('revealed', payload)
         },
-        SET_USER_VOTED(state, { name, gameId }) {
+        SET_USER_VOTED(state, { name, gameId, value }) {
             const user = state.users.find(u => u.name == name && u.gameId == gameId);
             if (user) {
                 user.hasVoted = true;
+                if (value !== undefined) {
+                    user.value = value;
+                }
             }
+        },
+        RESET_VOTES(state) {
+            state.users = state.users.map(user => ({ ...user, value: '', hasVoted: false }))
+            state.selectedCard = null
+            state.revealed = false
+            sessionStorage.setItem('revealed', false)
         }
     },
     actions: {

@@ -23,6 +23,13 @@ const https = fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)
     : undefined;
 
 module.exports = {
+    chainWebpack: config => {
+        // Title of the page (index.html uses it for the <title> tag).
+        config.plugin('html').tap(args => {
+            args[0].title = 'Planing Poker'
+            return args
+        })
+    },
     devServer: {
         https,
         proxy: {

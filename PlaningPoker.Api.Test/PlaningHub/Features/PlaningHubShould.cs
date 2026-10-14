@@ -163,6 +163,55 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         }
 
         [Test]
+        public async Task KeepTheVoteOfAUserWhenJoiningTheGroupAgain()
+        {
+            var game = Game.Create("rejoinGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create("2")));
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+
+            await connection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+
+            var user = await userRepository.GetByNameAndGameId("Carlos", game.Id);
+            user.Vote.Value.Should().Be("2");
+        }
+
+        [Test]
+        public async Task ResetTheVotesOfTheGameAndNotifyThePlayers()
+        {
+            var game = Game.Create("resetGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create("2")));
+            await userRepository.Add(User.Create("Pedro", game.Id, string.Empty, false, Vote.Create("5")));
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var notified = false;
+            connection.On("OnResetVotes", () => notified = true);
+            await connection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+
+            await connection.InvokeAsync("ResetVotes", game.Id);
+            await Task.Delay(200);
+
+            notified.Should().BeTrue();
+            var users = await userRepository.GetUsersGameByGameId(game.Id);
+            users.Should().OnlyContain(user => user.Vote.Value == string.Empty);
+        }
+
+        [Test]
+        public async Task NotAllowAUserOutsideTheGameToResetItsVotes()
+        {
+            var game = Game.Create("resetDeniedGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create("2")));
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+
+            var action = async () => await connection.InvokeAsync("ResetVotes", game.Id);
+
+            await action.Should().ThrowAsync<HubException>();
+            var user = await userRepository.GetByNameAndGameId("Carlos", game.Id);
+            user.Vote.Value.Should().Be("2");
+        }
+
+        [Test]
         public async Task TakeAdminValueFromStoredUserWhenJoiningGroup()
         {
             var game = Game.Create("adminGameId", "Carlos", "Release1", "Description", 60, 60);

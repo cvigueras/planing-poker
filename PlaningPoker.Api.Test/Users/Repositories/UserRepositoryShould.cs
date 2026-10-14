@@ -145,6 +145,23 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         }
 
         [Test]
+        public async Task ResetTheVotesOfAGameWithoutTouchingOtherGames()
+        {
+            var gameGuid = guidGenerator.Generate().ToString();
+            var otherGameGuid = "otherGameForReset";
+            await userRepository.Add(User.Create("Carlos", gameGuid, string.Empty, true, Vote.Create("3")));
+            await userRepository.Add(User.Create("Pedro", gameGuid, string.Empty, false, Vote.Create("5")));
+            await userRepository.Add(User.Create("Marta", otherGameGuid, string.Empty, false, Vote.Create("8")));
+
+            await userRepository.ResetVotesByGameId(gameGuid);
+
+            var resetUsers = await userRepository.GetUsersGameByGameId(gameGuid);
+            resetUsers.Should().OnlyContain(user => user.Vote.Value == string.Empty);
+            var otherUser = await userRepository.GetByNameAndGameId("Marta", otherGameGuid);
+            otherUser.Vote.Value.Should().Be("8");
+        }
+
+        [Test]
         public async Task RetrieveNumberAllTotalUsersAsync()
         {
             var result = await userRepository.GetTotalNumberUsers();

@@ -32,6 +32,16 @@ public class PlaningHub : Hub
         await Clients.Group(group).SendAsync("OnNotifyUserHasVoted", name, vote);
     }
 
+    public async Task ResetVotes(string gameId)
+    {
+        var caller = await FindByConnectionId(Context.ConnectionId);
+        if (caller is null || caller.GameId != gameId)
+            throw new HubException("Only the players of the game can reset the votes.");
+
+        await userRepository.ResetVotesByGameId(gameId);
+        await Clients.Group(gameId).SendAsync("OnResetVotes");
+    }
+
     public async Task JoinGroup(string group, string user)
     {
         var existingUser = await FindByNameAndGameId(user, group);

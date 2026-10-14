@@ -1,6 +1,6 @@
 <template>
     <div v-if="!mobile" class="room">
-        <HeaderPlaning />
+        <HeaderPlaning @leave="askToLeave" />
 
         <LoadingPlaning v-if="loading" />
 
@@ -8,7 +8,7 @@
             <div class="mainCol">
                 <section class="panelCard gameInfo">
                     <div class="gameText">
-                        <span class="gameAdmin">Admin: {{ createdBy }}</span>
+                        <span class="gameAdmin">Admin: {{ adminName }}</span>
                         <h1>{{ title }}</h1>
                         <p>{{ description }}</p>
                     </div>
@@ -29,6 +29,8 @@
 
             <PlayerList />
         </div>
+
+        <ShowMessageModal v-if="confirmLeaveOpen" modaltype="leave" :busy="leaving" @confirm="leaveGame" @close-modal="cancelLeave" />
     </div>
 
     <div v-else class="mRoom">
@@ -44,10 +46,13 @@
                     </svg>
                     <div class="mTitle">
                         <h1>{{ title }}</h1>
-                        <span>Admin: {{ createdBy }}</span>
+                        <span>Admin: {{ adminName }}</span>
                     </div>
                     <button type="button" class="mInvite" aria-label="Invite players" @click="openSheet">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M19 8v6M22 11h-6" /></svg>
+                    </button>
+                    <button type="button" class="mInvite" aria-label="Leave game" @click="askToLeave">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
                     </button>
                 </div>
                 <div class="mProgress">
@@ -80,6 +85,8 @@
                 </div>
             </div>
         </template>
+
+        <ShowMessageModal v-if="confirmLeaveOpen" modaltype="leave" :busy="leaving" @confirm="leaveGame" @close-modal="cancelLeave" />
     </div>
 </template>
 
@@ -90,6 +97,7 @@
     import PlayerList from './PlayerList.vue'
     import GameActions from './GameActions.vue';
     import LoadingPlaning from './LoadingPlaning.vue';
+    import ShowMessageModal from './ShowMessageModal.vue';
     import HeaderPlaning from './HeaderPlaning.vue';
     import signalr from '../signalr/signalR.js';
     import { buildGameLink } from '../utils/gameLink';
@@ -98,7 +106,7 @@
 
     export default {
         components: {
-            CardList, HeaderPlaning, PlayerList, GameActions, LoadingPlaning
+            CardList, HeaderPlaning, PlayerList, GameActions, LoadingPlaning, ShowMessageModal
         },
         data() {
             return {
@@ -106,6 +114,8 @@
                 copied: false,
                 mobile: false,
                 sheetOpen: false,
+                confirmLeaveOpen: false,
+                leaving: false,
                 id: '',
                 createdBy: '',
                 title: '',
@@ -113,6 +123,10 @@
             };
         },
         computed: {
+            adminName() {
+                const admin = this.$store.state.users.find(user => user.admin == true);
+                return admin ? admin.name : this.createdBy;
+            },
             shareLink() {
                 return this.id ? buildGameLink(this.id) : '';
             },
@@ -187,6 +201,32 @@
                     this.copied = true;
                     setTimeout(() => { this.copied = false; }, 2000);
                 }).catch(error => console.log(error));
+            },
+            askToLeave() {
+                this.sheetOpen = false;
+                this.confirmLeaveOpen = true;
+            },
+            cancelLeave() {
+                this.confirmLeaveOpen = false;
+            },
+            async leaveGame() {
+                this.leaving = true;
+                const gameId = sessionStorage.getItem('gameid');
+                try {
+                    // The server removes the player from the game and from its SignalR group.
+                    await this.$signalr.invoke('LeaveGame', gameId);
+                } catch (err) {
+                    console.error(err);
+                }
+                try {
+                    // Stops the connection on purpose, so it is not reconnected automatically.
+                    await signalr.stop();
+                } catch (err) {
+                    console.error(err);
+                }
+                ['users', 'username', 'gameid', 'revealed'].forEach(key => sessionStorage.removeItem(key));
+                this.$store.commit('RESET_GAME');
+                this.$router.push('/');
             },
             openSheet() {
                 this.copied = false;

@@ -100,6 +100,9 @@
                     OnResetVotes: () => {
                         this.$store.commit('RESET_VOTES');
                     },
+                    OnAdminChanged: (userName) => {
+                        this.$store.commit('SET_ADMIN', userName);
+                    },
                     OnJoinGroup: (user, admin) => {
                         const userAdded = {
                             name: user,

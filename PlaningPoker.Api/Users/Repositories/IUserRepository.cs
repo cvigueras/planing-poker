@@ -15,5 +15,6 @@ public interface IUserRepository
     Task UpdateByGameIdAndName(User givenUser, string gameId);
     Task DeleteByGameIdAndName(string gameId, string userName);
     Task ResetVotesByGameId(string gameId);
+    Task SetAdminByGameIdAndName(string gameId, string userName, bool admin);
     Task<long> GetTotalNumberUsers();
 }

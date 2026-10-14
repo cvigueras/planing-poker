@@ -1,111 +1,308 @@
-.divCreate {
-    margin: auto;
-    margin-top: 200px;
-    border: 1.5px solid #04AA6D;
-    padding: 1%;
-    border-style: dotted;
-    position: relative;
-    float: left;
-    margin-left: 2%;
-    height: 16em;
-    width: 44%;
+.login {
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    background: #F5F6F2;
+    color: #10201B;
+    font-family: 'Figtree', system-ui, sans-serif;
+    text-align: left;
 }
 
-.divJoin {
-    margin: auto;
-    border: 1.5px solid #3377FF;
-    padding: 1%;
-    border-style: dotted;
-    margin-top: 200px;
+/* Hero */
+.hero {
+    flex: 1 1 520px;
+    min-width: 0;
+    box-sizing: border-box;
+    background: #073B2C;
+    color: #FFFFFF;
+    padding: 40px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 48px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brandName {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+}
+
+.pitch {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 520px;
+}
+
+.pitch h1 {
+    margin: 0;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 52px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+}
+
+.pitch p {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, .82);
+}
+
+.fan {
     position: relative;
-    float: left;
-    margin-left: 4%;
-    height: 16em;
-    width: 44%;
+    width: 320px;
+    height: 200px;
+}
+
+.fanCard {
+    position: absolute;
+    width: 110px;
+    height: 154px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .28);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fanCard1 { left: 0; top: 24px; transform: rotate(-14deg); color: #027A4F; }
+.fanCard2 { left: 70px; top: 6px; transform: rotate(-3deg); color: #2457D6; }
+.fanCard3 { left: 140px; top: 18px; transform: rotate(9deg); color: #C2362F; }
+.fanCard4 { left: 206px; top: 44px; transform: rotate(19deg); }
+
+/* Form panel */
+.panel {
+    flex: 1 1 480px;
+    min-width: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+}
+
+.card {
+    width: 100%;
+    max-width: 440px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    border: 1px solid #DDE4DF;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 12px 32px rgba(16, 32, 27, .08);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tabs {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: #E7ECE8;
+    border-radius: 12px;
+}
+
+.tab {
+    flex: 1;
+    height: 44px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #4B5B54;
+    font: 600 15px 'Figtree', system-ui, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab.active {
+    background: #FFFFFF;
+    color: #10201B;
+    box-shadow: 0 1px 2px rgba(16, 32, 27, .18);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dotCreate { background: #027A4F; }
+.dotJoin { background: #2457D6; }
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.intro h2 {
+    margin: 0;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.01em;
+}
+
+.intro p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.45;
+    color: #4B5B54;
+}
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #33423C;
+}
+
+.hint {
+    font-size: 13px;
+    color: #5B6B64;
 }
 
 .inputHome {
-    background-color: whitesmoke !important;
-    width: 100% !important;
-    padding: 12px 20px !important;
-    margin: 8px 0 !important;
-    display: inline-block !important;
-    border: 1px solid #ccc !important;
-    box-sizing: border-box !important;
-    color: black !important;
-    font-weight: bold !important;
-    font-size: 20px;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    border: 1.5px solid #B8C4BD;
+    border-radius: 10px;
+    font: 16px 'Figtree', system-ui, sans-serif;
+    color: #10201B;
+    background: #FFFFFF;
 }
 
-.btnNumber {
-    width: 40% !important;
-    padding: 12px 20px !important;
-    margin: 8px 24px !important;
-    display: inline-block !important;
-    border: 1px solid #04AA6D !important;
-    box-sizing: border-box !important;
-    color: black !important;
-    font-weight: bold !important;
+.inputHome::placeholder {
+    color: #6B7A73;
 }
 
-.btnCreate {
-    background-color: #FF0000;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    font-size: 20px;
+.inputHome:focus {
+    outline: none;
+    border-color: #2457D6;
+    box-shadow: 0 0 0 3px rgba(36, 87, 214, .25);
 }
 
-.btnCreate:hover {
-    opacity: 0.8;
+.inputMono {
+    font-family: ui-monospace, 'Cascadia Code', Menlo, monospace;
 }
 
-.btnDelete {
-    color: red;
-    padding: 0;
-    margin: 0;
-    border: none;
-    cursor: pointer;
-    width: auto;
-    font-weight: bold;
+.inputInvalid {
+    border-color: #D92D20;
 }
 
-.btnDelete:hover {
-    opacity: 0.8;
+.errorBox {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #FEF3F2;
+    color: #B42318;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 500;
 }
 
+.errorBox svg {
+    flex: none;
+    margin-top: 1px;
+}
+
+.btnCreate,
 .btnJoin {
-    background-color: #64D0FF;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
+    height: 52px;
+    border: 0;
+    border-radius: 12px;
+    color: #FFFFFF;
+    font: 700 17px 'Figtree', system-ui, sans-serif;
     cursor: pointer;
-    width: 100%;
-    font-size: 20px;
 }
 
-.btnJoin:hover {
-    opacity: 0.8;
+.btnCreate { background: #027A4F; }
+.btnJoin { background: #2457D6; }
+
+.btnCreate:hover:not(:disabled),
+.btnJoin:hover:not(:disabled) {
+    filter: brightness(1.1);
 }
 
-@media only screen and (max-device-width : 900px) {
-    .divCreate {
-        padding: 1%;
-        margin-top: 150px;
-        margin-left: 3%;
-        height: auto;
-        width: 90%;
+.btnCreate:disabled,
+.btnJoin:disabled {
+    opacity: .7;
+    cursor: progress;
+}
+
+.tab:focus-visible,
+.btnCreate:focus-visible,
+.btnJoin:focus-visible {
+    outline: 3px solid rgba(36, 87, 214, .45);
+    outline-offset: 2px;
+}
+
+@media only screen and (max-width: 900px) {
+    .hero {
+        flex: none;
+        width: 100%;
+        padding: 24px 24px 72px;
+        gap: 24px;
     }
 
-    .divJoin {
-        padding: 1%;
-        margin-top: 50px;
-        margin-left: 3%;
-        height: auto;
-        width: 90%;
+    .brandName {
+        font-size: 20px;
+    }
+
+    .fan,
+    .pitch p {
+        display: none;
+    }
+
+    .pitch h1 {
+        font-size: 30px;
+    }
+
+    .panel {
+        flex: none;
+        width: 100%;
+        padding: 0 16px 24px;
+        margin-top: -48px;
+    }
+
+    .card {
+        padding: 24px 20px;
+        box-shadow: 0 12px 32px rgba(16, 32, 27, .1);
+    }
+
+    .intro h2 {
+        font-size: 24px;
     }
 }

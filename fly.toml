@@ -1,0 +1,37 @@
+# Fly.io configuration of the API (https://cvigueras-planing-poker.fly.dev/).
+#
+# To deploy it, with flyctl installed and logged in (`fly auth login`), from the root of the repository:
+#   1. fly volumes create planing_poker_data --size 1 --region cdg     (only the first time)
+#   2. fly deploy --ha=false
+# If the app has to be created again (`fly apps create <name>`), the name may change: then put the new address in
+# PlaningPoker.App/.env.production (VUE_APP_ENVIROMENT and VUE_APP_ENVIROMENT_SIGNALR).
+#
+# Keep exactly ONE machine (--ha=false): the SignalR groups live in the memory of the process and the database is
+# a SQLite file on the volume, so a second machine would not share players, votes nor data.
+
+app = "cvigueras-planing-poker"
+primary_region = "cdg"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  ASPNETCORE_ENVIRONMENT = "Production"
+  # Origin of the web allowed by CORS (the address of the page, without path).
+  Enviroments__ClientPolicyUrl = "https://cvigueras.github.io"
+
+[[mounts]]
+  source = "planing_poker_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Always on: a stopped machine would cut the SignalR connections of the players.
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

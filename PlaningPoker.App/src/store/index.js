@@ -4,7 +4,8 @@ export default createStore({
     state: {
         games: [],
         users: [],
-        selectedCard: null
+        selectedCard: null,
+        revealed: false
     },
     mutations: {
         UPDATE_GAMES(state, payload) {
@@ -15,6 +16,9 @@ export default createStore({
         },
         SET_SELECTED_CARD(state, payload) {
             state.selectedCard = payload
+        },
+        SET_REVEALED(state, payload) {
+            state.revealed = payload
         },
         SET_USER_VOTED(state, { name, gameId }) {
             const user = state.users.find(u => u.name == name && u.gameId == gameId);
@@ -46,6 +50,9 @@ export default createStore({
         },
     },
     getters: {
+        votedCount: (state) => {
+            return state.users.filter(user => state.revealed ? !!user.value : user.hasVoted).length;
+        },
         getCurrentGame: (state) => (id) => {
             return state.games.find(game => game.id === id);
         },

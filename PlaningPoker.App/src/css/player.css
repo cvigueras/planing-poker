@@ -172,39 +172,43 @@
     gap: 10px;
 }
 
-.btnShowVotes,
-.btnResetMatch {
-    height: 52px;
-    border-radius: 12px;
-    font: 700 16px 'Figtree', system-ui, sans-serif;
-    cursor: pointer;
-}
-
-.btnShowVotes {
-    flex: 1 1 160px;
-    border: 0;
-    background: #027A4F;
-    color: #FFFFFF;
-}
-
-.btnShowVotes:hover {
-    filter: brightness(1.1);
-}
-
-.btnResetMatch {
-    flex: 1 1 140px;
-    border: 1.5px solid #B8C4BD;
-    background: #FFFFFF;
-    color: #10201B;
-}
-
-.btnResetMatch:hover {
-    background: #F0F4F1;
-}
-
-.btnRemove:focus-visible,
-.btnShowVotes:focus-visible,
-.btnResetMatch:focus-visible {
+.btnRemove:focus-visible {
     outline: 3px solid rgba(36, 87, 214, .45);
     outline-offset: 2px;
+}
+
+/* Mobile: the list lives in the scrollable area, without the card look */
+.players.mobileList {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.mobileList .row {
+    min-height: 60px;
+}
+
+.mobileList .avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.mobileList .valueBox {
+    height: 52px;
+}
+
+.mobileList .btnRemove {
+    flex: none;
+    width: 44px;
+    padding: 0;
+    margin-right: -6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

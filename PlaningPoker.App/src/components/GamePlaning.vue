@@ -1,5 +1,5 @@
 <template>
-    <div class="room">
+    <div v-if="!mobile" class="room">
         <HeaderPlaning />
 
         <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
@@ -30,6 +30,57 @@
             <PlayerList />
         </div>
     </div>
+
+    <div v-else class="mRoom">
+        <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
+
+        <template v-else>
+            <header class="mHead">
+                <div class="mHeadTop">
+                    <svg width="28" height="28" viewBox="0 0 36 36" fill="none" aria-hidden="true" class="mLogo">
+                        <rect x="3" y="7" width="20" height="26" rx="4" fill="#0B5A43" stroke="#FFFFFF" stroke-width="2" transform="rotate(-10 13 20)" />
+                        <rect x="12" y="3" width="20" height="26" rx="4" fill="#FFFFFF" />
+                        <circle cx="22" cy="16" r="4" fill="#027A4F" />
+                    </svg>
+                    <div class="mTitle">
+                        <h1>{{ title }}</h1>
+                        <span>Admin: {{ createdBy }}</span>
+                    </div>
+                    <button type="button" class="mInvite" aria-label="Invite players" @click="openSheet">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M19 8v6M22 11h-6" /></svg>
+                    </button>
+                </div>
+                <div class="mProgress">
+                    <span>{{ votedCount }} of {{ totalPlayers }} voted</span>
+                    <div class="mBar"><div class="mBarFill" :style="{ width: progress + '%' }"></div></div>
+                </div>
+            </header>
+
+            <main class="mMain">
+                <p v-if="description" class="mDesc">{{ description }}</p>
+                <PlayerList mobile />
+            </main>
+
+            <footer class="mDock">
+                <GameActions compact />
+                <CardList mobile :id="id" />
+            </footer>
+
+            <div v-if="sheetOpen" class="sheetLayer">
+                <button type="button" class="sheetBackdrop" aria-label="Close" @click="closeSheet"></button>
+                <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="invite-title">
+                    <span class="sheetHandle"></span>
+                    <div class="sheetText">
+                        <h2 id="invite-title">Invite your team</h2>
+                        <p>Share this game ID. Players enter it on the start screen to join.</p>
+                    </div>
+                    <div class="sheetId">{{ id }}</div>
+                    <button type="button" class="btnSheetCopy" @click="copyUrl">{{ copied ? 'Copied' : 'Copy ID' }}</button>
+                    <button type="button" class="btnSheetDone" @click="closeSheet">Done</button>
+                </div>
+            </div>
+        </template>
+    </div>
 </template>
 
 
@@ -37,31 +88,60 @@
     import axios from 'axios';
     import CardList from './CardList.vue'
     import PlayerList from './PlayerList.vue'
+    import GameActions from './GameActions.vue';
     import HeaderPlaning from './HeaderPlaning.vue';
     import signalr from '../signalr/signalR.js';
 
+    const MOBILE_QUERY = '(max-width: 700px)';
+
     export default {
         components: {
-            CardList, HeaderPlaning, PlayerList
+            CardList, HeaderPlaning, PlayerList, GameActions
         },
         data() {
             return {
                 loading: false,
                 copied: false,
+                mobile: false,
+                sheetOpen: false,
                 id: '',
                 createdBy: '',
                 title: '',
                 description: ''
             };
         },
+        computed: {
+            votedCount() {
+                return this.$store.getters.votedCount;
+            },
+            totalPlayers() {
+                return this.$store.state.users.length;
+            },
+            progress() {
+                return this.totalPlayers ? Math.round((this.votedCount / this.totalPlayers) * 100) : 0;
+            }
+        },
         created() {
+            this.watchViewport();
+            this.$store.commit('SET_REVEALED', false);
+            this.$store.commit('SET_SELECTED_CARD', null);
             this.getGame();
             this.onDisconnect();
         },
         beforeUnmount() {
             this.$signalr.off('UserDisconnected', this.onUserDisconnected);
+            this.viewport.removeEventListener('change', this.onViewportChange);
         },
         methods: {
+            watchViewport() {
+                this.viewport = window.matchMedia(MOBILE_QUERY);
+                this.mobile = this.viewport.matches;
+                this.viewport.addEventListener('change', this.onViewportChange);
+            },
+            onViewportChange(event) {
+                this.mobile = event.matches;
+                this.sheetOpen = false;
+            },
             getGame() {
                 this.loading = true;
                 let gameid = sessionStorage.getItem("gameid");
@@ -97,6 +177,13 @@
                     this.copied = true;
                     setTimeout(() => { this.copied = false; }, 2000);
                 }).catch(error => console.log(error));
+            },
+            openSheet() {
+                this.copied = false;
+                this.sheetOpen = true;
+            },
+            closeSheet() {
+                this.sheetOpen = false;
             },
             onDisconnect() {
                 this.$signalr.on('UserDisconnected', this.onUserDisconnected);

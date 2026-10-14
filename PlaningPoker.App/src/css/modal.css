@@ -78,6 +78,37 @@
     filter: brightness(1.1);
 }
 
+.modalActions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btnModalDanger {
+    background: #B42318;
+}
+
+.btnModalCancel {
+    width: 100%;
+    height: 52px;
+    border: 1.5px solid #B8C4BD;
+    border-radius: 12px;
+    background: #FFFFFF;
+    color: #10201B;
+    font: 700 17px 'Figtree', system-ui, sans-serif;
+    cursor: pointer;
+}
+
+.btnModalCancel:hover {
+    background: #F0F4F1;
+}
+
+.btnModalCancel:focus-visible {
+    outline: 3px solid rgba(36, 87, 214, .45);
+    outline-offset: 2px;
+}
+
 .btnModalOk:focus-visible {
     outline: 3px solid rgba(36, 87, 214, .45);
     outline-offset: 2px;

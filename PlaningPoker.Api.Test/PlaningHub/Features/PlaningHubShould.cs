@@ -197,6 +197,64 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         }
 
         [Test]
+        public async Task RemoveAPlayerWhoLeavesTheGameAndNotifyTheOthers()
+        {
+            var game = Game.Create("leaveGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create(string.Empty)));
+            await userRepository.Add(User.Create("Pedro", game.Id, string.Empty, false, Vote.Create("5")));
+            var adminConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var pedroConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var removedUser = string.Empty;
+            adminConnection.On<string>("OnRemoveGroup", name => removedUser = name);
+            await adminConnection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+            await pedroConnection.InvokeAsync("JoinGroup", game.Id, "Pedro");
+
+            await pedroConnection.InvokeAsync("LeaveGame", game.Id);
+            await Task.Delay(200);
+
+            removedUser.Should().Be("Pedro");
+            var action = async () => await userRepository.GetByNameAndGameId("Pedro", game.Id);
+            await action.Should().ThrowAsync<InvalidOperationException>();
+            (await userRepository.GetByNameAndGameId("Carlos", game.Id)).Admin.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task PassTheAdminToAnotherPlayerWhenTheAdminLeavesTheGame()
+        {
+            var game = Game.Create("leaveAdminGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create(string.Empty)));
+            await userRepository.Add(User.Create("Pedro", game.Id, string.Empty, false, Vote.Create(string.Empty)));
+            var adminConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var pedroConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var newAdmin = string.Empty;
+            pedroConnection.On<string>("OnAdminChanged", name => newAdmin = name);
+            await adminConnection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+            await pedroConnection.InvokeAsync("JoinGroup", game.Id, "Pedro");
+
+            await adminConnection.InvokeAsync("LeaveGame", game.Id);
+            await Task.Delay(200);
+
+            newAdmin.Should().Be("Pedro");
+            (await userRepository.GetByNameAndGameId("Pedro", game.Id)).Admin.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task NotAllowAUserOutsideTheGameToLeaveIt()
+        {
+            var game = Game.Create("leaveDeniedGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create(string.Empty)));
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+
+            var action = async () => await connection.InvokeAsync("LeaveGame", game.Id);
+
+            await action.Should().ThrowAsync<HubException>();
+            (await userRepository.GetByNameAndGameId("Carlos", game.Id)).Should().NotBeNull();
+        }
+
+        [Test]
         public async Task NotAllowAUserOutsideTheGameToResetItsVotes()
         {
             var game = Game.Create("resetDeniedGameId", "Carlos", "Release1", "Description", 60, 60);

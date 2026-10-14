@@ -50,3 +50,27 @@
     font-size: 12px;
     font-weight: 700;
 }
+
+.btnLeave {
+    margin-left: 6px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1.5px solid rgba(255, 255, 255, .4);
+    border-radius: 10px;
+    background: transparent;
+    color: #FFFFFF;
+    font: 600 14px 'Figtree', system-ui, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btnLeave:hover {
+    background: rgba(255, 255, 255, .14);
+}
+
+.btnLeave:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, .6);
+    outline-offset: 2px;
+}

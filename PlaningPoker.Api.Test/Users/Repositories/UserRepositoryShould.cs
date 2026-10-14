@@ -145,6 +145,18 @@ namespace PlaningPoker.Api.Test.Users.Repositories
         }
 
         [Test]
+        public async Task SetTheAdminOfAUser()
+        {
+            var gameGuid = guidGenerator.Generate().ToString();
+            await userRepository.Add(User.Create("Pedro", gameGuid, string.Empty, false, Vote.Create(string.Empty)));
+
+            await userRepository.SetAdminByGameIdAndName(gameGuid, "Pedro", true);
+
+            var result = await userRepository.GetByNameAndGameId("Pedro", gameGuid);
+            result.Admin.Should().BeTrue();
+        }
+
+        [Test]
         public async Task ResetTheVotesOfAGameWithoutTouchingOtherGames()
         {
             var gameGuid = guidGenerator.Generate().ToString();

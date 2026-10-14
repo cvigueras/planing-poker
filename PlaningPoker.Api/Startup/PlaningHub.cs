@@ -71,6 +71,20 @@ public class PlaningHub : Hub
         await Clients.Group(gameId).SendAsync("OnRemoveGroup", userName);
     }
 
+    public async Task LeaveGame(string gameId)
+    {
+        var caller = await FindByConnectionId(Context.ConnectionId);
+        if (caller is null || caller.GameId != gameId)
+            throw new HubException("You are not a player of this game.");
+
+        await userRepository.DeleteByGameIdAndName(gameId, caller.Name);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameId);
+        await Clients.Group(gameId).SendAsync("OnRemoveGroup", caller.Name);
+
+        if (caller.Admin)
+            await PassAdminToNextPlayer(gameId);
+    }
+
     public override async Task OnDisconnectedAsync(Exception? ex)
     {
         var user = await FindByConnectionId(Context.ConnectionId);
@@ -81,6 +95,22 @@ public class PlaningHub : Hub
             await Clients.Group(user.GameId).SendAsync("UserDisconnected", user.Name);
         }
         await base.OnDisconnectedAsync(ex);
+    }
+
+    // When the admin leaves, the next player (the oldest one still in the game) becomes the admin.
+    private async Task PassAdminToNextPlayer(string gameId)
+    {
+        try
+        {
+            var players = await userRepository.GetUsersGameByGameId(gameId);
+            var next = players.First();
+            await userRepository.SetAdminByGameIdAndName(gameId, next.Name, true);
+            await Clients.Group(gameId).SendAsync("OnAdminChanged", next.Name);
+        }
+        catch (InvalidOperationException)
+        {
+            // Nobody left in the game.
+        }
     }
 
     private async Task PublishUser(string group, string user, bool admin)

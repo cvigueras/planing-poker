@@ -68,6 +68,14 @@ public class UserRepository : IUserRepository
             "UPDATE Users SET Vote = '' WHERE GameId = @gameId", new { gameId });
     }
 
+    public async Task SetAdminByGameIdAndName(string gameId, string userName, bool admin)
+    {
+        // The admin flag is stored as text ("True" / "False"), like in Add.
+        await connection.ExecuteAsync(
+            "UPDATE Users SET Admin = @admin WHERE GameId = @gameId AND Name = @userName",
+            new { admin = admin.ToString(), gameId, userName });
+    }
+
     public async Task<long> GetTotalNumberUsers()
     {
         return connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM Users");

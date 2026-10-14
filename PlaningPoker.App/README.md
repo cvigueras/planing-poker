@@ -1,4 +1,6 @@
-# planingpokerapp
+# PlaningPoker.App
+
+Vue 3 frontend for Planing Poker. See the [root README](../README.md) for the full setup, environment variables and API reference.
 
 ## Project setup
 ```

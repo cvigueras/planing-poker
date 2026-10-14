@@ -2,7 +2,7 @@
     <div v-if="!mobile" class="room">
         <HeaderPlaning />
 
-        <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
+        <LoadingPlaning v-if="loading" />
 
         <div v-else class="roomBody">
             <div class="mainCol">
@@ -32,7 +32,7 @@
     </div>
 
     <div v-else class="mRoom">
-        <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
+        <LoadingPlaning v-if="loading" />
 
         <template v-else>
             <header class="mHead">
@@ -89,6 +89,7 @@
     import CardList from './CardList.vue'
     import PlayerList from './PlayerList.vue'
     import GameActions from './GameActions.vue';
+    import LoadingPlaning from './LoadingPlaning.vue';
     import HeaderPlaning from './HeaderPlaning.vue';
     import signalr from '../signalr/signalR.js';
     import { buildGameLink } from '../utils/gameLink';
@@ -97,7 +98,7 @@
 
     export default {
         components: {
-            CardList, HeaderPlaning, PlayerList, GameActions
+            CardList, HeaderPlaning, PlayerList, GameActions, LoadingPlaning
         },
         data() {
             return {

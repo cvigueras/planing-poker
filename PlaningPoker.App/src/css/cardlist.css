@@ -18,15 +18,23 @@
     color: #4B5B54;
 }
 
+/* --cards-per-row cards per row, aligned to the left (7 + 6 for the 13 cards). The cards shrink with the
+   panel (down to 56 px) so the two rows are kept; only a very narrow panel gets fewer cards per row. */
 .deckGrid {
+    --cards-per-row: 7;
+    --cards-gap: 14px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(max(56px, calc((100% - (var(--cards-per-row) - 1) * var(--cards-gap)) / var(--cards-per-row))), 1fr));
+    gap: var(--cards-gap);
+    width: 100%;
+    max-width: calc(var(--cards-per-row) * 90px + (var(--cards-per-row) - 1) * var(--cards-gap));
     padding-top: 6px;
 }
 
 .deckCard {
-    height: 108px;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 5 / 7;
     box-sizing: border-box;
     border: 1.5px solid #D5DDD8;
     border-radius: 12px;
@@ -38,8 +46,13 @@
     justify-content: center;
     font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 800;
-    font-size: 28px;
+    font-size: clamp(22px, 2vw, 34px);
     transition: transform .15s, box-shadow .15s;
+}
+
+.coffeeIcon {
+    width: clamp(20px, 2vw, 32px);
+    height: clamp(20px, 2vw, 32px);
 }
 
 .deckCard:hover {
@@ -57,16 +70,24 @@
     box-shadow: 0 0 0 4px rgba(2, 122, 79, .2), 0 10px 18px rgba(16, 32, 27, .18);
 }
 
-.cardNumber {
-    color: #2457D6;
+/* Poker-style corners: the mark at the top left and, upside down, at the bottom right. The color of
+   each card comes from the style set in the template (see utils/cardColors.js). */
+.corner {
+    position: absolute;
+    width: clamp(11px, 1.2vw, 15px);
+    height: clamp(11px, 1.2vw, 15px);
+    pointer-events: none;
 }
 
-.interrogant {
-    color: #B4531A;
+.cornerTop {
+    top: 6px;
+    left: 6px;
 }
 
-.coffee {
-    color: #10201B;
+.cornerBottom {
+    bottom: 6px;
+    right: 6px;
+    transform: rotate(180deg);
 }
 
 /* Mobile: single row of cards with arrows, pinned in the bottom dock */
@@ -122,6 +143,7 @@
 }
 
 .railCard {
+    position: relative;
     flex: none;
     width: 72px;
     height: 104px;
@@ -139,6 +161,21 @@
     font-size: 28px;
     scroll-snap-align: start;
     transition: transform .15s, box-shadow .15s;
+}
+
+.railCard .corner {
+    width: 12px;
+    height: 12px;
+}
+
+.railCard .cornerTop {
+    top: 6px;
+    left: 6px;
+}
+
+.railCard .cornerBottom {
+    bottom: 6px;
+    right: 6px;
 }
 
 .railCard.selected {

@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 14px clamp(16px, 4vw, 32px);
+    padding: 14px clamp(16px, 3vw, 56px);
     background: #073B2C;
     color: #FFFFFF;
     font-family: 'Figtree', system-ui, sans-serif;

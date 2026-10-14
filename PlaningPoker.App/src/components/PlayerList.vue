@@ -18,8 +18,8 @@
                     <span class="tag">{{ tagFor(user) }}</span>
                 </div>
 
-                <span v-if="revealed" class="valueBox">
-                    <svg v-if="user.value === 'coffee'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10201B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9z" /><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2" /><path d="M8 3v2M12 3v2" /></svg>
+                <span v-if="revealed" class="valueBox" :style="{ color: cardColor(user.value) }">
+                    <svg v-if="user.value === 'coffee'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9z" /><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2" /><path d="M8 3v2M12 3v2" /></svg>
                     <template v-else>{{ user.value || '–' }}</template>
                 </span>
                 <span v-else-if="user.hasVoted" class="chip chipVoted">
@@ -44,6 +44,7 @@
     import ShowMessageModal from './ShowMessageModal.vue';
     import GameActions from './GameActions.vue';
     import signalr from '../signalr/signalR.js';
+    import { cardColor } from '../utils/cardColors';
 
     export default {
         components: {
@@ -77,6 +78,7 @@
             };
         },
         methods: {
+            cardColor,
             isSelf(user) {
                 return user.name === sessionStorage.getItem("username");
             },

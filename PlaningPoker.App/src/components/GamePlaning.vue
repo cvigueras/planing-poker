@@ -127,7 +127,8 @@
         },
         created() {
             this.watchViewport();
-            this.$store.commit('SET_REVEALED', false);
+            // After a refresh the votes stay shown if they were shown before.
+            this.$store.commit('SET_REVEALED', sessionStorage.getItem('revealed') === 'true');
             this.$store.commit('SET_SELECTED_CARD', null);
             this.getGame();
             this.onDisconnect();
@@ -172,7 +173,11 @@
             fetchGame(gameId) {
                 axios.get('game/' + gameId)
                     .then(response => {
-                        this.$store.state.users = response.data.users;
+                        // The server keeps the votes of the current round: whoever has one has already voted.
+                        const users = response.data.users.map(user => ({ ...user, hasVoted: !!user.value }));
+                        this.$store.commit('UPDATE_USERS', users);
+                        const me = users.find(user => user.name === sessionStorage.getItem('username'));
+                        this.$store.commit('SET_SELECTED_CARD', me && me.value ? me.value : null);
                         this.buildGame(response.data);
                     }).catch(error => console.log(error))
             },

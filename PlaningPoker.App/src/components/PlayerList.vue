@@ -88,11 +88,15 @@
             },
             subscribeEvents() {
                 this.signalHandlers = {
-                    OnNotifyUserHasVoted: (user) => {
+                    OnNotifyUserHasVoted: (user, vote) => {
                         this.$store.commit('SET_USER_VOTED', {
                             name: user,
-                            gameId: sessionStorage.getItem('gameid')
+                            gameId: sessionStorage.getItem('gameid'),
+                            value: vote
                         });
+                    },
+                    OnResetVotes: () => {
+                        this.$store.commit('RESET_VOTES');
                     },
                     OnJoinGroup: (user, admin) => {
                         const userAdded = {
@@ -151,6 +155,7 @@
                 sessionStorage.removeItem('users');
                 sessionStorage.removeItem('username');
                 sessionStorage.removeItem('gameid');
+                sessionStorage.removeItem('revealed');
             }
         },
         mounted() {

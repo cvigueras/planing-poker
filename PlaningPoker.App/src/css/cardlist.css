@@ -68,3 +68,126 @@
 .coffee {
     color: #10201B;
 }
+
+/* Mobile: single row of cards with arrows, pinned in the bottom dock */
+.dockDeck {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.estimateRow {
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.estimateLabel {
+    font-size: 14px;
+    font-weight: 700;
+    color: #33423C;
+}
+
+.estimateChip {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #EEF1EE;
+    color: #4B5B54;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.estimateChip.estimateVoted {
+    background: #E3F3EB;
+    color: #02603E;
+}
+
+.railWrap {
+    position: relative;
+}
+
+.rail {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 14px 16px 6px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+    display: none;
+}
+
+.railCard {
+    flex: none;
+    width: 72px;
+    height: 104px;
+    box-sizing: border-box;
+    border: 1.5px solid #D5DDD8;
+    border-radius: 12px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(16, 32, 27, .08);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    scroll-snap-align: start;
+    transition: transform .15s, box-shadow .15s;
+}
+
+.railCard.selected {
+    border: 2px solid #027A4F;
+    transform: translateY(-10px);
+    box-shadow: 0 0 0 4px rgba(2, 122, 79, .2), 0 10px 18px rgba(16, 32, 27, .18);
+}
+
+.railCard:focus-visible,
+.railArrow:focus-visible {
+    outline: 3px solid rgba(36, 87, 214, .45);
+    outline-offset: 2px;
+}
+
+.railArrow {
+    position: absolute;
+    top: 14px;
+    width: 48px;
+    height: 104px;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #10201B;
+}
+
+.railArrowLeft {
+    left: 0;
+    padding-left: 6px;
+    justify-content: flex-start;
+    background: linear-gradient(to right, #FFFFFF 35%, rgba(255, 255, 255, 0));
+}
+
+.railArrowRight {
+    right: 0;
+    padding-right: 6px;
+    justify-content: flex-end;
+    background: linear-gradient(to left, #FFFFFF 35%, rgba(255, 255, 255, 0));
+}
+
+.railArrowIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1.5px solid #B8C4BD;
+    box-shadow: 0 2px 6px rgba(16, 32, 27, .18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

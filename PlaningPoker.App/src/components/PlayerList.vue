@@ -1,8 +1,8 @@
 <template>
-    <aside class="players">
+    <aside class="players" :class="{ mobileList: mobile }">
         <ShowMessageModal modaltype="disconnected" v-show="showMessageModal" />
 
-        <div class="playersHead">
+        <div v-if="!mobile" class="playersHead">
             <div class="playersTitle">
                 <h2>Players</h2>
                 <span class="count">{{ votedCount }} of {{ users.length }} voted</span>
@@ -28,27 +28,34 @@
                 </span>
                 <span v-else class="chip chipWaiting">Waiting</span>
 
-                <button v-if="isAdmin && !user.admin" type="button" class="btnRemove" :aria-label="'Remove ' + user.name + ' from the game'" @click="removeUser($event, user.name)">Remove</button>
+                <button v-if="isAdmin && !user.admin" type="button" class="btnRemove" :aria-label="'Remove ' + user.name + ' from the game'" @click="removeUser($event, user.name)">
+                    <svg v-if="mobile" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                    <template v-else>Remove</template>
+                </button>
             </div>
         </div>
 
-        <div class="actions">
-            <button type="button" class="btnShowVotes" @click="showAllVotes()">Show votes</button>
-            <button type="button" class="btnResetMatch" @click="resetMatch()">Reset match</button>
-        </div>
+        <GameActions v-if="!mobile" />
     </aside>
 </template>
 
 <script lang="js">
 
     import ShowMessageModal from './ShowMessageModal.vue';
+    import GameActions from './GameActions.vue';
     import signalr from '../signalr/signalR.js';
 
     export default {
         components: {
-            ShowMessageModal
+            ShowMessageModal, GameActions
+        },
+        props: {
+            mobile: Boolean
         },
         computed: {
+            revealed() {
+                return this.$store.state.revealed;
+            },
             users() {
                 return this.$store.state.users
             },
@@ -58,7 +65,7 @@
                 return this.$store.getters.userIsAdmin(gameId, user);
             },
             votedCount() {
-                return this.users.filter(user => this.revealed ? !!user.value : user.hasVoted).length;
+                return this.$store.getters.votedCount;
             },
             progress() {
                 return this.users.length ? Math.round((this.votedCount / this.users.length) * 100) : 0;
@@ -67,7 +74,6 @@
         data() {
             return {
                 showMessageModal: false,
-                revealed: false,
             };
         },
         methods: {
@@ -116,7 +122,7 @@
                     },
                     OnReceiveAllVotes: (votes) => {
                         this.$store.commit('UPDATE_USERS', votes);
-                        this.revealed = true;
+                        this.$store.commit('SET_REVEALED', true);
                         console.info(votes);
                     },
                 };
@@ -128,20 +134,6 @@
                 Object.entries(this.signalHandlers).forEach(([event, handler]) => {
                     this.$signalr.off(event, handler);
                 });
-            },
-            showAllVotes() {
-                let gameId = sessionStorage.getItem("gameid");
-                this.$signalr
-                    .invoke('ReceiveAllVotes', gameId)
-                    .catch(function (err) { console.error(err) })
-                console.log("Showing all votes");
-            },
-            resetMatch() {
-                let users = JSON.parse(sessionStorage.getItem("users"))
-                    .map(user => ({ ...user, hasVoted: false }));
-                this.$store.commit('UPDATE_USERS', users);
-                this.$store.commit('SET_SELECTED_CARD', null);
-                this.revealed = false;
             },
             removeUser(event, userName) {
                 if (event) {

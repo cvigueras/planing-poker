@@ -44,11 +44,6 @@ public class Startup
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
-
-                    options.WithOrigins(GetPolicyUrlSettings())
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
                 });
             });
         services.AddSignalR();
@@ -64,8 +59,9 @@ public class Startup
 
         app.UseHttpsRedirection();
 
-        app.UseAuthorization();
         app.UseRouting();
+        app.UseCors("AllowClientPolicy");
+        app.UseAuthorization();
         app.MapControllers();
 
         app.UseEndpoints(endpoints =>

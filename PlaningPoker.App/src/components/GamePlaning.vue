@@ -34,6 +34,7 @@
     import CardList from './CardList.vue'
     import PlayerList from './PlayerList.vue'
     import HeaderPlaning from './HeaderPlaning.vue';
+    import signalr from '../signalr/signalR.js';
 
     export default {
         components: {
@@ -54,6 +55,9 @@
             this.getGame();
             this.onDisconnect();
         },
+        beforeUnmount() {
+            this.$signalr.off('UserDisconnected', this.onUserDisconnected);
+        },
         methods: {
             getGame() {
                 this.loading = true;
@@ -64,15 +68,9 @@
             joinGroup() {
                 let gameId = sessionStorage.getItem("gameid");
                 let userName = sessionStorage.getItem("username");
-                let admin = false;
-                if (JSON.parse(sessionStorage.getItem("users")).length == 1) {
-                    admin = true;
-                }
-                this.$signalr.start().then(() => {
-                    this.$signalr
-                        .invoke('JoinGroup', gameId, userName, admin)
-                        .catch(function (err) { console.error(err) })
-                });
+                signalr.start()
+                    .then(() => this.$signalr.invoke('JoinGroup', gameId, userName))
+                    .catch(function (err) { console.error(err) });
             },
             buildGame(game) {
                 this.id = game.id;
@@ -101,9 +99,10 @@
                 navigator.clipboard.writeText(copyText.value);
             },
             onDisconnect() {
-                this.$signalr.on('UserDisconnected', (connectionId) => {
-                    console.log(connectionId);
-                }); 
+                this.$signalr.on('UserDisconnected', this.onUserDisconnected);
+            },
+            onUserDisconnected(userName) {
+                console.log(userName + " has been disconnected");
             }
         },
     }

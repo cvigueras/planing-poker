@@ -32,9 +32,12 @@ public class PlaningHub : Hub
         await Clients.Group(group).SendAsync("OnNotifyUserHasVoted", name, vote);
     }
 
-    public async Task JoinGroup(string group, string user, bool admin)
+    public async Task JoinGroup(string group, string user)
     {
-        var userCreate = User.Create(user, group, Context.ConnectionId, admin, Vote.Create(string.Empty));
+        var existingUser = await FindByNameAndGameId(user, group);
+        var admin = existingUser?.Admin ?? false;
+        var vote = existingUser?.Vote ?? Vote.Create(string.Empty);
+        var userCreate = User.Create(user, group, Context.ConnectionId, admin, vote);
         await userRepository.UpdateByGameIdAndName(userCreate, userCreate.GameId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
         await PublishUser(group, user, admin);
@@ -42,33 +45,61 @@ public class PlaningHub : Hub
 
     public async Task RemoveFromGroup(string userName, string gameId)
     {
-        var user = await userRepository.GetByNameAndGameId(userName, gameId);
+        var caller = await FindByConnectionId(Context.ConnectionId);
+        if (caller is null || !caller.Admin || caller.GameId != gameId)
+            throw new HubException("Only the admin of the game can remove users.");
+
+        var user = await FindByNameAndGameId(userName, gameId);
+        if (user is null || user.Admin) return;
+
         await userRepository.DeleteByGameIdAndName(gameId, userName);
-        await Groups.RemoveFromGroupAsync(user.ConnectionId, user.GameId);
-        await Clients.Group(user.GameId).SendAsync("OnRemoveGroup", user, user.ConnectionId);
+        if (!string.IsNullOrEmpty(user.ConnectionId))
+        {
+            await Clients.Client(user.ConnectionId).SendAsync("OnReceiveMessage", "You has been disconnected");
+            await Groups.RemoveFromGroupAsync(user.ConnectionId, user.GameId);
+        }
+        await Clients.Group(gameId).SendAsync("OnRemoveGroup", userName);
     }
 
-    public async Task PublishUser(string group, string user, bool admin)
+    public override async Task OnDisconnectedAsync(Exception? ex)
+    {
+        var user = await FindByConnectionId(Context.ConnectionId);
+        if (user is not null)
+        {
+            user.ConnectionId = string.Empty;
+            await userRepository.UpdateByConnectionId(user, Context.ConnectionId);
+            await Clients.Group(user.GameId).SendAsync("UserDisconnected", user.Name);
+        }
+        await base.OnDisconnectedAsync(ex);
+    }
+
+    private async Task PublishUser(string group, string user, bool admin)
     {
         await Clients.Group(group).SendAsync("OnJoinGroup", user, admin);
     }
 
-    public Task SendMessageToUser(string connectionId, string message)
+    private async Task<User?> FindByNameAndGameId(string name, string gameId)
     {
-        return Clients.Client(connectionId).SendAsync("OnReceiveMessage", message);
+        try
+        {
+            return await userRepository.GetByNameAndGameId(name, gameId);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
     }
 
-    public override async Task OnConnectedAsync()
+    private async Task<User?> FindByConnectionId(string connectionId)
     {
-        await Clients.Others.SendAsync("UserConnected", Context.ConnectionId);
-        await base.OnConnectedAsync();
-    }
-
-    public override async Task OnDisconnectedAsync(Exception ex)
-    {
-        //await RemoveFromGroup(Context.ConnectionId);
-        await Clients.Others.SendAsync("UserDisconnected", Context.ConnectionId);
-        await base.OnDisconnectedAsync(ex);
+        try
+        {
+            return await userRepository.GetByConnectionId(connectionId);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
     }
 
     //Unused functionality

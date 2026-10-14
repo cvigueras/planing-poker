@@ -1,6 +1,6 @@
 .players {
-    flex: 1 1 340px;
-    max-width: 440px;
+    flex: 1 1 420px;
+    max-width: 520px;
     min-width: 0;
     box-sizing: border-box;
     background: #FFFFFF;
@@ -104,7 +104,9 @@
 .name {
     font-size: 16px;
     font-weight: 600;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tag {

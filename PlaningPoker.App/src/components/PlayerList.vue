@@ -14,7 +14,7 @@
             <div v-for="user in users" :key="user.name" class="row" :class="{ self: isSelf(user) }">
                 <span class="avatar" :class="{ avatarAdmin: user.admin }">{{ user.name.charAt(0).toUpperCase() }}</span>
                 <div class="who">
-                    <span class="name">{{ user.name }}</span>
+                    <span class="name" :title="user.name">{{ user.name }}</span>
                     <span class="tag">{{ tagFor(user) }}</span>
                 </div>
 

@@ -66,17 +66,39 @@ dotnet dev-certs https --export-path ~/.aspnet/https/vueapp.pem --format Pem --n
 
 | Variable | Description | Development value |
 |----------|-------------|-------------------|
-| `VUE_APP_ENVIROMENT` | API base URL (target of the dev proxy) | `https://localhost:7096/` |
+| `VUE_APP_ENVIROMENT` | API base URL (target of the dev proxy; in production the base URL of the requests) | `https://localhost:7096/` |
 | `VUE_APP_REDIRECT_PORT` | Port of the Vue dev server | `5002` |
 | `VUE_APP_ENVIROMENT_SIGNALR` | SignalR hub URL | `https://localhost:7096/hubs/planing` |
+| `VUE_APP_PUBLIC_PATH` | Folder the app is served from (only in `.env.production`; `/` when not set) | — |
 
-`.env.production` still has a `TODO URL PRODUCTION` placeholder for `VUE_APP_ENVIROMENT`; set it before building for production.
+`.env.production` holds the production values: the API hosted on Fly.io and `/planing-poker/` as public path.
 
 ### Backend (`PlaningPoker.Api/appsettings.json`)
 
 | Key | Description |
 |-----|-------------|
 | `Enviroments:ClientPolicyUrl` | Origin allowed by CORS (the frontend URL, `https://localhost:5002` by default). |
+
+## Deployment
+
+### Web (GitHub Pages)
+
+The workflow `.github/workflows/deploy-web.yml` builds the Vue app and publishes it at
+`https://<user>.github.io/planing-poker/` on every push to `main` that changes `PlaningPoker.App/` (it can also be
+run by hand from the Actions tab).
+
+One-time setup: in the repository, **Settings > Pages > Build and deployment > Source: GitHub Actions**.
+
+The build copies `index.html` to `404.html`, so routes such as `/planing` still work when the page is refreshed.
+
+### API (Fly.io)
+
+The web talks to the API set in `.env.production`. The API is not deployed by the workflow; when it changes, deploy it
+again so it matches the web (for example the SignalR hub methods the page calls). In the API:
+
+- Set `Enviroments__ClientPolicyUrl` to the origin of the web, without path: `https://<user>.github.io`.
+- The database is a SQLite file (`PlaningPoker.db`), so keep it on a persistent volume or every deployment starts
+  with an empty database.
 
 ## API reference
 

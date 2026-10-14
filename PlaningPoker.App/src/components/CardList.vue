@@ -21,15 +21,10 @@
 
 <script lang="js">
     import axios from 'axios';
-    import { getCurrentInstance } from "vue";
 
     export default {
         props: {
             id: String
-        },
-        setup() {
-            const instance = getCurrentInstance();
-            window.signalR = instance.appContext.config.globalProperties.$signalr;
         },
         data() {
             return {
@@ -55,8 +50,8 @@
                     value: vote
                 }
                 axios.post('votes', votes)
-                    .then(function () {
-                        window.signalR
+                    .then(() => {
+                        this.$signalr
                             .invoke('NotifyUserHasVoted', votes.group, votes.name, votes.value)
                             .catch(function (err) { console.error(err) })
                     }).catch(error => console.log(error))

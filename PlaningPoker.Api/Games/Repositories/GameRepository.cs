@@ -16,7 +16,7 @@ public class GameRepository : IGameRepository
 
     public async Task<Game> GetByGuid(string guid)
     {
-        var rawData = (await connection.QueryAsync<dynamic>($"SELECT * FROM Games WHERE Id = '{guid}'")).First();
+        var rawData = (await connection.QueryAsync<dynamic>("SELECT * FROM Games WHERE Id = @guid", new { guid })).First();
         return ToGame(rawData);
 
     }
@@ -25,7 +25,8 @@ public class GameRepository : IGameRepository
     {
         await connection.ExecuteAsync(
             "INSERT INTO Games (Id, CreatedBy, Title, Description, RoundTime, Expiration) " +
-            $"VALUES ('{game.Id}', '{game.CreatedBy}','{game.Title}', '{game.Description}','{game.RoundTime}', '{game.Expiration}')");
+            "VALUES (@Id, @CreatedBy, @Title, @Description, @RoundTime, @Expiration)",
+            new { game.Id, game.CreatedBy, game.Title, game.Description, game.RoundTime, game.Expiration });
     }
 
 

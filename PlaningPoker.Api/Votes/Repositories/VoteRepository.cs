@@ -15,12 +15,14 @@ namespace PlaningPoker.Api.Votes.Repositories
 
         public async Task AddVoteByUserNameAndGroupIdAsync(string name, string gameId, string vote)
         {
-            await connection.ExecuteAsync($"UPDATE Users SET Vote = '{vote}' WHERE Name = '{name}' AND GameId = '{gameId}'");
+            await connection.ExecuteAsync(
+                "UPDATE Users SET Vote = @vote WHERE Name = @name AND GameId = @gameId", new { vote, name, gameId });
         }
 
         public async Task<IEnumerable<VotesUsers>> GetAllVotesByGroupIdAsync(string gameId)
         {
-            var rawData = (await connection.QueryAsync<dynamic>($"SELECT * FROM Users WHERE GameId = '{gameId}'")).ToList();
+            var rawData = (await connection.QueryAsync<dynamic>(
+                "SELECT * FROM Users WHERE GameId = @gameId", new { gameId })).ToList();
             return ToVotesUsers(rawData);
         }
 

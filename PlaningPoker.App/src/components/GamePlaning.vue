@@ -68,12 +68,8 @@
             joinGroup() {
                 let gameId = sessionStorage.getItem("gameid");
                 let userName = sessionStorage.getItem("username");
-                let admin = false;
-                if (JSON.parse(sessionStorage.getItem("users")).length == 1) {
-                    admin = true;
-                }
                 signalr.start()
-                    .then(() => this.$signalr.invoke('JoinGroup', gameId, userName, admin))
+                    .then(() => this.$signalr.invoke('JoinGroup', gameId, userName))
                     .catch(function (err) { console.error(err) });
             },
             buildGame(game) {
@@ -105,8 +101,8 @@
             onDisconnect() {
                 this.$signalr.on('UserDisconnected', this.onUserDisconnected);
             },
-            onUserDisconnected(connectionId) {
-                console.log(connectionId);
+            onUserDisconnected(userName) {
+                console.log(userName + " has been disconnected");
             }
         },
     }

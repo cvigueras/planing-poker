@@ -38,6 +38,7 @@
 <script lang="js">
 
     import ShowMessageModal from './ShowMessageModal.vue';
+    import signalr from '../signalr/signalR.js';
 
     export default {
         components: {
@@ -84,21 +85,15 @@
                     OnReceiveMessage: (message) => {
                         console.log(message);
                         this.removeStorage();
-                        this.$signalr.stop();
+                        signalr.stop();
                         this.showMessageModal = true;
                     },
-                    OnRemoveGroup: (user, connectionId) => {
+                    OnRemoveGroup: (userName) => {
                         const userRemoved = {
-                            name: user.name,
+                            name: userName,
                             gameId: sessionStorage.getItem('gameid'),
                         }
                         this.$store.dispatch('removeToUsers', JSON.stringify(userRemoved));
-                        if (this.isAdmin()) {
-                            console.log("The connection Id of disconnected user is: " + connectionId);
-                            this.$signalr
-                                .invoke('SendMessageToUser', connectionId, "You has been disconnected")
-                                .catch(function (err) { console.error(err) })
-                        }
                     },
                     OnReceiveAllVotes: (votes) => {
                         this.$store.commit('UPDATE_USERS', votes);

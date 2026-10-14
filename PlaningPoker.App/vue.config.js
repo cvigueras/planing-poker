@@ -17,12 +17,14 @@ if (!certificateName) {
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
+// The dev certificate only exists on developer machines (not in CI), so serve over HTTPS only when it is found.
+const https = fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)
+    ? { key: fs.readFileSync(keyFilePath), cert: fs.readFileSync(certFilePath) }
+    : undefined;
+
 module.exports = {
     devServer: {
-        https: {
-            key: fs.readFileSync(keyFilePath),
-            cert: fs.readFileSync(certFilePath),
-        },
+        https,
         proxy: {
             '^/cards': {
                 target: process.env.VUE_APP_ENVIROMENT

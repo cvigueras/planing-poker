@@ -23,6 +23,8 @@ const https = fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)
     : undefined;
 
 module.exports = {
+    // Folder the app is served from (GitHub Pages serves it under /<repository>/); "/" in development.
+    publicPath: process.env.VUE_APP_PUBLIC_PATH || '/',
     chainWebpack: config => {
         // Title of the page (index.html uses it for the <title> tag).
         config.plugin('html').tap(args => {

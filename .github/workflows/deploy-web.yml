@@ -1,0 +1,67 @@
+name: Deploy web
+
+# Builds the Vue app and publishes it on GitHub Pages:
+# https://<user>.github.io/planing-poker/
+# One-time setup: Settings > Pages > Source: "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'PlaningPoker.App/**'
+      - '.github/workflows/deploy-web.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deployments at the same time, and do not cancel one that is publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: PlaningPoker.App
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: PlaningPoker.App/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # GitHub Pages answers 404 for routes of a single page app such as /planing (for example when the
+      # page is refreshed). Serving index.html as the 404 page lets the router handle them.
+      - name: Single page app fallback
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: PlaningPoker.App/dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

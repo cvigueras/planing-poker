@@ -28,6 +28,45 @@
 
         <main class="panel">
             <form class="card" @submit.prevent="submit" novalidate>
+                <template v-if="isInvite">
+                    <div v-if="inviteChecking" class="intro">
+                        <h2>Checking your invite…</h2>
+                    </div>
+
+                    <template v-else-if="inviteInvalid">
+                        <div class="intro">
+                            <h2>This link is not valid</h2>
+                            <p>The game does not exist or the link is incomplete. Ask the admin for a new link.</p>
+                        </div>
+                        <router-link to="/" class="linkBtn">Create or join another game</router-link>
+                    </template>
+
+                    <template v-else>
+                        <div class="intro">
+                            <span class="inviteBy">{{ inviteGame.createdBy }} invited you to</span>
+                            <h2>{{ inviteGame.title }}</h2>
+                            <p>Enter your name to join the game. No account needed.</p>
+                        </div>
+
+                        <div class="fields">
+                            <div class="field">
+                                <label for="invite-username">Your name</label>
+                                <input id="invite-username" v-model.trim="username" type="text" autocomplete="nickname" maxlength="19" placeholder="e.g. Carlos" class="inputHome" required>
+                                <span class="hint">3 to 19 characters. Others will see this name.</span>
+                            </div>
+                        </div>
+
+                        <div v-if="formError" class="errorBox" role="alert">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 8v5M12 16.5v.01" /></svg>
+                            <span>{{ formError }}</span>
+                        </div>
+
+                        <button type="submit" class="btnJoin" :disabled="loading">{{ loading ? 'Joining…' : 'Join game' }}</button>
+                        <router-link to="/" class="linkBtn">Create your own game instead</router-link>
+                    </template>
+                </template>
+
+                <template v-else>
                 <div class="tabs" role="group" aria-label="Choose what you want to do">
                     <button type="button" :class="['tab', { active: isCreate }]" :aria-pressed="isCreate" @click="setMode('create')">
                         <span class="dot dotCreate"></span>Create a game
@@ -40,8 +79,8 @@
                 <div class="intro">
                     <h2 v-if="isCreate">Start a new game</h2>
                     <h2 v-else>Join your team</h2>
-                    <p v-if="isCreate">You will be the admin. After creating it you get a game ID to share with your team.</p>
-                    <p v-else>Ask the admin for the game ID and enter it below.</p>
+                    <p v-if="isCreate">You will be the admin. After creating it you get a link to share with your team.</p>
+                    <p v-else>Paste the link the admin shared with you, or its game ID.</p>
                 </div>
 
                 <div class="fields">
@@ -63,8 +102,8 @@
                     </template>
 
                     <div v-else class="field">
-                        <label for="gameid">Game ID</label>
-                        <input id="gameid" v-model.trim="gameId" type="text" autocomplete="off" spellcheck="false" placeholder="Paste the ID here" class="inputHome inputMono"
+                        <label for="gameid">Game link or ID</label>
+                        <input id="gameid" v-model.trim="gameId" type="text" autocomplete="off" spellcheck="false" placeholder="Paste the link here" class="inputHome inputMono"
                                :class="{ inputInvalid: joinError }" :aria-invalid="joinError ? 'true' : 'false'" aria-describedby="gameid-error" required>
                         <div v-if="joinError" id="gameid-error" class="errorBox" role="alert">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 8v5M12 16.5v.01" /></svg>
@@ -82,6 +121,7 @@
                     <template v-if="loading">{{ isCreate ? 'Creating…' : 'Joining…' }}</template>
                     <template v-else>{{ isCreate ? 'Create game' : 'Join game' }}</template>
                 </button>
+                </template>
             </form>
         </main>
     </div>
@@ -91,6 +131,7 @@
     import axios from 'axios';
     import InfoHome from './InfoHome.vue';
     import gameFactory from '../factories/game'
+    import { parseGameId } from '../utils/gameLink'
 
     export default {
         components: {
@@ -106,17 +147,51 @@
                 gameId: '',
                 formError: '',
                 joinError: '',
+                inviteGame: null,
+                inviteChecking: false,
+                inviteInvalid: false,
             };
         },
         computed: {
             isCreate() {
                 return this.mode === 'create';
+            },
+            inviteId() {
+                const game = this.$route.query.game;
+                return typeof game === 'string' ? game.trim() : '';
+            },
+            isInvite() {
+                return this.inviteId !== '';
+            }
+        },
+        watch: {
+            inviteId() {
+                this.loadInvite();
             }
         },
         mounted() {
             sessionStorage.clear();
+            this.loadInvite();
         },
         methods: {
+            loadInvite() {
+                this.inviteGame = null;
+                this.inviteInvalid = false;
+                this.formError = '';
+                if (!this.isInvite) {
+                    return;
+                }
+                this.inviteChecking = true;
+                axios.get('game/' + encodeURIComponent(this.inviteId))
+                    .then(response => {
+                        this.inviteGame = { title: response.data.title, createdBy: response.data.createdBy };
+                    }).catch(error => {
+                        console.log(error);
+                        this.inviteInvalid = true;
+                    }).finally(() => {
+                        this.inviteChecking = false;
+                    })
+            },
             setMode(mode) {
                 this.mode = mode;
                 this.formError = '';
@@ -129,10 +204,12 @@
                     this.formError = 'Your name must have between 3 and 19 characters.';
                     return;
                 }
-                if (this.isCreate) {
+                if (this.isInvite) {
+                    this.joinGame(this.inviteId);
+                } else if (this.isCreate) {
                     this.createGame();
                 } else {
-                    this.joinGame();
+                    this.joinFromForm();
                 }
             },
             createGame() {
@@ -156,20 +233,29 @@
                         this.loading = false;
                     })
             },
-            joinGame() {
-                if (!this.gameId) {
-                    this.joinError = 'Please enter the game ID.';
+            joinFromForm() {
+                const gameId = parseGameId(this.gameId);
+                if (!gameId) {
+                    this.joinError = 'Please enter the game link or ID.';
                     return;
                 }
+                this.joinGame(gameId);
+            },
+            joinGame(gameId) {
                 this.loading = true;
-                let user = this.buildUser(this.username, this.gameId);
-                axios.put('game/' + this.gameId, user)
+                let user = this.buildUser(this.username, gameId);
+                axios.put('game/' + encodeURIComponent(gameId), user)
                     .then(response => {
                         this.persistLocalData(response.data, user);
                         this.loading = false;
                     }).catch(error => {
                         console.log(error);
-                        this.joinError = 'We could not find a game with that ID. Check it with the admin and try again.';
+                        const message = 'We could not join that game. Check the link with the admin and try again.';
+                        if (this.isInvite) {
+                            this.formError = message;
+                        } else {
+                            this.joinError = message;
+                        }
                         this.loading = false;
                     })
             },

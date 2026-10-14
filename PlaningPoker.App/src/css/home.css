@@ -269,6 +269,27 @@
     outline-offset: 2px;
 }
 
+.inviteBy {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4B5B54;
+}
+
+.linkBtn {
+    align-self: center;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    color: #2457D6;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.linkBtn:hover {
+    text-decoration: underline;
+}
+
 @media only screen and (max-width: 900px) {
     .hero {
         flex: none;

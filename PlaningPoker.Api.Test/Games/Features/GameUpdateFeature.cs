@@ -1,8 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using FluentAssertions;
+using Newtonsoft.Json;
 using PlaningPoker.Api.Games.Models;
 using PlaningPoker.Api.Test.PlaningHub.Fixtures;
 using PlaningPoker.Api.Test.Startup;
 using PlaningPoker.Api.Users.Models;
+using PlaningPoker.Api.Users.Repositories;
+using System.Net;
 
 namespace PlaningPoker.Api.Test.Games.Features
 {
@@ -38,6 +41,23 @@ namespace PlaningPoker.Api.Test.Games.Features
             settings.ScrubInlineGuids();
 
             await Verify(result, settings);
+        }
+
+        [Test]
+        public async Task ReturnNotFoundAndNotCreateTheUserWhenTheGameDoesNotExist()
+        {
+            var fixture = new SetupFixture();
+            client = new PlaningPokerClient(fixture.CreateClient());
+            var userRepository = new UserRepository(fixture.GetSQLiteConnection());
+            var totalUsersBefore = await userRepository.GetTotalNumberUsers();
+
+            var userAddDto = new UsersAddDto("Pedro", "nonExistingGame", false);
+            var serializedDto = JsonConvert.SerializeObject(userAddDto, Formatting.Indented);
+            var action = async () => await client.Put($"{RequestUriBase}/nonExistingGame", serializedDto);
+
+            // The test client throws when the response is not successful.
+            await action.Should().ThrowAsync<HttpRequestException>().Where(e => e.StatusCode == HttpStatusCode.NotFound);
+            (await userRepository.GetTotalNumberUsers()).Should().Be(totalUsersBefore);
         }
     }
 }

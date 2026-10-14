@@ -14,12 +14,12 @@
                     </div>
                     <div class="shareBox">
                         <div class="shareText">
-                            <span class="shareLabel">Share this game ID with your team</span>
-                            <span class="shareId">{{ id }}</span>
+                            <span class="shareLabel">Share this link with your team</span>
+                            <span class="shareId">{{ shareLink }}</span>
                         </div>
                         <button type="button" class="btnCopy" @click="copyUrl">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h8" /></svg>
-                            {{ copied ? 'Copied' : 'Copy ID' }}
+                            {{ copied ? 'Copied' : 'Copy link' }}
                         </button>
                     </div>
                 </section>
@@ -72,10 +72,10 @@
                     <span class="sheetHandle"></span>
                     <div class="sheetText">
                         <h2 id="invite-title">Invite your team</h2>
-                        <p>Share this game ID. Players enter it on the start screen to join.</p>
+                        <p>Share this link. Players only need to enter their name to join.</p>
                     </div>
-                    <div class="sheetId">{{ id }}</div>
-                    <button type="button" class="btnSheetCopy" @click="copyUrl">{{ copied ? 'Copied' : 'Copy ID' }}</button>
+                    <div class="sheetId">{{ shareLink }}</div>
+                    <button type="button" class="btnSheetCopy" @click="copyUrl">{{ copied ? 'Copied' : 'Copy link' }}</button>
                     <button type="button" class="btnSheetDone" @click="closeSheet">Done</button>
                 </div>
             </div>
@@ -91,6 +91,7 @@
     import GameActions from './GameActions.vue';
     import HeaderPlaning from './HeaderPlaning.vue';
     import signalr from '../signalr/signalR.js';
+    import { buildGameLink } from '../utils/gameLink';
 
     const MOBILE_QUERY = '(max-width: 700px)';
 
@@ -111,6 +112,9 @@
             };
         },
         computed: {
+            shareLink() {
+                return this.id ? buildGameLink(this.id) : '';
+            },
             votedCount() {
                 return this.$store.getters.votedCount;
             },
@@ -173,7 +177,7 @@
                     }).catch(error => console.log(error))
             },
             copyUrl() {
-                navigator.clipboard.writeText(this.id).then(() => {
+                navigator.clipboard.writeText(this.shareLink).then(() => {
                     this.copied = true;
                     setTimeout(() => { this.copied = false; }, 2000);
                 }).catch(error => console.log(error));

@@ -58,11 +58,24 @@ public class GameController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Put(string guid, UsersAddDto userAdd)
     {
-        var userAdded = userAdd with { Admin = false };
+        var allCardList = await sender.Send(new GetAllCardsListQuery());
+        try
+        {
+            // The game must exist before adding the user, otherwise an orphan user would be created.
+            await sender.Send(new GetGameByGuidQuery(guid,
+                await sender.Send(new GetUsersGameByGameIdQuery(guid)),
+                allCardList));
+        }
+        catch (InvalidOperationException)
+        {
+            return NotFound("Guid game contains no elements");
+        }
+
+        var userAdded = userAdd with { Admin = false, GameId = guid };
         await sender.Send(new CreateUserCommand(userAdded));
         return Ok(await sender.Send(new GetGameByGuidQuery(guid,
             await sender.Send(new GetUsersGameByGameIdQuery(guid)),
-            await sender.Send(new GetAllCardsListQuery()))));
+            allCardList)));
     }
 
     [HttpGet]

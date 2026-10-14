@@ -1,25 +1,52 @@
-.logo {
-    position: relative;
-    float: left;
-    width: 120px;
-    height: 100%;
-}
-
-.headText {
-    font-family: auto;
-    font-size: 47px;
-    color: #04AA6D;
-    -webkit-text-stroke: 1px #3377ff;
-}
-
 .head {
-    position: fixed;
-    width: 100%;
-    border-bottom: 1px solid gray;
-    height: 100px;
-    line-height: 100px;
-    background-color: #FEFEFE;
-    margin: -8px 0 20px -8px;
-    padding: 0 8px 0 8px;
-    z-index: 999999999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px clamp(16px, 4vw, 32px);
+    background: #073B2C;
+    color: #FFFFFF;
+    font-family: 'Figtree', system-ui, sans-serif;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brandName {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    color: #073B2C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.badge {
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: #E3F3EB;
+    color: #02603E;
+    font-size: 12px;
+    font-weight: 700;
 }

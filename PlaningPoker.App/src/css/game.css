@@ -1,67 +1,131 @@
-.loading {
-    margin-top: 110px;
-}
-
-.content {
-    position: relative;
-    float: left;
-    height: auto;
-    width: 100%;
-    margin-top: 110px;
-}
-
-#customers {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-    #customers td, #customers th {
-        border: 1px solid #ddd;
-        padding: 8px;
-        font-size: 20px;
-    }
-
-#customers tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-#customers tr:hover {
-    background-color: #ddd;
-}
-
-#customers th {
-    padding-top: 12px;
-    padding-bottom: 12px;
+.room {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #F5F6F2;
+    color: #10201B;
+    font-family: 'Figtree', system-ui, sans-serif;
     text-align: left;
-    background-color: #04AA6D;
-    color: white;
-    text-align: center;
 }
 
-.btnGame {
-    background-color: white !important;
-    border: none !important;
-    color: #3377FF !important;
-    font-weight: bold;
-    padding: 3px 30px !important;
-    text-decoration: none !important;
-    margin: 4px 2px !important;
-    cursor: pointer !important;
-    margin-left: 12px !important;
-    font-size: 20px;
+.loading {
+    display: block;
+    margin: 120px auto 0;
 }
 
-.inputGame {
-    background-color: white !important;
-    border: none !important;
-    color: #3377FF !important;
-    font-weight: bold;
-    padding: 3px 30px !important;
-    text-decoration: none !important;
-    margin: 4px 2px !important;
-    margin-left: 12px !important;
-    width: 350px !important;
-    font-size: 18px;
+.roomBody {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+    padding: clamp(16px, 4vw, 32px);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.mainCol {
+    flex: 999 1 560px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.panelCard {
+    background: #FFFFFF;
+    border: 1px solid #DDE4DF;
+    border-radius: 20px;
+    padding: 28px;
+}
+
+.gameInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.gameText {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.gameAdmin {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4B5B54;
+}
+
+.gameText h1 {
+    margin: 0;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+}
+
+.gameText p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.45;
+    color: #4B5B54;
+    overflow-wrap: anywhere;
+}
+
+.shareBox {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #F0F4F1;
+    border-radius: 14px;
+}
+
+.shareText {
+    flex: 1 1 240px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.shareLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4B5B54;
+}
+
+.shareId {
+    font-family: ui-monospace, 'Cascadia Code', Menlo, monospace;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.btnCopy {
+    height: 44px;
+    padding: 0 18px;
+    border: 1.5px solid #B8C4BD;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #10201B;
+    font: 700 15px 'Figtree', system-ui, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btnCopy:hover {
+    background: #F0F4F1;
+}
+
+.btnCopy:focus-visible {
+    outline: 3px solid rgba(36, 87, 214, .45);
+    outline-offset: 2px;
 }

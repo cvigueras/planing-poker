@@ -5,69 +5,80 @@
     left: 0;
     right: 0;
     display: flex;
+    align-items: center;
     justify-content: center;
-    background-color: #000000da;
+    padding: 32px;
+    box-sizing: border-box;
+    background-color: rgba(7, 59, 44, .92);
     z-index: 999999;
+    font-family: 'Figtree', system-ui, sans-serif;
 }
 
 .modal {
-    text-align: center;
-    background-color: white;
-    height: 500px;
-    width: 500px;
-    margin-top: 10%;
-    padding: 60px 0;
+    width: 100%;
+    max-width: 460px;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    color: #10201B;
     border-radius: 20px;
+    padding: 40px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
 }
 
-.close {
-    margin: 10% 0 0 16px;
-    cursor: pointer;
+.modalIcon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #FEF3F2;
+    color: #B42318;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.close-img {
-    width: 25px;
+.modalText {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.check {
-    width: 150px;
+.modalText h2 {
+    margin: 0;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
-h6 {
-    font-weight: 500;
-    font-size: 28px;
-    margin: 20px 0;
-}
-
-p {
+.modalText p {
+    margin: 0;
     font-size: 16px;
-    margin: 20px 0;
+    line-height: 1.5;
+    color: #4B5B54;
 }
 
 .btnModalOk {
-    position: relative;
-    background-color: #FF337D;
-    border: none;
-    color: white;
-    padding: 10px 40px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
+    width: 100%;
+    height: 52px;
+    border: 0;
+    border-radius: 12px;
+    background: #027A4F;
+    color: #FFFFFF;
+    font: 700 17px 'Figtree', system-ui, sans-serif;
     cursor: pointer;
-    margin-top: 90px;
 }
 
-@media only screen and (max-device-width : 900px) {
-    .modal {
-        text-align: center;
-        background-color: white;
-        height: 60%;
-        width: 60%;
-        margin-top: 15%;
-        padding: 60px 0;
-        border-radius: 20px;
-    }
+.btnModalOk:hover {
+    filter: brightness(1.1);
 }
 
-
+.btnModalOk:focus-visible {
+    outline: 3px solid rgba(36, 87, 214, .45);
+    outline-offset: 2px;
+}

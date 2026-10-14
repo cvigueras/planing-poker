@@ -1,38 +1,42 @@
-﻿<template>
-    <ShowMessageModal modaltype="disconnected" v-show="showMessageModal" />
-    <div class="results">Results</div>
-    <hr />
-    <div class="actions">
-        <button class="btnShowVotes" @click="showAllVotes()">Show votes</button>
-        <button class="btnResetMatch" @click="resetMatch()">Reset match</button>
-    </div>
-    <table v-if="isAdmin() == true" id="players">
-        <tr>
-            <th>Player</th>
-            <th>Actions</th>
-            <th>Vote</th>
-        </tr>
-        <tr v-for="user in users" v-bind:key="user.name" :class="{ highlight: user.hasVoted }">
-            <td>{{ user.name }}</td>
-            <td v-if="user.admin == false">
-                <p class="btnDelete" @click="removeUser($event, user.name)" type="submit">Eliminar usuario</p>
-            </td>
-            <td v-if="user.admin == true"></td>
-            <td v-bind:id="`vote-${user.name}`">{{ voteText(user) }}</td>
-        </tr>
-    </table>
-    <table v-if="isAdmin() == false" id="players">
-        <tr>
-            <th>Player</th>
-            <th>Actions</th>
-            <th>Vote</th>
-        </tr>
-        <tr v-for="user in users" v-bind:key="user.name" :class="{ highlight: user.hasVoted }">
-            <td>{{ user.name }}</td>
-            <td></td>
-            <td v-bind:id="`vote-${user.name}`">{{ voteText(user) }}</td>
-        </tr>
-    </table>
+<template>
+    <aside class="players">
+        <ShowMessageModal modaltype="disconnected" v-show="showMessageModal" />
+
+        <div class="playersHead">
+            <div class="playersTitle">
+                <h2>Players</h2>
+                <span class="count">{{ votedCount }} of {{ users.length }} voted</span>
+            </div>
+            <div class="progress"><div class="progressBar" :style="{ width: progress + '%' }"></div></div>
+        </div>
+
+        <div class="rows">
+            <div v-for="user in users" :key="user.name" class="row" :class="{ self: isSelf(user) }">
+                <span class="avatar" :class="{ avatarAdmin: user.admin }">{{ user.name.charAt(0).toUpperCase() }}</span>
+                <div class="who">
+                    <span class="name">{{ user.name }}</span>
+                    <span class="tag">{{ tagFor(user) }}</span>
+                </div>
+
+                <span v-if="revealed" class="valueBox">
+                    <svg v-if="user.value === 'coffee'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10201B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9z" /><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2" /><path d="M8 3v2M12 3v2" /></svg>
+                    <template v-else>{{ user.value || '–' }}</template>
+                </span>
+                <span v-else-if="user.hasVoted" class="chip chipVoted">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                    Voted
+                </span>
+                <span v-else class="chip chipWaiting">Waiting</span>
+
+                <button v-if="isAdmin && !user.admin" type="button" class="btnRemove" :aria-label="'Remove ' + user.name + ' from the game'" @click="removeUser($event, user.name)">Remove</button>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="button" class="btnShowVotes" @click="showAllVotes()">Show votes</button>
+            <button type="button" class="btnResetMatch" @click="resetMatch()">Reset match</button>
+        </div>
+    </aside>
 </template>
 
 <script lang="js">
@@ -48,18 +52,33 @@
             users() {
                 return this.$store.state.users
             },
+            isAdmin() {
+                let gameId = sessionStorage.getItem("gameid");
+                let user = sessionStorage.getItem("username");
+                return this.$store.getters.userIsAdmin(gameId, user);
+            },
+            votedCount() {
+                return this.users.filter(user => this.revealed ? !!user.value : user.hasVoted).length;
+            },
+            progress() {
+                return this.users.length ? Math.round((this.votedCount / this.users.length) * 100) : 0;
+            }
         },
         data() {
             return {
                 showMessageModal: false,
+                revealed: false,
             };
         },
         methods: {
-            voteText(user) {
-                if (user.value) {
-                    return user.value;
+            isSelf(user) {
+                return user.name === sessionStorage.getItem("username");
+            },
+            tagFor(user) {
+                if (user.admin) {
+                    return this.isSelf(user) ? 'Admin · You' : 'Admin';
                 }
-                return user.hasVoted ? "✔" : "";
+                return this.isSelf(user) ? 'You' : 'Player';
             },
             subscribeEvents() {
                 this.signalHandlers = {
@@ -97,6 +116,7 @@
                     },
                     OnReceiveAllVotes: (votes) => {
                         this.$store.commit('UPDATE_USERS', votes);
+                        this.revealed = true;
                         console.info(votes);
                     },
                 };
@@ -109,11 +129,6 @@
                     this.$signalr.off(event, handler);
                 });
             },
-            isAdmin() {
-                let gameId = sessionStorage.getItem("gameid");
-                let user = sessionStorage.getItem("username");
-                return this.$store.getters.userIsAdmin(gameId, user);
-            },
             showAllVotes() {
                 let gameId = sessionStorage.getItem("gameid");
                 this.$signalr
@@ -125,6 +140,8 @@
                 let users = JSON.parse(sessionStorage.getItem("users"))
                     .map(user => ({ ...user, hasVoted: false }));
                 this.$store.commit('UPDATE_USERS', users);
+                this.$store.commit('SET_SELECTED_CARD', null);
+                this.revealed = false;
             },
             removeUser(event, userName) {
                 if (event) {

@@ -1,30 +1,34 @@
-﻿<template>
-    <HeaderPlaning />
+<template>
+    <div class="room">
+        <HeaderPlaning />
 
-    <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
+        <img v-if="loading" src="../assets/loading.gif" alt="Loading" class="loading" />
 
-    <div v-else class="content">
-        <table id="customers">
-            <tr>
-                <th>Admin</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Share Game Id</th>
-            </tr>
-            <tr>
-                <td>{{ createdBy }}</td>
-                <td>{{ title }}</td>
-                <td>{{ description }}</td>
-                <td>
-                    <input type="text" id="urlShare" name="urlValue" :value="urlValue" class="inputGame">
-                    <input type="button" @click="copyUrl" value="Copy id" class="btnGame">
-                </td>
-            </tr>
-        </table>
+        <div v-else class="roomBody">
+            <div class="mainCol">
+                <section class="panelCard gameInfo">
+                    <div class="gameText">
+                        <span class="gameAdmin">Admin: {{ createdBy }}</span>
+                        <h1>{{ title }}</h1>
+                        <p>{{ description }}</p>
+                    </div>
+                    <div class="shareBox">
+                        <div class="shareText">
+                            <span class="shareLabel">Share this game ID with your team</span>
+                            <span class="shareId">{{ id }}</span>
+                        </div>
+                        <button type="button" class="btnCopy" @click="copyUrl">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h8" /></svg>
+                            {{ copied ? 'Copied' : 'Copy ID' }}
+                        </button>
+                    </div>
+                </section>
 
-        <CardList :id="this.id" />
+                <CardList :id="id" />
+            </div>
 
-        <PlayerList />
+            <PlayerList />
+        </div>
     </div>
 </template>
 
@@ -40,15 +44,14 @@
         components: {
             CardList, HeaderPlaning, PlayerList
         },
-        computed: {
-            urlValue() {
-                return this.id;
-            }
-        },
         data() {
             return {
                 loading: false,
-                game: this.game
+                copied: false,
+                id: '',
+                createdBy: '',
+                title: '',
+                description: ''
             };
         },
         created() {
@@ -77,11 +80,8 @@
                 this.createdBy = game.createdBy;
                 this.title = game.title;
                 this.description = game.description;
-                this.roundTime = game.roundTime;
-                this.expiration = game.expiration;
                 sessionStorage.setItem('users', JSON.stringify(game.users));
                 setTimeout(() => {
-                    this.game = game;
                     this.loading = false;
                 }, 1000);
             },
@@ -93,10 +93,10 @@
                     }).catch(error => console.log(error))
             },
             copyUrl() {
-                let copyText = document.getElementById("urlShare");
-                copyText.select();
-                copyText.setSelectionRange(0, 99999);
-                navigator.clipboard.writeText(copyText.value);
+                navigator.clipboard.writeText(this.id).then(() => {
+                    this.copied = true;
+                    setTimeout(() => { this.copied = false; }, 2000);
+                }).catch(error => console.log(error));
             },
             onDisconnect() {
                 this.$signalr.on('UserDisconnected', this.onUserDisconnected);

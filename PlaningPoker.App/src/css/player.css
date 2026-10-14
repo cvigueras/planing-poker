@@ -1,102 +1,210 @@
-#players {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 80%;
-    margin-left: 10%;
-    margin-top: 20px;
-    position: relative;
-    float: left;
+.players {
+    flex: 1 1 340px;
+    max-width: 440px;
+    min-width: 0;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    border: 1px solid #DDE4DF;
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 12px 32px rgba(16, 32, 27, .06);
 }
 
-#players td, #customers th {
-    border: 1px solid #ddd;
-    padding: 8px;
+.playersHead {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-#players tr:nth-child(even) {
-    background-color: #f2f2f2;
+.playersTitle {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-#players tr:hover {
-    background-color: #ddd;
+.playersTitle h2 {
+    margin: 0;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.01em;
 }
 
-#players th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: center;
-    background-color: #3377FF;
-    color: white;
+.count {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4B5B54;
 }
 
-.highlight {
-    color: white !important;
-    font-weight: bold;
-    background-image: linear-gradient( to bottom right, transparent 50%, #b393d3 50% ), linear-gradient(#b393d3, #b393d3), linear-gradient(to top left, transparent 50%, #b393d3 50%);
-    background-repeat: no-repeat;
-    background-size: 10px 40px, calc(100% - 20px) 40px, 10px 40px;
-    background-position: left center, center, right;
+.progress {
+    height: 8px;
+    border-radius: 999px;
+    background: #E7ECE8;
+    overflow: hidden;
 }
 
-td[id^=vote-] {
-    font-size: 20px;
-    color: green;
+.progressBar {
+    height: 100%;
+    border-radius: 999px;
+    background: #027A4F;
+    transition: width .3s;
 }
 
-hr {
-    width: 80%;
-    border: 2px solid lightgray;
+.rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.results {
-    width: 20%;
-    position: relative;
-    float: left;
-    margin: 30px 0 10px 46px;
-    font-size: 32px;
-    color: #04AA6D;
+.row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    min-height: 56px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    border: 1.5px solid #E7ECE8;
+}
+
+.row.self {
+    background: #F0F7F3;
+    border-color: #BFE3D0;
+}
+
+.avatar {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #FFFFFF;
+    background: #2457D6;
+}
+
+.avatarAdmin {
+    background: #027A4F;
+}
+
+.who {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-size: 16px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5B6B64;
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.chipWaiting {
+    background: #EEF1EE;
+    color: #4B5B54;
+}
+
+.chipVoted {
+    background: #E3F3EB;
+    color: #02603E;
+    font-weight: 700;
+}
+
+.valueBox {
+    min-width: 44px;
+    height: 54px;
+    box-sizing: border-box;
+    padding: 0 8px;
+    border: 1.5px solid #D5DDD8;
+    border-radius: 10px;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: #2457D6;
+}
+
+.btnRemove {
+    height: 44px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #B42318;
+    font: 700 14px 'Figtree', system-ui, sans-serif;
+    cursor: pointer;
+}
+
+.btnRemove:hover {
+    background: #FEF3F2;
 }
 
 .actions {
-    position: relative;
-    float: left;
-    width: 80%;
-    margin: 10px 0 0 10%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btnShowVotes,
+.btnResetMatch {
+    height: 52px;
+    border-radius: 12px;
+    font: 700 16px 'Figtree', system-ui, sans-serif;
+    cursor: pointer;
 }
 
 .btnShowVotes {
-    position: relative;
-    float: right;
-    background-color: #04AA6D;
-    border: none;
-    color: white;
-    padding: 10px 40px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
+    flex: 1 1 160px;
+    border: 0;
+    background: #027A4F;
+    color: #FFFFFF;
 }
 
-    .btnShowVotes:hover {
-        background-color: #82D4B6;
-    }
+.btnShowVotes:hover {
+    filter: brightness(1.1);
+}
 
 .btnResetMatch {
-    position: relative;
-    float: right;
-    background-color: #FF337D;
-    border: none;
-    color: white;
-    padding: 10px 40px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-right: 30px;
-    cursor: pointer;
+    flex: 1 1 140px;
+    border: 1.5px solid #B8C4BD;
+    background: #FFFFFF;
+    color: #10201B;
 }
 
-    .btnResetMatch:hover {
-        background-color: #FF99BE;
-    }
+.btnResetMatch:hover {
+    background: #F0F4F1;
+}
+
+.btnRemove:focus-visible,
+.btnShowVotes:focus-visible,
+.btnResetMatch:focus-visible {
+    outline: 3px solid rgba(36, 87, 214, .45);
+    outline-offset: 2px;
+}

@@ -1,62 +1,70 @@
-.cardlist {
-    position: relative;
-    float: left;
-    width: 80%;
-    text-align: center;
-    margin-left: 10%;
-    margin-right: 10%;
-    background-color: aliceblue;
+.deck {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.selected {
-    box-shadow: 0 0px 3px 6px rgba(4, 170, 109, 0.6) !important;
-    position: relative !important;
-    z-index: 9999;
-    pointer-events: auto;
-    transition: all 0.5s ease;
-    transform: scale(1.2, 1.2);
+.deckHead h2 {
+    margin: 0 0 4px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.01em;
 }
 
-.grid-container {
-    position: relative;
-    float: left;
-    height: auto;
-    padding: 14px;
+.deckHead p {
+    margin: 0;
+    font-size: 15px;
+    color: #4B5B54;
 }
 
-.grid-item {
-    background-color: white;
-    height: 80px;
-    line-height: 80px;
-    position: relative;
-    float: left;
-    width: 40px;
-    color: black;
-    font-size: 1.5em;
-    padding: 10px;
-    border-radius: 5%;
-    box-shadow: 0px 5px 15px grey;
+.deckGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 14px;
+    padding-top: 6px;
+}
+
+.deckCard {
+    height: 108px;
+    box-sizing: border-box;
+    border: 1.5px solid #D5DDD8;
+    border-radius: 12px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(16, 32, 27, .08);
     cursor: pointer;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    transition: transform .15s, box-shadow .15s;
+}
+
+.deckCard:hover {
+    border-color: #027A4F;
+}
+
+.deckCard:focus-visible {
+    outline: 3px solid rgba(36, 87, 214, .45);
+    outline-offset: 2px;
+}
+
+.deckCard.selected {
+    border: 2px solid #027A4F;
+    transform: translateY(-6px);
+    box-shadow: 0 0 0 4px rgba(2, 122, 79, .2), 0 10px 18px rgba(16, 32, 27, .18);
+}
+
+.cardNumber {
+    color: #2457D6;
 }
 
 .interrogant {
-    color: #FF5733;
+    color: #B4531A;
 }
 
 .coffee {
-    color: #FF337D;
-}
-
-.cero {
-    color: #A233FF;
-}
-
-.cerocinco {
-    color: #FF337D;
-}
-
-
-.cardNumber {
-    color: #3361FF;
+    color: #10201B;
 }

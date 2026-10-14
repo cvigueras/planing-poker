@@ -148,7 +148,9 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
                 votesList = listVotes;
             });
 
-            await connection.InvokeAsync("ReceiveAllVotes", "anyGameId");
+            // The votes are sent to the game group, so the connection has to join it first.
+            await connection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+            await connection.InvokeAsync("ReceiveAllVotes", game.Id);
             await Task.Delay(200);
 
             var expectedVotesList = new List<VotesUsersReadDto>()
@@ -222,7 +224,7 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
 
         private async Task GivenThreeUsers(Game game)
         {
-            var user1 = User.Create("Juan", game.Id, "anyConnectionId", false, Vote.Create("3"));
+            var user1 = User.Create("Carlos", game.Id, "anyConnectionId", true, Vote.Create("3"));
             await userRepository.Add(user1);
             var user2 = User.Create("Juan", game.Id, "anyConnectionId", false, Vote.Create("5"));
             await userRepository.Add(user2);

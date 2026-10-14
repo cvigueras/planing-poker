@@ -24,10 +24,8 @@ jobs:
       - name: Build
         run: dotnet build PlaningPoker.sln --no-restore --configuration Release
 
-      # ConsiderReceivedAllVotesByGameIdAsync is excluded: it already failed before CI existed
-      # (its test data is inconsistent). Remove the filter once the test is fixed.
       - name: Test
-        run: dotnet test PlaningPoker.sln --no-build --configuration Release --filter "Name!=ConsiderReceivedAllVotesByGameIdAsync"
+        run: dotnet test PlaningPoker.sln --no-build --configuration Release
 
   frontend:
     name: Frontend (lint and build)

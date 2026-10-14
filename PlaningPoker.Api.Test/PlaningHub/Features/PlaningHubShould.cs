@@ -220,6 +220,30 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
         }
 
         [Test]
+        public async Task NotifyTheOthersThatAPlayerHasLeftTheGameBothWhenLeavingAndWhenRemovedByTheAdmin()
+        {
+            var game = Game.Create("userLeftGameId", "Carlos", "Release1", "Description", 60, 60);
+            await gameRepository.Add(game);
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create(string.Empty)));
+            await userRepository.Add(User.Create("Pedro", game.Id, string.Empty, false, Vote.Create(string.Empty)));
+            await userRepository.Add(User.Create("Ana", game.Id, string.Empty, false, Vote.Create(string.Empty)));
+            var adminConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var pedroConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var anaConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var usersWhoLeft = new List<string>();
+            adminConnection.On<string>("OnUserLeft", name => usersWhoLeft.Add(name));
+            await adminConnection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+            await pedroConnection.InvokeAsync("JoinGroup", game.Id, "Pedro");
+            await anaConnection.InvokeAsync("JoinGroup", game.Id, "Ana");
+
+            await adminConnection.InvokeAsync("RemoveFromGroup", "Ana", game.Id);
+            await pedroConnection.InvokeAsync("LeaveGame", game.Id);
+            await Task.Delay(200);
+
+            usersWhoLeft.Should().Equal("Ana", "Pedro");
+        }
+
+        [Test]
         public async Task PassTheAdminToAnotherPlayerWhenTheAdminLeavesTheGame()
         {
             var game = Game.Create("leaveAdminGameId", "Carlos", "Release1", "Description", 60, 60);

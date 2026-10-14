@@ -1,5 +1,7 @@
 .login {
-    min-height: 100vh;
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
     display: flex;
     flex-wrap: wrap;
     background: #F5F6F2;

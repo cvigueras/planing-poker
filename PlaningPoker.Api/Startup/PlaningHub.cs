@@ -69,6 +69,7 @@ public class PlaningHub : Hub
             await Groups.RemoveFromGroupAsync(user.ConnectionId, user.GameId);
         }
         await Clients.Group(gameId).SendAsync("OnRemoveGroup", userName);
+        await Clients.Group(gameId).SendAsync("OnUserLeft", userName);
     }
 
     public async Task LeaveGame(string gameId)
@@ -80,6 +81,7 @@ public class PlaningHub : Hub
         await userRepository.DeleteByGameIdAndName(gameId, caller.Name);
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameId);
         await Clients.Group(gameId).SendAsync("OnRemoveGroup", caller.Name);
+        await Clients.Group(gameId).SendAsync("OnUserLeft", caller.Name);
 
         if (caller.Admin)
             await PassAdminToNextPlayer(gameId);

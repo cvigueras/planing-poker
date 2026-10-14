@@ -1,0 +1,15 @@
+**/bin
+**/obj
+**/node_modules
+**/.vs
+**/*.user
+**/*.db
+**/*.db-journal
+.git
+.github
+.gitignore
+PlaningPoker.App
+PlaningPoker.Api.Test
+*.md
+Dockerfile
+fly.toml

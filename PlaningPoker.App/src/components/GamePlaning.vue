@@ -88,6 +88,13 @@
 
         <ShowMessageModal v-if="confirmLeaveOpen" modaltype="leave" :busy="leaving" @confirm="leaveGame" @close-modal="cancelLeave" />
     </div>
+
+    <div class="toasts" aria-live="polite">
+        <div v-for="toast in toasts" :key="toast.id" class="toast" role="status">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
+            <span>{{ toast.text }}</span>
+        </div>
+    </div>
 </template>
 
 
@@ -103,6 +110,8 @@
     import { buildGameLink } from '../utils/gameLink';
 
     const MOBILE_QUERY = '(max-width: 700px)';
+    const TOAST_DURATION = 4000;
+    let toastCounter = 0;
 
     export default {
         components: {
@@ -116,6 +125,7 @@
                 sheetOpen: false,
                 confirmLeaveOpen: false,
                 leaving: false,
+                toasts: [],
                 id: '',
                 createdBy: '',
                 title: '',
@@ -150,6 +160,7 @@
         },
         beforeUnmount() {
             this.$signalr.off('UserDisconnected', this.onUserDisconnected);
+            this.$signalr.off('OnUserLeft', this.onUserLeft);
             this.viewport.removeEventListener('change', this.onViewportChange);
         },
         methods: {
@@ -237,9 +248,20 @@
             },
             onDisconnect() {
                 this.$signalr.on('UserDisconnected', this.onUserDisconnected);
+                this.$signalr.on('OnUserLeft', this.onUserLeft);
             },
             onUserDisconnected(userName) {
                 console.log(userName + " has been disconnected");
+            },
+            onUserLeft(userName) {
+                this.showToast(userName + ' has left the game');
+            },
+            showToast(text) {
+                const toast = { id: ++toastCounter, text };
+                this.toasts.push(toast);
+                setTimeout(() => {
+                    this.toasts = this.toasts.filter(item => item.id !== toast.id);
+                }, TOAST_DURATION);
             }
         },
     }

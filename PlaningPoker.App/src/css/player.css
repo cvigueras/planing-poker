@@ -2,6 +2,7 @@
     flex: 1 1 420px;
     max-width: 520px;
     min-width: 0;
+    max-height: 100%;
     box-sizing: border-box;
     background: #FFFFFF;
     border: 1px solid #DDE4DF;
@@ -58,6 +59,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .row {
@@ -153,6 +156,18 @@
     color: #2457D6;
 }
 
+/* Empty space where Remove would be, so Voted/Waiting stays in the same column in every row */
+.btnRemove,
+.removeSlot {
+    flex: none;
+    box-sizing: border-box;
+    width: 78px;
+}
+
+.removeSlot {
+    height: 44px;
+}
+
 .btnRemove {
     height: 44px;
     padding: 0 12px;
@@ -181,6 +196,7 @@
 
 /* Mobile: the list lives in the scrollable area, without the card look */
 .players.mobileList {
+    max-height: none;
     flex: none;
     width: 100%;
     max-width: none;
@@ -190,6 +206,10 @@
     border: 0;
     border-radius: 0;
     box-shadow: none;
+}
+
+.mobileList .rows {
+    overflow-y: visible;
 }
 
 .mobileList .row {
@@ -203,6 +223,11 @@
 
 .mobileList .valueBox {
     height: 52px;
+}
+
+.mobileList .removeSlot {
+    width: 44px;
+    margin-right: -6px;
 }
 
 .mobileList .btnRemove {

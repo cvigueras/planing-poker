@@ -31,7 +31,16 @@
                 <template v-if="isInvite">
                     <div v-if="inviteChecking" class="intro">
                         <h2>Checking your invite…</h2>
+                        <p v-if="inviteRetrying">The server is waking up, this can take up to a minute.</p>
                     </div>
+
+                    <template v-else-if="inviteServerError">
+                        <div class="intro">
+                            <h2>We could not reach the server</h2>
+                            <p>Check your connection and try again.</p>
+                        </div>
+                        <button type="button" class="linkBtn" @click="loadInvite()">Try again</button>
+                    </template>
 
                     <template v-else-if="inviteInvalid">
                         <div class="intro">
@@ -133,6 +142,9 @@
     import gameFactory from '../factories/game'
     import { parseGameId } from '../utils/gameLink'
 
+    const INVITE_RETRIES = 6;
+    const INVITE_RETRY_DELAY = 5000;
+
     export default {
         components: {
             InfoHome
@@ -150,6 +162,8 @@
                 inviteGame: null,
                 inviteChecking: false,
                 inviteInvalid: false,
+                inviteServerError: false,
+                inviteRetrying: false,
             };
         },
         computed: {
@@ -177,9 +191,11 @@
             sessionStorage.clear();
         },
         methods: {
-            loadInvite() {
+            loadInvite(attempt = 0) {
                 this.inviteGame = null;
                 this.inviteInvalid = false;
+                this.inviteServerError = false;
+                this.inviteRetrying = attempt > 0;
                 this.formError = '';
                 if (!this.isInvite) {
                     return;
@@ -188,11 +204,20 @@
                 axios.get('game/' + encodeURIComponent(this.inviteId))
                     .then(response => {
                         this.inviteGame = { title: response.data.title, createdBy: response.data.createdBy };
+                        this.inviteChecking = false;
                     }).catch(error => {
                         console.log(error);
-                        this.inviteInvalid = true;
-                    }).finally(() => {
-                        this.inviteChecking = false;
+                        // Only a 404 means the game does not exist; anything else (the free server waking up,
+                        // no connection...) is retried a few times before giving up.
+                        if (error.response && error.response.status === 404) {
+                            this.inviteInvalid = true;
+                            this.inviteChecking = false;
+                        } else if (attempt < INVITE_RETRIES) {
+                            setTimeout(() => this.loadInvite(attempt + 1), INVITE_RETRY_DELAY);
+                        } else {
+                            this.inviteServerError = true;
+                            this.inviteChecking = false;
+                        }
                     })
             },
             setMode(mode) {

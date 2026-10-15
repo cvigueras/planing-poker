@@ -353,6 +353,56 @@ namespace PlaningPoker.Api.Test.PlaningHub.Features
             await action.Should().ThrowAsync<InvalidOperationException>();
         }
 
+        [Test]
+        public async Task ShowTheVotesAutomaticallyWhenEveryoneHasVoted()
+        {
+            var game = await GIvenAGame();
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create(string.Empty)));
+            await userRepository.Add(User.Create("Pedro", game.Id, string.Empty, false, Vote.Create(string.Empty)));
+            var votes = new VoteRepository(connectionSql);
+            var carlosConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var pedroConnection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var received = new List<List<VotesUsersReadDto>>();
+            carlosConnection.On<List<VotesUsersReadDto>>("OnReceiveAllVotes", list => received.Add(list));
+            pedroConnection.On<List<VotesUsersReadDto>>("OnReceiveAllVotes", list => { });
+            await carlosConnection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+            await pedroConnection.InvokeAsync("JoinGroup", game.Id, "Pedro");
+
+            await votes.AddVoteByUserNameAndGroupIdAsync("Carlos", game.Id, "3");
+            await carlosConnection.InvokeAsync("NotifyUserHasVoted", game.Id, "Carlos", "3");
+            await Task.Delay(200);
+            received.Should().BeEmpty();
+
+            await votes.AddVoteByUserNameAndGroupIdAsync("Pedro", game.Id, "5");
+            await pedroConnection.InvokeAsync("NotifyUserHasVoted", game.Id, "Pedro", "5");
+            await Task.Delay(200);
+
+            received.Should().ContainSingle();
+            received.Single().Select(vote => (vote.Name, vote.Value)).Should()
+                .BeEquivalentTo(new[] { ("Carlos", "3"), ("Pedro", "5") });
+        }
+
+        [Test]
+        public async Task NotShowTheVotesWhileSomeoneHasNotVoted()
+        {
+            var game = await GIvenAGame();
+            await userRepository.Add(User.Create("Carlos", game.Id, string.Empty, true, Vote.Create(string.Empty)));
+            await userRepository.Add(User.Create("Pedro", game.Id, string.Empty, false, Vote.Create(string.Empty)));
+            await userRepository.Add(User.Create("Paco", game.Id, string.Empty, false, Vote.Create(string.Empty)));
+            var votes = new VoteRepository(connectionSql);
+            connection = await PlaningHubStartup.StartHubConnectionAsync(server.CreateHandler(), "planing");
+            var revealed = false;
+            connection.On<List<VotesUsersReadDto>>("OnReceiveAllVotes", _ => revealed = true);
+            await connection.InvokeAsync("JoinGroup", game.Id, "Carlos");
+
+            await votes.AddVoteByUserNameAndGroupIdAsync("Carlos", game.Id, "3");
+            await votes.AddVoteByUserNameAndGroupIdAsync("Pedro", game.Id, "5");
+            await connection.InvokeAsync("NotifyUserHasVoted", game.Id, "Pedro", "5");
+            await Task.Delay(200);
+
+            revealed.Should().BeFalse();
+        }
+
         private async Task GivenThreeUsers(Game game)
         {
             var user1 = User.Create("Carlos", game.Id, "anyConnectionId", true, Vote.Create("3"));

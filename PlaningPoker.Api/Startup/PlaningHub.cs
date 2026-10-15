@@ -23,13 +23,36 @@ public class PlaningHub : Hub
     public async Task ReceiveAllVotes(string gameId)
     {
         var votes = await voteRepository.GetAllVotesByGroupIdAsync(gameId);
-        var votesDTo = mapper.Map<List<VotesUsersReadDto>>(votes);
-        await Clients.Group(gameId).SendAsync("OnReceiveAllVotes", votesDTo);
+        await SendAllVotes(gameId, votes);
     }
 
     public async Task NotifyUserHasVoted(string group, string name, string vote)
     {        
         await Clients.Group(group).SendAsync("OnNotifyUserHasVoted", name, vote);
+        await ShowVotesWhenEveryoneHasVoted(group);
+    }
+
+    // The vote is saved by the API before the player notifies it, so the stored votes are already up to date.
+    private async Task ShowVotesWhenEveryoneHasVoted(string gameId)
+    {
+        IEnumerable<VotesUsers> votes;
+        try
+        {
+            votes = (await voteRepository.GetAllVotesByGroupIdAsync(gameId)).ToList();
+        }
+        catch (InvalidOperationException)
+        {
+            return; // The game has no players.
+        }
+
+        if (votes.All(vote => !string.IsNullOrEmpty(vote.Vote.Value)))
+            await SendAllVotes(gameId, votes);
+    }
+
+    private async Task SendAllVotes(string gameId, IEnumerable<VotesUsers> votes)
+    {
+        var votesDTo = mapper.Map<List<VotesUsersReadDto>>(votes);
+        await Clients.Group(gameId).SendAsync("OnReceiveAllVotes", votesDTo);
     }
 
     public async Task ResetVotes(string gameId)

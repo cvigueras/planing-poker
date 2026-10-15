@@ -34,7 +34,7 @@ public static class DataBaseConnection
             Password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : null,
             Database = uri.AbsolutePath.TrimStart('/'),
             // Neon requires SSL; local Postgres (localhost or a docker service name) does not have it.
-            SslMode = uri.IsLoopback || !uri.Host.Contains('.') ? SslMode.Disable : SslMode.Require,
+            SslMode = uri.IsLoopback || !uri.Host.Contains('.') ? SslMode.Disable : SslMode.VerifyFull,
         }.ConnectionString;
     }
 }

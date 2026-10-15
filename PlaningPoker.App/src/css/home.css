@@ -1,7 +1,10 @@
 .login {
     position: fixed;
     inset: 0;
-    overflow: hidden;
+    /* No scroll while everything fits; on small screens (hero + form stacked) it scrolls so the buttons are reachable. */
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-wrap: wrap;
     background: #F5F6F2;

@@ -14,7 +14,8 @@ COPY --from=build /app/publish .
 
 ENV ASPNETCORE_URLS=http://+:8080
 
-# The API creates its SQLite database (./PlaningPoker.db) in the working directory when it starts.
+# With DATABASE_URL (Postgres, e.g. Neon on Render) the API uses it; otherwise it creates a SQLite database
+# (./PlaningPoker.db) in the working directory when it starts.
 # /data is where the persistent volume is mounted (see [[mounts]] in fly.toml).
 RUN mkdir -p /data
 WORKDIR /data

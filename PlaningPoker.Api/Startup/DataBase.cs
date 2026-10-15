@@ -1,44 +1,44 @@
-﻿using Dapper;
+using Dapper;
 using PlaningPoker.Api.Cards.Models;
-using System.Data.SQLite;
+using System.Data;
 
 namespace PlaningPoker.Api.Startup
 {
     public class DataBase
     {
-        public static void Create()
+        public static void Create(IDbConnection connection, bool postgres)
         {
-            var connection = new SQLiteConnection("Data Source=./PlaningPoker.db");
+            // The admin flag is stored as text ("True" / "False"), so it is VARCHAR in Postgres and not BOOLEAN.
+            var cardId = postgres ? "SERIAL PRIMARY KEY" : "INTEGER PRIMARY KEY AUTOINCREMENT";
+            var bigInt = postgres ? "BIGINT" : "INTEGER";
+            var admin = postgres ? "VARCHAR(5)" : "BOOLEAN";
 
-            connection.Execute(@"CREATE TABLE IF NOT EXISTS Games 
+            connection.Execute($@"CREATE TABLE IF NOT EXISTS Games 
                 (Id VARCHAR(60) NOT NULL,
                 CreatedBy VARCHAR(60) NOT NULL,
                 Title VARCHAR(100) NOT NULL,
                 Description VARCHAR(200) NOT NULL,
-                RoundTime INTEGER NOT NULL,
-                Expiration INTEGER NOT NULL)"
+                RoundTime {bigInt} NOT NULL,
+                Expiration {bigInt} NOT NULL)"
             );
 
-            connection.Execute(@"CREATE TABLE IF NOT EXISTS Users(
+            connection.Execute($@"CREATE TABLE IF NOT EXISTS Users(
                 ConnectionId VARCHAR(200),
                 Name VARCHAR(20) NOT NULL,
                 GameId VARCHAR(60) NOT NULL,
-                Admin BOOLEAN,
+                Admin {admin},
                 Vote VARCHAR(10) NOT NULL)"
             );
 
-            connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            connection.Execute($@"CREATE TABLE IF NOT EXISTS Cards(
+                Id {cardId},
                 Value VARCHAR(5) NOT NULL)"
             );
 
             Seed(connection);
-
-            connection.Close();
-            connection.Dispose();
         }
 
-        private static void Seed(SQLiteConnection connection)
+        private static void Seed(IDbConnection connection)
         {
             if (ExistTableCards(connection)) return;
             var cards = new List<Card>
@@ -60,9 +60,9 @@ namespace PlaningPoker.Api.Startup
             connection.Execute("INSERT INTO Cards(Value) VALUES (@Value)", cards);
         }
 
-        private static bool ExistTableCards(SQLiteConnection connection)
+        private static bool ExistTableCards(IDbConnection connection)
         {
-            var exist = connection.Query<dynamic>("SELECT COUNT(*) as Count FROM Cards");
+            var exist = connection.Query<dynamic>("SELECT COUNT(*) AS \"Count\" FROM Cards");
             return exist.Single().Count > 1;
         }
     }

@@ -1,21 +1,21 @@
 ﻿using Dapper;
 using PlaningPoker.Api.Cards.Models;
-using System.Data.SQLite;
+using System.Data;
 
 namespace PlaningPoker.Api.Cards.Repositories;
 
 public class CardRepository : ICardRepository
 {
-    private readonly SQLiteConnection connection;
+    private readonly IDbConnection connection;
 
-    public CardRepository(SQLiteConnection connection)
+    public CardRepository(IDbConnection connection)
     {
         this.connection = connection;
     }
 
     public async Task<IEnumerable<Card>> GetAll()
     {
-        var rawData = await connection.QueryAsync<dynamic>($"SELECT * FROM Cards");
+        var rawData = await connection.QueryAsync<dynamic>("SELECT Id AS \"Id\", Value AS \"Value\" FROM Cards");
         return ToCardList(rawData);
     }
 

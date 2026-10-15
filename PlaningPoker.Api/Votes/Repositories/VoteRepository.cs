@@ -1,14 +1,14 @@
 ﻿using Dapper;
 using PlaningPoker.Api.Votes.Models;
-using System.Data.SQLite;
+using System.Data;
 
 namespace PlaningPoker.Api.Votes.Repositories
 {
     public class VoteRepository : IVoteRepository
     {
-        private SQLiteConnection connection;
+        private IDbConnection connection;
 
-        public VoteRepository(SQLiteConnection connection)
+        public VoteRepository(IDbConnection connection)
         {
             this.connection = connection;
         }
@@ -22,7 +22,7 @@ namespace PlaningPoker.Api.Votes.Repositories
         public async Task<IEnumerable<VotesUsers>> GetAllVotesByGroupIdAsync(string gameId)
         {
             var rawData = (await connection.QueryAsync<dynamic>(
-                "SELECT * FROM Users WHERE GameId = @gameId", new { gameId })).ToList();
+                "SELECT ConnectionId AS \"ConnectionId\", Name AS \"Name\", GameId AS \"GameId\", Admin AS \"Admin\", Vote AS \"Vote\" FROM Users WHERE GameId = @gameId", new { gameId })).ToList();
             return ToVotesUsers(rawData);
         }
 
@@ -36,7 +36,7 @@ namespace PlaningPoker.Api.Votes.Repositories
             foreach (var userItem in dataList)
             {
                 var vote = userItem.Vote == null ? string.Empty : userItem.Vote;
-                var user = VotesUsers.Create(userItem.Name, userItem.GameId, userItem.Admin, Vote.Create(vote));
+                var user = VotesUsers.Create(userItem.Name, userItem.GameId, Convert.ToBoolean(userItem.Admin), Vote.Create(vote));
                 listVotesUsers.Add(user);
             }
             return listVotesUsers;

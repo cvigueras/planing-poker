@@ -1,15 +1,15 @@
 ﻿using Dapper;
 using PlaningPoker.Api.Users.Models;
 using PlaningPoker.Api.Votes.Models;
-using System.Data.SQLite;
+using System.Data;
 
 namespace PlaningPoker.Api.Users.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly SQLiteConnection connection;
+    private readonly IDbConnection connection;
 
-    public UserRepository(SQLiteConnection connection)
+    public UserRepository(IDbConnection connection)
     {
         this.connection = connection;
     }
@@ -17,7 +17,7 @@ public class UserRepository : IUserRepository
     public async Task<User> GetByNameAndGameId(string name, string gameId)
     {
         var rawData = (await connection.QueryAsync<dynamic>(
-            "SELECT * FROM Users WHERE GameId = @gameId AND Name = @name", new { gameId, name })).First();
+            "SELECT ConnectionId AS \"ConnectionId\", Name AS \"Name\", GameId AS \"GameId\", Admin AS \"Admin\", Vote AS \"Vote\" FROM Users WHERE GameId = @gameId AND Name = @name", new { gameId, name })).First();
         return ToUser(rawData);
     }
 
@@ -32,13 +32,13 @@ public class UserRepository : IUserRepository
     public async Task<IEnumerable<User>> GetUsersGameByGameId(string gameId)
     {
         var rawData = (await connection.QueryAsync<dynamic>(
-            "SELECT * FROM Users WHERE GameId = @gameId", new { gameId })).ToList();
+            "SELECT ConnectionId AS \"ConnectionId\", Name AS \"Name\", GameId AS \"GameId\", Admin AS \"Admin\", Vote AS \"Vote\" FROM Users WHERE GameId = @gameId", new { gameId })).ToList();
         return ToListUser(rawData);
     }
     public async Task<User> GetByConnectionId(string connectionId)
     {
         var rawData = (await connection.QueryAsync<dynamic>(
-            "SELECT * FROM Users WHERE ConnectionId = @connectionId", new { connectionId })).First();
+            "SELECT ConnectionId AS \"ConnectionId\", Name AS \"Name\", GameId AS \"GameId\", Admin AS \"Admin\", Vote AS \"Vote\" FROM Users WHERE ConnectionId = @connectionId", new { connectionId })).First();
         return ToUser(rawData);
     }
 
@@ -83,7 +83,7 @@ public class UserRepository : IUserRepository
 
     private User ToUser(dynamic rawData)
     {
-        return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId, rawData.Admin, Vote.Create(rawData.Vote));
+        return User.Create(rawData.Name, rawData.GameId, rawData.ConnectionId, Convert.ToBoolean(rawData.Admin), Vote.Create(rawData.Vote));
     }
 
     private IEnumerable<User> ToListUser(IEnumerable<dynamic> rawData)
@@ -96,7 +96,7 @@ public class UserRepository : IUserRepository
         foreach (var userItem in dataList)
         {
             var vote = userItem.Vote == null ? string.Empty : userItem.Vote;
-            var user = User.Create(userItem.Name, userItem.GameId, string.Empty, userItem.Admin, Vote.Create(vote));
+            var user = User.Create(userItem.Name, userItem.GameId, string.Empty, Convert.ToBoolean(userItem.Admin), Vote.Create(vote));
             listUsers.Add(user);
         }
         return listUsers;

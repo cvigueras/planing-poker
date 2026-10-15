@@ -6,7 +6,7 @@ services:
     plan: free
     region: frankfurt
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /cards
+    healthCheckPath: /health
     envVars:
       - key: PORT
         value: "8080"

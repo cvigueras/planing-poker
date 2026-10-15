@@ -71,6 +71,8 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapHub<PlaningHub>("/hubs/planing");
+            // Light endpoint (no database) for Render's health check and an external pinger.
+            endpoints.MapGet("/health", () => Results.Ok("ok"));
         });
 
         app.Run();

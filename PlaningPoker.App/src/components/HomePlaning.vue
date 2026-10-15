@@ -96,8 +96,8 @@
                             <input id="gamename" v-model.trim="gamename" type="text" placeholder="e.g. Sprint 42 planning" class="inputHome" required>
                         </div>
                         <div class="field">
-                            <label for="description">Description</label>
-                            <input id="description" v-model.trim="description" type="text" placeholder="What are you estimating?" class="inputHome" required>
+                            <label for="description">Description <span class="hint">(optional)</span></label>
+                            <input id="description" v-model.trim="description" type="text" placeholder="What are you estimating?" class="inputHome">
                         </div>
                     </template>
 
@@ -216,8 +216,8 @@
                 }
             },
             createGame() {
-                if (!this.gamename || !this.description) {
-                    this.formError = 'Please fill in the game name and the description.';
+                if (!this.gamename) {
+                    this.formError = 'Please fill in the game name.';
                     return;
                 }
                 this.loading = true;

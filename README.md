@@ -6,7 +6,7 @@ Real-time Planning Poker web app. An anonymous user creates a game, shares its u
 
 | Layer | Technologies |
 |-------|--------------|
-| Backend (`PlaningPoker.Api`) | .NET 7, ASP.NET Core Web API, SignalR, MediatR (CQRS), AutoMapper, Dapper, SQLite, Swagger |
+| Backend (`PlaningPoker.Api`) | .NET 10, ASP.NET Core Web API, SignalR, MediatR (CQRS), AutoMapper, Dapper, SQLite, Swagger |
 | Frontend (`PlaningPoker.App`) | Vue 3, Vuex, Vue Router, Axios, `@aspnet/signalr` (Vue CLI 5) |
 | Tests (`PlaningPoker.Api.Test`) | NUnit, FluentAssertions, NSubstitute, AutoFixture, Verify, `Microsoft.AspNetCore.Mvc.Testing` |
 
@@ -23,7 +23,7 @@ Each API feature folder is organised as `Controllers / Commands / Queries / Mode
 
 ## Prerequisites
 
-- [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [Node.js](https://nodejs.org/) and npm
 - ASP.NET Core HTTPS development certificate (see [HTTPS certificate](#https-certificate))
 

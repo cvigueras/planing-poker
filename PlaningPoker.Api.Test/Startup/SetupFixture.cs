@@ -8,6 +8,7 @@ using PlaningPoker.Api.Games.Repositories;
 using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Users.Repositories;
 using PlaningPoker.Api.Votes.Repositories;
+using System.Data;
 using System.Data.SQLite;
 
 namespace PlaningPoker.Api.Test.Startup;
@@ -36,6 +37,7 @@ public class SetupFixture : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(connection);
+            services.AddSingleton<IDbConnection>(connection);
             services.AddSingleton<IGameRepository, GameRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IGuidGenerator, GuidGenerator>();

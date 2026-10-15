@@ -1,0 +1,18 @@
+# Render blueprint of the API (free plan, Docker). The database is Postgres on Neon (DATABASE_URL).
+services:
+  - type: web
+    name: planing-poker-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /cards
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: Enviroments__ClientPolicyUrl
+        value: https://cvigueras.github.io
+      - key: DATABASE_URL
+        sync: false # secret: paste the Neon connection string in the Render dashboard

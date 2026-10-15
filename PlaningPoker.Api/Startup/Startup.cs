@@ -4,7 +4,7 @@ using PlaningPoker.Api.Helpers;
 using PlaningPoker.Api.Users.Repositories;
 using PlaningPoker.Api.Votes.Repositories;
 using System.Configuration;
-using System.Data.SQLite;
+using System.Data;
 using Microsoft.Extensions.Configuration;
 
 namespace PlaningPoker.Api.Startup;
@@ -27,14 +27,18 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(Program).Assembly));
-        services.AddScoped(_ => new SQLiteConnection("Data Source=./PlaningPoker.db"));
+        var databaseUrl = ConfigRoot["DATABASE_URL"];
+        services.AddScoped<IDbConnection>(_ => DataBaseConnection.Create(databaseUrl));
         services.AddAutoMapper(typeof(MapperConfig));
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IGuidGenerator, GuidGenerator>();
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IVoteRepository, VoteRepository>();
-        DataBase.Create();
+        using (var connection = DataBaseConnection.Create(databaseUrl))
+        {
+            DataBase.Create(connection, DataBaseConnection.IsPostgres(databaseUrl));
+        }
         services.AddCors(
             x =>
             {

@@ -1,22 +1,22 @@
 ﻿using Dapper;
 using PlaningPoker.Api.Games.Models;
 using System;
-using System.Data.SQLite;
+using System.Data;
 
 namespace PlaningPoker.Api.Games.Repositories;
 
 public class GameRepository : IGameRepository
 {
-    private readonly SQLiteConnection connection;
+    private readonly IDbConnection connection;
 
-    public GameRepository(SQLiteConnection connection)
+    public GameRepository(IDbConnection connection)
     {
         this.connection = connection;
     }
 
     public async Task<Game> GetByGuid(string guid)
     {
-        var rawData = (await connection.QueryAsync<dynamic>("SELECT * FROM Games WHERE Id = @guid", new { guid })).First();
+        var rawData = (await connection.QueryAsync<dynamic>("SELECT Id AS \"Id\", CreatedBy AS \"CreatedBy\", Title AS \"Title\", Description AS \"Description\", RoundTime AS \"RoundTime\", Expiration AS \"Expiration\" FROM Games WHERE Id = @guid", new { guid })).First();
         return ToGame(rawData);
 
     }

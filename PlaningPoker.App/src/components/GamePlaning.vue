@@ -89,6 +89,11 @@
         <ShowMessageModal v-if="confirmLeaveOpen" modaltype="leave" :busy="leaving" @confirm="leaveGame" @close-modal="cancelLeave" />
     </div>
 
+    <div v-if="reconnecting" class="reconnecting" role="alert">
+        <span class="reconnectingSpinner" aria-hidden="true"></span>
+        <span>Reconnecting&hellip;</span>
+    </div>
+
     <div class="toasts" aria-live="polite">
         <div v-for="toast in toasts" :key="toast.id" class="toast" role="status">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
@@ -125,6 +130,7 @@
                 sheetOpen: false,
                 confirmLeaveOpen: false,
                 leaving: false,
+                reconnecting: signalr.isReconnecting(),
                 toasts: [],
                 id: '',
                 createdBy: '',
@@ -157,8 +163,10 @@
             this.$store.commit('SET_SELECTED_CARD', null);
             this.getGame();
             this.onDisconnect();
+            this.stopWatchingConnection = signalr.onReconnecting(value => { this.reconnecting = value; });
         },
         beforeUnmount() {
+            this.stopWatchingConnection();
             this.$signalr.off('UserDisconnected', this.onUserDisconnected);
             this.$signalr.off('OnUserLeft', this.onUserLeft);
             this.viewport.removeEventListener('change', this.onViewportChange);

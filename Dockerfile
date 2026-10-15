@@ -1,14 +1,14 @@
 # Image of the API (PlaningPoker.Api), used to deploy it on Fly.io (see fly.toml).
 # Build context: the root of the repository.
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY PlaningPoker.Api/PlaningPoker.Api.csproj PlaningPoker.Api/
 RUN dotnet restore PlaningPoker.Api/PlaningPoker.Api.csproj
 COPY PlaningPoker.Api/ PlaningPoker.Api/
 RUN dotnet publish PlaningPoker.Api/PlaningPoker.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 

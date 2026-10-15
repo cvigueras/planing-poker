@@ -14,11 +14,28 @@ const retryDelays = [0, 2000, 5000, 10000, 30000]
 
 let startPromise = null
 let stoppedByUser = false
+let reconnecting = false
+const listeners = new Set()
+
+const setReconnecting = (value) => {
+    reconnecting = value
+    listeners.forEach((callback) => callback(value))
+}
+
+// Calls back with true when the connection is lost and with false when it is back (and the game rejoined).
+// Returns the function that stops listening.
+const onReconnecting = (callback) => {
+    listeners.add(callback)
+    return () => listeners.delete(callback)
+}
+
+const isReconnecting = () => reconnecting
 
 signal.onclose((err) => {
     startPromise = null
     console.log("You have been disconnected", err)
     if (!stoppedByUser) {
+        setReconnecting(true)
         reconnect()
     }
 })
@@ -36,8 +53,10 @@ const reconnect = async (attempt = 0) => {
     try {
         await start()
         await rejoin()
+        setReconnecting(false)
     } catch (err) {
         if (stoppedByUser) {
+            setReconnecting(false)
             return
         }
         const delay = retryDelays[Math.min(attempt, retryDelays.length - 1)]
@@ -67,5 +86,7 @@ const stop = () => {
 export default {
     signal,
     start,
-    stop
+    stop,
+    onReconnecting,
+    isReconnecting
 }

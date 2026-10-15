@@ -392,3 +392,36 @@
 .toast svg {
     flex: none;
 }
+
+.reconnecting {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 110;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: #FFF4DB;
+    border: 1px solid #F0D28A;
+    color: #7A5200;
+    font-family: 'Figtree', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(16, 32, 27, .16);
+}
+
+.reconnectingSpinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #F0D28A;
+    border-top-color: #7A5200;
+    animation: reconnectingSpin .8s linear infinite;
+}
+
+@keyframes reconnectingSpin {
+    to { transform: rotate(360deg); }
+}

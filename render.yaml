@@ -5,7 +5,7 @@ services:
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /api/cards
+    healthCheckPath: /cards
     envVars:
       - key: PORT
         value: "8080"

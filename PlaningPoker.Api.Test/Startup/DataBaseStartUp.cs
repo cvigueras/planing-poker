@@ -37,7 +37,7 @@ namespace PlaningPoker.Api.Test.Startup
 
             connection.Execute(@"CREATE TABLE IF NOT EXISTS Cards(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Value VARCHAR(5) NOT NULL)"
+                Value VARCHAR(10) NOT NULL)"
             );
         }
 

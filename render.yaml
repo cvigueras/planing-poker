@@ -4,6 +4,7 @@ services:
     name: planing-poker-api
     runtime: docker
     plan: free
+    region: frankfurt
     dockerfilePath: ./Dockerfile
     healthCheckPath: /cards
     envVars:
